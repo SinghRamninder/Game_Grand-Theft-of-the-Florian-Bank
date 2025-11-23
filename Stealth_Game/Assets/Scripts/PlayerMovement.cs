@@ -5,7 +5,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject player;
     
     [Tooltip("Control the speed of player")]
-    [SerializeField] private float playerSpeed;
+    [SerializeField] private float playerSpeed = 3f;
 
     void Start()
     {
@@ -19,12 +19,12 @@ public class PlayerMovement : MonoBehaviour
 
         if (distance > 0)
         {
-            transform.rotation = Quaternion.Euler(0,0,0);
+            transform.rotation = Quaternion.Euler(0,180,0);
             //For animation//
         }
         else if (distance < 0)
         {
-            transform.rotation = Quaternion.Euler(0,180,0);
+            transform.rotation = Quaternion.Euler(0,0,0);
             //For animation//
         }
     }
