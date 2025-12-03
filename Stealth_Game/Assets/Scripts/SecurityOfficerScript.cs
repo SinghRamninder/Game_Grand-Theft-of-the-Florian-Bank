@@ -17,9 +17,19 @@ public class SecurityOfficerScript : MonoBehaviour
     [Tooltip("How far guard can see")]
     [SerializeField] private float maxVisibiltiy;
 
+    [SerializeField] private float hearingRadius;
+
+    [SerializeField] private float maxQuiteSpeed;
+    [SerializeField] private float minQuiteSpeed;
+
+    private float currentQuiteSpeed;
+
     [SerializeField] private LayerMask playerMask;
 
+    [SerializeField] private GameObject player;
+
     private Rigidbody2D rb;
+    private Rigidbody2D playerRb;
     private Vector2 currentTarget;
     private bool chasePlayer = false;
     private bool playerOutOfVision = true;
@@ -31,6 +41,8 @@ public class SecurityOfficerScript : MonoBehaviour
         pointB.GetComponent<SpriteRenderer>().enabled = false;
 
         rb = GetComponent<Rigidbody2D>();
+        player = GameObject.FindGameObjectWithTag("Player");
+        playerRb = player.GetComponent<Rigidbody2D>();
         currentTarget = new Vector2(pointA.transform.position.x, rb.position.y);
     }
 
@@ -54,6 +66,8 @@ public class SecurityOfficerScript : MonoBehaviour
         {
             playerOutOfVision = true;
         }
+
+        //HandleHearing();
     }
 
     private void FixedUpdate()
@@ -108,5 +122,21 @@ public class SecurityOfficerScript : MonoBehaviour
         yield return new WaitForSeconds(2f);
         GetComponent<SpriteRenderer>().color = Color.white;
         chasePlayer = false;
+    }
+
+    private void HandleHearing()
+    {
+        float distance = Vector2.Distance(transform.position, player.transform.position);
+        float currentDistance = Mathf.Clamp(distance, 0f, hearingRadius);
+
+        float t = currentDistance / hearingRadius;
+        currentQuiteSpeed = Mathf.Lerp(maxQuiteSpeed, minQuiteSpeed, t);
+        float playerSpeed = playerRb.linearVelocity.magnitude;
+
+        if (distance < hearingRadius && playerSpeed > currentQuiteSpeed)
+        {
+            float newY = (transform.eulerAngles.y == 0) ? 180 : 0;
+            transform.rotation = Quaternion.Euler(0, newY, 0);
+        }
     }
 }

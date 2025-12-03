@@ -1,15 +1,21 @@
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
-{
-    [SerializeField] private GameObject player;
-    
+{   
     [Tooltip("Control the speed of player")]
-    [SerializeField] private float playerSpeed = 3f;
+    [SerializeField] private float normalSpeed = 3f;
+
+    [Tooltip("Player Speed while sprinting")]
+    [SerializeField] private float sprintSpeed;
+
+    [Tooltip("Player Speed while sneaking")]
+    [SerializeField] private float sneakSpeed;
+
+    private float playerSpeed;
 
     void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player");
+        playerSpeed = normalSpeed;
     }
 
     void Update()
@@ -26,6 +32,26 @@ public class PlayerMovement : MonoBehaviour
         {
             transform.rotation = Quaternion.Euler(0,0,0);
             //For animation//
+        }
+
+        if (Input.GetKey(KeyCode.LeftShift))
+        {
+            playerSpeed = sprintSpeed;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftShift))
+        {
+            playerSpeed = normalSpeed;
+        }
+
+        if (Input.GetKey(KeyCode.LeftControl))
+        {
+            playerSpeed = sneakSpeed;
+        }
+
+        if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
+            playerSpeed = normalSpeed;
         }
     }
 }

@@ -103,7 +103,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   player: {fileID: 0}
-  playerSpeed: 5
+  normalSpeed: 3
+  sprintSpeed: 5
+  sneakSpeed: 1
 --- !u!61 &889221862417700792
 BoxCollider2D:
   m_ObjectHideFlags: 0
