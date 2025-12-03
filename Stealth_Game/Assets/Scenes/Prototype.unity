@@ -747,6 +747,18 @@ PrefabInstance:
       propertyPath: m_Name
       value: Backgrounds
       objectReference: {fileID: 0}
+    - target: {fileID: 7068029092699228469, guid: b45772a3d90dbec45b18d476293ba18d, type: 3}
+      propertyPath: m_Color.b
+      value: 0.71868277
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068029092699228469, guid: b45772a3d90dbec45b18d476293ba18d, type: 3}
+      propertyPath: m_Color.g
+      value: 0.71868277
+      objectReference: {fileID: 0}
+    - target: {fileID: 7068029092699228469, guid: b45772a3d90dbec45b18d476293ba18d, type: 3}
+      propertyPath: m_Color.r
+      value: 0.7283019
+      objectReference: {fileID: 0}
     - target: {fileID: 7324520911699116990, guid: b45772a3d90dbec45b18d476293ba18d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -4.327167
