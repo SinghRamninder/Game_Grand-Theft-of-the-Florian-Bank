@@ -61,6 +61,7 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (hit.collider!= null && hit.collider.CompareTag("Player"))
         {
+            Debug.Log("Player found");
             playerCurrentPos = new Vector2(hit.collider.transform.position.x, transform.position.y);
             chasePlayer = true;
             playerOutOfVision = false;
@@ -142,10 +143,10 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (distance > hearingRadius)
         {
-            if (sr != null)
-            {
-                sr.color = Color.white;
-            }
+            //if (sr != null)
+            //{
+            //    sr.color = Color.white;
+            //}
             Debug.Log("[Hearing] Player outside hearing radius, resetting color to white.");
             return;
         }
@@ -176,7 +177,7 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (playerSpeed > currentQuiteSpeed)
         {
-            //float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
+            float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
             transform.rotation = Quaternion.Euler(0, 0, 0);
             Debug.Log("[Hearing] Player too loud! Guard turned around.");
         }
