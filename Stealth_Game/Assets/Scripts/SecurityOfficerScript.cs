@@ -34,6 +34,7 @@ public class SecurityOfficerScript : MonoBehaviour
     private bool chasePlayer = false;
     private bool playerOutOfVision = true;
     private Vector2 playerCurrentPos;
+    private SpriteRenderer sr;
 
     void Start()
     {
@@ -41,10 +42,14 @@ public class SecurityOfficerScript : MonoBehaviour
         pointB.GetComponent<SpriteRenderer>().enabled = false;
 
         rb = GetComponent<Rigidbody2D>();
+        sr = GetComponent<SpriteRenderer>();
+
         player = GameObject.FindGameObjectWithTag("Player");
         playerRb = player.GetComponent<Rigidbody2D>();
+
         currentTarget = new Vector2(pointA.transform.position.x, rb.position.y);
     }
+
 
     void Update()
     {
@@ -67,7 +72,7 @@ public class SecurityOfficerScript : MonoBehaviour
             playerOutOfVision = true;
         }
 
-        //HandleHearing();
+        HandleHearing();
     }
 
     private void FixedUpdate()
@@ -126,17 +131,59 @@ public class SecurityOfficerScript : MonoBehaviour
 
     private void HandleHearing()
     {
+        if (player == null || playerRb == null)
+        {
+            Debug.LogWarning("[Hearing] Player or playerRb is null!");
+            return;
+        }
+
         float distance = Vector2.Distance(transform.position, player.transform.position);
+        Debug.Log($"[Hearing] Distance to player: {distance}");
+
+        if (distance > hearingRadius)
+        {
+            if (sr != null)
+            {
+                sr.color = Color.white;
+            }
+            Debug.Log("[Hearing] Player outside hearing radius, resetting color to white.");
+            return;
+        }
+
         float currentDistance = Mathf.Clamp(distance, 0f, hearingRadius);
 
-        float t = currentDistance / hearingRadius;
-        currentQuiteSpeed = Mathf.Lerp(maxQuiteSpeed, minQuiteSpeed, t);
+        float t = (currentDistance / hearingRadius);
+
+        currentQuiteSpeed = Mathf.Lerp(minQuiteSpeed, maxQuiteSpeed, t);
+
         float playerSpeed = playerRb.linearVelocity.magnitude;
 
-        if (distance < hearingRadius && playerSpeed > currentQuiteSpeed)
+        Debug.Log(
+            $"[Hearing] currentDistance={currentDistance}, t={t}, " +
+            $"quietSpeed={currentQuiteSpeed}, playerSpeed={playerSpeed}"
+        );
+
+        float noiseFactor = (currentQuiteSpeed > 0f)
+            ? Mathf.Clamp01(playerSpeed / currentQuiteSpeed)
+            : 1f;
+
+        if (sr != null)
         {
-            float newY = (transform.eulerAngles.y == 0) ? 180 : 0;
+            Color targetColor = Color.Lerp(Color.white, Color.red, noiseFactor);
+            sr.color = targetColor;
+            Debug.Log($"[Hearing] noiseFactor={noiseFactor}, newColor={targetColor}");
+        }
+
+        if (playerSpeed > currentQuiteSpeed)
+        {
+            float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
             transform.rotation = Quaternion.Euler(0, newY, 0);
+            Debug.Log("[Hearing] Player too loud! Guard turned around.");
+        }
+        else
+        {
+            Debug.Log("[Hearing] Player is quiet enough. No reaction.");
         }
     }
+
 }

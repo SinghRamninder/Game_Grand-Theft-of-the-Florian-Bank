@@ -1,57 +1,52 @@
 using UnityEngine;
 
 public class PlayerMovement : MonoBehaviour
-{   
-    [Tooltip("Control the speed of player")]
+{
+    [Header("Speeds")]
     [SerializeField] private float normalSpeed = 3f;
+    [SerializeField] private float sprintSpeed = 5f;
+    [SerializeField] private float sneakSpeed = 1.5f;
 
-    [Tooltip("Player Speed while sprinting")]
-    [SerializeField] private float sprintSpeed;
+    private float moveSpeed;
 
-    [Tooltip("Player Speed while sneaking")]
-    [SerializeField] private float sneakSpeed;
-
-    private float playerSpeed;
+    private Rigidbody2D rb;
+    private Vector2 movementInput;
 
     void Start()
     {
-        playerSpeed = normalSpeed;
+        rb = GetComponent<Rigidbody2D>();
+        rb.freezeRotation = true;
+
+        moveSpeed = normalSpeed;
     }
 
     void Update()
     {
-        float distance = Input.GetAxisRaw("Horizontal");
-        transform.Translate(new Vector3 (distance,0f,0f) * playerSpeed * Time.deltaTime,Space.World);
+        float inputX = Input.GetAxisRaw("Horizontal");
+        movementInput = new Vector2(inputX, 0f).normalized;
 
-        if (distance > 0)
-        {
-            transform.rotation = Quaternion.Euler(0,180,0);
-            //For animation//
-        }
-        else if (distance < 0)
-        {
-            transform.rotation = Quaternion.Euler(0,0,0);
-            //For animation//
-        }
+        if (inputX > 0)
+            transform.rotation = Quaternion.Euler(0, 180, 0);
+        else if (inputX < 0)
+            transform.rotation = Quaternion.Euler(0, 0, 0);
 
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            playerSpeed = sprintSpeed;
-        }
-
+        if (Input.GetKeyDown(KeyCode.LeftShift))
+            moveSpeed = sprintSpeed;
         if (Input.GetKeyUp(KeyCode.LeftShift))
-        {
-            playerSpeed = normalSpeed;
-        }
+            moveSpeed = normalSpeed;
 
-        if (Input.GetKey(KeyCode.LeftControl))
-        {
-            playerSpeed = sneakSpeed;
-        }
-
+        if (Input.GetKeyDown(KeyCode.LeftControl))
+            moveSpeed = sneakSpeed;
         if (Input.GetKeyUp(KeyCode.LeftControl))
-        {
-            playerSpeed = normalSpeed;
-        }
+            moveSpeed = normalSpeed;
+    }
+
+    void FixedUpdate()
+    {
+        Vector2 v = rb.linearVelocity;
+
+        v.x = movementInput.x * moveSpeed;
+
+        rb.linearVelocity = v;
     }
 }

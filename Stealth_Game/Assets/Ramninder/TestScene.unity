@@ -625,8 +625,24 @@ PrefabInstance:
       value: SecurtiyOfficer
       objectReference: {fileID: 0}
     - target: {fileID: 8545407361541288252, guid: 94c3f0bcdc55364438b9dedbd61debe6, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 763672148}
+    - target: {fileID: 8545407361541288252, guid: 94c3f0bcdc55364438b9dedbd61debe6, type: 3}
       propertyPath: chaseSpeed
       value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545407361541288252, guid: 94c3f0bcdc55364438b9dedbd61debe6, type: 3}
+      propertyPath: hearingRadius
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545407361541288252, guid: 94c3f0bcdc55364438b9dedbd61debe6, type: 3}
+      propertyPath: maxQuiteSpeed
+      value: 9
+      objectReference: {fileID: 0}
+    - target: {fileID: 8545407361541288252, guid: 94c3f0bcdc55364438b9dedbd61debe6, type: 3}
+      propertyPath: minQuiteSpeed
+      value: 1.5
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
