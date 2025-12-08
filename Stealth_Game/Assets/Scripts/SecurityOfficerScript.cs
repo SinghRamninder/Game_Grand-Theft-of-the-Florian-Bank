@@ -72,7 +72,7 @@ public class SecurityOfficerScript : MonoBehaviour
             playerOutOfVision = true;
         }
 
-        HandleHearing();
+        //HandleHearing();
     }
 
     private void FixedUpdate()
@@ -176,8 +176,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (playerSpeed > currentQuiteSpeed)
         {
-            float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
-            transform.rotation = Quaternion.Euler(0, newY, 0);
+            //float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
+            transform.rotation = Quaternion.Euler(0, 180f, 0);
             Debug.Log("[Hearing] Player too loud! Guard turned around.");
         }
         else
