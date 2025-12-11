@@ -13,23 +13,23 @@ public class HiddingMechanics : MonoBehaviour
             player.transform.position = transform.position;
             player.GetComponent<Rigidbody2D>().gravityScale = 0f;
             player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
-            player.GetComponent<BoxCollider2D>().enabled = false;
+            player.GetComponent<CapsuleCollider2D>().enabled = false;
             player.GetComponent<PlayerMovement>().enabled = false;
-            Color c = player.GetComponent<SpriteRenderer>().color;
-            c.a = 0.45f;
-            player.GetComponent<SpriteRenderer>().color = c;
+            //Color c = player.GetComponent<SpriteRenderer>().color;
+            //c.a = 0.45f;
+            //player.GetComponent<SpriteRenderer>().color = c;
 
             isHidden = true;
         }
 
         else if (Input.GetKeyDown(KeyCode.Z) && isHidden)
         {
-            player.GetComponent<BoxCollider2D>().enabled = true;
+            player.GetComponent<CapsuleCollider2D>().enabled = true;
             player.GetComponent<Rigidbody2D>().gravityScale = 1f;
             player.GetComponent<PlayerMovement>().enabled = true;
-            Color c = player.GetComponent<SpriteRenderer>().color;
-            c.a = 1f;
-            player.GetComponent<SpriteRenderer>().color = c;
+            //Color c = player.GetComponent<SpriteRenderer>().color;
+            //c.a = 1f;
+            //player.GetComponent<SpriteRenderer>().color = c;
 
             isHidden = false;
         }

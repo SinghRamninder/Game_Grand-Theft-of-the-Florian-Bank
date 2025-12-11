@@ -6,23 +6,26 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private float normalSpeed = 3f;
     [SerializeField] private float sprintSpeed = 5f;
     [SerializeField] private float sneakSpeed = 1.5f;
+    [SerializeField] private Animator playerAnimation;
 
     private float moveSpeed;
 
     private Rigidbody2D rb;
     private Vector2 movementInput;
+    private float inputX;
 
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
         rb.freezeRotation = true;
+        playerAnimation = GetComponent<Animator>();
 
         moveSpeed = normalSpeed;
     }
 
     void Update()
     {
-        float inputX = Input.GetAxisRaw("Horizontal");
+        inputX = Input.GetAxisRaw("Horizontal");
         movementInput = new Vector2(inputX, 0f).normalized;
 
         if (inputX > 0)
@@ -47,6 +50,15 @@ public class PlayerMovement : MonoBehaviour
 
         v.x = movementInput.x * moveSpeed;
 
-        rb.linearVelocity = v;
+        if (rb.linearVelocity.x != 0)
+        {
+            playerAnimation.SetBool("Walk", true);
+        }
+        else
+        {
+            playerAnimation.SetBool("Walk", false);
+        }
+
+            rb.linearVelocity = v;
     }
 }
