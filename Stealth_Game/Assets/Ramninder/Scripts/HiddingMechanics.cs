@@ -14,6 +14,7 @@ public class HiddingMechanics : MonoBehaviour
             player.GetComponent<Rigidbody2D>().gravityScale = 0f;
             player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
             player.GetComponent<CapsuleCollider2D>().enabled = false;
+            player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
             //Color c = player.GetComponent<SpriteRenderer>().color;
             //c.a = 0.45f;
