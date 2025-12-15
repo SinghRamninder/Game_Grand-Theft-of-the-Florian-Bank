@@ -6,6 +6,13 @@ public class HiddingMechanics : MonoBehaviour
     private bool isNear = false;
     private bool isHidden = false;
 
+    private Vector3 originalScale;
+
+    private void Awake()
+    {
+        originalScale = transform.localScale;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z) && isNear && !isHidden)
@@ -16,6 +23,7 @@ public class HiddingMechanics : MonoBehaviour
             player.GetComponent<CapsuleCollider2D>().enabled = false;
             player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
+            transform.localScale = originalScale * 1.2f;
             //Color c = player.GetComponent<SpriteRenderer>().color;
             //c.a = 0.45f;
             //player.GetComponent<SpriteRenderer>().color = c;
@@ -28,6 +36,7 @@ public class HiddingMechanics : MonoBehaviour
             player.GetComponent<CapsuleCollider2D>().enabled = true;
             player.GetComponent<Rigidbody2D>().gravityScale = 1f;
             player.GetComponent<PlayerMovement>().enabled = true;
+            transform.localScale = originalScale;
             //Color c = player.GetComponent<SpriteRenderer>().color;
             //c.a = 1f;
             //player.GetComponent<SpriteRenderer>().color = c;
