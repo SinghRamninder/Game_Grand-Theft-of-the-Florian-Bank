@@ -17,7 +17,7 @@ public class SecurityOfficerScript : MonoBehaviour
     [Tooltip("How far guard can see")]
     [SerializeField] private float maxVisibiltiy;
 
-    [SerializeField] private float hearingRadius;
+    public float hearingRadius;
 
     [SerializeField] private float maxQuiteSpeed;
     [SerializeField] private float minQuiteSpeed;
@@ -27,6 +27,12 @@ public class SecurityOfficerScript : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
 
     [SerializeField] private GameObject player;
+
+    public bool hasKey;
+
+    public GameObject key;
+
+    public string keyName;
 
     private Rigidbody2D rb;
     private Rigidbody2D playerRb;
@@ -48,6 +54,7 @@ public class SecurityOfficerScript : MonoBehaviour
         playerRb = player.GetComponent<Rigidbody2D>();
 
         currentTarget = new Vector2(pointA.transform.position.x, rb.position.y);
+        hasKey = true;
     }
 
 

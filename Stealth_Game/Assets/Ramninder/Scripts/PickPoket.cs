@@ -2,52 +2,52 @@ using UnityEngine;
 
 public class PickPoket : MonoBehaviour
 {
-    [SerializeField] private Transform guardPosition;
-    [SerializeField] private GameObject key;
     [SerializeField] private float pickPocketDistance;
-    [SerializeField] private GameObject door;
 
-    private GameObject chest;
+    private GameObject securityGuard;
 
-    private bool hasKey;
-    private bool canOpenChest;
+    private bool basement1Key;
+    private bool basement2Key;
 
     void Update()
     {
-        if(Vector2.Distance(transform.position, guardPosition.position) < pickPocketDistance)
+        if (securityGuard != null && securityGuard.GetComponent<SecurityOfficerScript>().hasKey)
         {
+            //Show button icon
             if (Input.GetKeyDown(KeyCode.C))
             {
-                key.transform.SetParent(gameObject.transform);
-                key.transform.position = transform.position;
+                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.SetParent(gameObject.transform);
+                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.position = transform.position;
 
-                hasKey = true;
+                if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 1")
+                {
+                    basement1Key = true;
+                    basement2Key = false;
+                }
+                else if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 2")
+                {
+                    basement1Key = false;
+                    basement2Key = true;
+                }
+
+                securityGuard.GetComponent<SecurityOfficerScript>().hasKey = false;
             }
-        }
-
-        if (Input.GetKeyDown(KeyCode.O) && canOpenChest)
-        {
-            Destroy(chest);
-            Destroy(key);
-            canOpenChest = false;
-            door.GetComponent<DoorScript>().enabled = true;
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Chest") && hasKey)
+        if (collision.CompareTag("Guard"))
         {
-            chest = collision.gameObject;
-            canOpenChest = true;
+            securityGuard = collision.gameObject;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Chest"))
+        if (collision.CompareTag("Guard"))
         {
-            canOpenChest = false;
+            securityGuard = null;
         }
     }
 }
