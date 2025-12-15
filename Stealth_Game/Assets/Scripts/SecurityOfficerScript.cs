@@ -40,7 +40,7 @@ public class SecurityOfficerScript : MonoBehaviour
     private bool chasePlayer = false;
     private bool playerOutOfVision = true;
     private Vector2 playerCurrentPos;
-    private SpriteRenderer sr;
+    //private SpriteRenderer sr;
 
     void Start()
     {
@@ -48,7 +48,7 @@ public class SecurityOfficerScript : MonoBehaviour
         pointB.GetComponent<SpriteRenderer>().enabled = false;
 
         rb = GetComponent<Rigidbody2D>();
-        sr = GetComponent<SpriteRenderer>();
+        //sr = GetComponent<SpriteRenderer>();
 
         player = GameObject.FindGameObjectWithTag("Player");
         playerRb = player.GetComponent<Rigidbody2D>();
@@ -72,7 +72,7 @@ public class SecurityOfficerScript : MonoBehaviour
             playerCurrentPos = new Vector2(hit.collider.transform.position.x, transform.position.y);
             chasePlayer = true;
             playerOutOfVision = false;
-            GetComponent<SpriteRenderer>().color = Color.red;
+            //GetComponent<SpriteRenderer>().color = Color.red;
             Debug.DrawLine(transform.position, hit.collider.transform.position, Color.red);
         }
         else
@@ -133,7 +133,7 @@ public class SecurityOfficerScript : MonoBehaviour
     private IEnumerator GuardChaseToNormal()
     {
         yield return new WaitForSeconds(2f);
-        GetComponent<SpriteRenderer>().color = Color.white;
+        //GetComponent<SpriteRenderer>().color = Color.white;
         chasePlayer = false;
     }
 
@@ -175,12 +175,12 @@ public class SecurityOfficerScript : MonoBehaviour
             ? Mathf.Clamp01(playerSpeed / currentQuiteSpeed)
             : 1f;
 
-        if (sr != null)
-        {
-            Color targetColor = Color.Lerp(Color.white, Color.red, noiseFactor);
-            sr.color = targetColor;
-            Debug.Log($"[Hearing] noiseFactor={noiseFactor}, newColor={targetColor}");
-        }
+        //if (sr != null)
+        //{
+        //    Color targetColor = Color.Lerp(Color.white, Color.red, noiseFactor);
+        //    sr.color = targetColor;
+        //    Debug.Log($"[Hearing] noiseFactor={noiseFactor}, newColor={targetColor}");
+        //}
 
         if (playerSpeed > currentQuiteSpeed)
         {

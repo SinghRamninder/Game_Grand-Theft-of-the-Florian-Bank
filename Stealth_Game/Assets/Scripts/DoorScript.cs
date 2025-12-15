@@ -3,158 +3,151 @@ using UnityEngine;
 
 public class DoorScript : MonoBehaviour
 {
-    [SerializeField] private Transform teleportLocation; // Assign for EACH door
+    [Header("Teleport Locations")]
+    [SerializeField] private Transform teleportLocationA;   // main destination
+    [SerializeField] private bool allowSecondTeleport = false;
+    [SerializeField] private Transform teleportLocationB;   // optional second destination
+
+    [Header("Input Keys")]
+    [SerializeField] private KeyCode keyToA = KeyCode.E;
+    [SerializeField] private KeyCode keyToB = KeyCode.Q;
+
+    [Header("Settings")]
+    [SerializeField] private float maxDistance = 3f;
+    [SerializeField] private float teleportDelay = 0.5f;
+
+    [Header("Key Requirement (ONLY for Location B)")]
+    [SerializeField] private bool keyRequired = false;
+
+    [Tooltip("Enable this if this door should be unlocked by Basement 1 Key")]
+    [SerializeField] private bool basement1Door = false;
+
+    [Tooltip("Enable this if this door should be unlocked by Basement 2 Key")]
+    [SerializeField] private bool basement2Door = false;
+
     private bool isPlayerInside = false;
     private Transform player;
+    private PickPoket pickPoket;          // script on the player
+    private bool isTeleporting = false;
 
-    void Start()
+    // Once unlocked, Location B stays usable permanently
+    private bool locationBUnlocked = false;
+
+    private void Start()
     {
-        // Cache the player reference
+        // Optional fallback if you want (but we also cache via trigger)
         player = GameObject.FindGameObjectWithTag("Player")?.transform;
+        if (player != null) pickPoket = player.GetComponent<PickPoket>();
     }
 
-    void OnTriggerEnter2D(Collider2D other)
+    private void OnTriggerEnter2D(Collider2D other)
     {
-        if (other.CompareTag("Player"))
+        if (!other.CompareTag("Player")) return;
+
+        isPlayerInside = true;
+
+        // Cache references using trigger (as you requested)
+        player = other.transform;
+        pickPoket = other.GetComponent<PickPoket>();
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+        isPlayerInside = false;
+    }
+
+    private void Update()
+    {
+        if (!isPlayerInside || isTeleporting) return;
+        if (!IsPlayerActuallyNear()) return;
+
+        // Teleport to A (no key logic)
+        if (Input.GetKeyDown(keyToA))
         {
-            isPlayerInside = true;
-            Debug.Log($"Player entered door trigger: {gameObject.name}");
+            TryTeleport(teleportLocationA);
+            return;
+        }
+
+        // Teleport to B (optional + key logic only here)
+        if (allowSecondTeleport && Input.GetKeyDown(keyToB))
+        {
+            if (CanUseTeleportB())
+                TryTeleport(teleportLocationB);
         }
     }
 
-    void OnTriggerExit2D(Collider2D other)
+    private bool CanUseTeleportB()
     {
-        if (other.CompareTag("Player"))
+        if (!allowSecondTeleport) return false;
+        if (teleportLocationB == null) return false;
+
+        // If no key required, allow directly
+        if (!keyRequired) return true;
+
+        // If already unlocked earlier, allow permanently
+        if (locationBUnlocked) return true;
+
+        // Need PickPoket script to check keys
+        if (pickPoket == null) return false;
+
+        // Door type validation (avoid both off / both on mistakes)
+        if (basement1Door == basement2Door)
         {
-            isPlayerInside = false;
-            Debug.Log($"Player exited door trigger: {gameObject.name}");
+            Debug.LogWarning($"{name}: Set ONLY one of basement1Door or basement2Door to true.");
+            return false;
         }
+
+        bool hasCorrectKey =
+            (basement1Door && pickPoket.basement1Key) ||
+            (basement2Door && pickPoket.basement2Key);
+
+        if (hasCorrectKey)
+        {
+            locationBUnlocked = true; // permanently unlocked
+            return true;
+        }
+
+        // No correct key
+        return false;
     }
 
-    void Update()
-    {
-        // Double-check player is actually close to this door before allowing teleport
-        if (isPlayerInside && Input.GetKeyDown(KeyCode.E) && IsPlayerActuallyNear())
-        {
-            Debug.Log($"Teleporting through door: {gameObject.name}");
-            StartCoroutine(TeleportWithDelay());
-        }
-    }
-
-    // Additional safety check to ensure player is actually near this door
     private bool IsPlayerActuallyNear()
     {
         if (player == null) return false;
 
         float distance = Vector2.Distance(player.position, transform.position);
-        float maxDistance = 3f; // Adjust this based on your trigger size
-
         bool isNear = distance <= maxDistance;
+
         if (!isNear)
-        {
-            // Reset the flag if player is not actually near
             isPlayerInside = false;
-            Debug.LogWarning($"Player not actually near door {gameObject.name}, resetting trigger");
-        }
 
         return isNear;
     }
 
-    IEnumerator TeleportWithDelay()
+    private void TryTeleport(Transform target)
     {
-        // Prevent multiple teleports
+        if (player == null || target == null) return;
+        StartCoroutine(TeleportWithDelay(target));
+    }
+
+    private IEnumerator TeleportWithDelay(Transform target)
+    {
+        isTeleporting = true;
         isPlayerInside = false;
 
-        yield return new WaitForSeconds(0.5f);
+        yield return new WaitForSeconds(teleportDelay);
 
-        if (player != null && teleportLocation != null)
-        {
-            player.position = teleportLocation.position;
-        }
+        if (player != null && target != null)
+            player.position = target.position;
+
+        yield return new WaitForSeconds(0.05f);
+        isTeleporting = false;
     }
 
-    // Force reset the trigger state (useful for debugging)
-    void OnDisable()
+    private void OnDisable()
     {
         isPlayerInside = false;
-    }
-}
-
-public class TeleportTrigger2D : MonoBehaviour
-{
-    [SerializeField] private Transform teleportLocation; // Assign for EACH door
-    private bool isPlayerInside = false;
-    private Transform player;
-
-    void Start()
-    {
-        // Cache the player reference
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-    }
-
-    void OnTriggerEnter2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInside = true;
-            Debug.Log($"Player entered door trigger: {gameObject.name}");
-        }
-    }
-
-    void OnTriggerExit2D(Collider2D other)
-    {
-        if (other.CompareTag("Player"))
-        {
-            isPlayerInside = false;
-            Debug.Log($"Player exited door trigger: {gameObject.name}");
-        }
-    }
-
-    void Update()
-    {
-        // Double-check player is actually close to this door before allowing teleport
-        if (isPlayerInside && Input.GetKeyDown(KeyCode.E) && IsPlayerActuallyNear())
-        {
-            Debug.Log($"Teleporting through door: {gameObject.name}");
-            StartCoroutine(TeleportWithDelay());
-        }
-    }
-
-    // Additional safety check to ensure player is actually near this door
-    private bool IsPlayerActuallyNear()
-    {
-        if (player == null) return false;
-
-        float distance = Vector2.Distance(player.position, transform.position);
-        float maxDistance = 3f; // Adjust this based on your trigger size
-
-        bool isNear = distance <= maxDistance;
-        if (!isNear)
-        {
-            // Reset the flag if player is not actually near
-            isPlayerInside = false;
-            Debug.LogWarning($"Player not actually near door {gameObject.name}, resetting trigger");
-        }
-
-        return isNear;
-    }
-
-    IEnumerator TeleportWithDelay()
-    {
-        // Prevent multiple teleports
-        isPlayerInside = false;
-
-        yield return new WaitForSeconds(0.5f);
-
-        if (player != null && teleportLocation != null)
-        {
-            player.position = teleportLocation.position;
-        }
-    }
-
-    // Force reset the trigger state (useful for debugging)
-    void OnDisable()
-    {
-        isPlayerInside = false;
+        isTeleporting = false;
     }
 }

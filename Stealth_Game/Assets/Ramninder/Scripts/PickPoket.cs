@@ -6,8 +6,8 @@ public class PickPoket : MonoBehaviour
 
     private GameObject securityGuard;
 
-    private bool basement1Key;
-    private bool basement2Key;
+    public bool basement1Key;
+    public bool basement2Key;
 
     void Update()
     {

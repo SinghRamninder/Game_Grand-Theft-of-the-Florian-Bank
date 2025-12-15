@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Chest
+  - Guard
   layers:
   - Default
   - TransparentFX
