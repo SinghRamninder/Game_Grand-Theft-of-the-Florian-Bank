@@ -3,6 +3,9 @@ using UnityEngine;
 
 public class DoorScript : MonoBehaviour
 {
+    [SerializeField] private GameObject instructionKey1;
+    [SerializeField] private GameObject instructionKey2;
+
     [Header("Teleport Locations")]
     [SerializeField] private Transform teleportLocationA;   // main destination
     [SerializeField] private bool allowSecondTeleport = false;
@@ -44,6 +47,15 @@ public class DoorScript : MonoBehaviour
     {
         if (!other.CompareTag("Player")) return;
 
+        if (instructionKey1 != null)
+        {
+            instructionKey1.SetActive(true);
+        }
+        if (instructionKey2 != null)
+        {
+            instructionKey2.SetActive(true);
+        }
+
         isPlayerInside = true;
 
         // Cache references using trigger (as you requested)
@@ -54,6 +66,16 @@ public class DoorScript : MonoBehaviour
     private void OnTriggerExit2D(Collider2D other)
     {
         if (!other.CompareTag("Player")) return;
+
+        if (instructionKey1 != null)
+        {
+            instructionKey1.SetActive(false);
+        }
+        if (instructionKey2 != null)
+        {
+            instructionKey2.SetActive(false);
+        }
+
         isPlayerInside = false;
     }
 

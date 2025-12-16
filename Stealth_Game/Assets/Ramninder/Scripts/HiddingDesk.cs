@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HiddingDesk : MonoBehaviour
 {
+    [SerializeField] private GameObject instructionKey;
+
     private GameObject player;
     private bool isNear = false;
     private bool isHidden = false;
@@ -24,6 +26,7 @@ public class HiddingDesk : MonoBehaviour
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
             sr.sortingOrder = 10;
             player.transform.localScale = new Vector3(0.11f, 0.11f, 0.11f);
+            instructionKey.SetActive(true);
             //Color c = player.GetComponent<SpriteRenderer>().color;
             //c.a = 0.45f;
             //player.GetComponent<SpriteRenderer>().color = c;
@@ -60,6 +63,7 @@ public class HiddingDesk : MonoBehaviour
                 onceCaptured = true;
             }
 
+            instructionKey.SetActive(true);
             isNear = true;
         }
     }
@@ -68,6 +72,7 @@ public class HiddingDesk : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            instructionKey.SetActive(false);
             isNear = false;
         }
     }

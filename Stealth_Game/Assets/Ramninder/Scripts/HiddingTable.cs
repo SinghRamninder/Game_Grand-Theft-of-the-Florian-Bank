@@ -2,6 +2,8 @@ using UnityEngine;
 
 public class HiddingTable : MonoBehaviour
 {
+    [SerializeField] private GameObject instructionKey;
+
     private GameObject player;
     private bool isNear = false;
     private bool isHidden = false;
@@ -23,6 +25,7 @@ public class HiddingTable : MonoBehaviour
             player.GetComponent<PlayerMovement>().enabled = false;
             player.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
             player.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
+            instructionKey.SetActive(true);
             //Color c = player.GetComponent<SpriteRenderer>().color;
             //c.a = 0.45f;
             //player.GetComponent<SpriteRenderer>().color = c;
@@ -58,7 +61,8 @@ public class HiddingTable : MonoBehaviour
 
                 onceCaptured = true;
             }
-            
+
+            instructionKey.SetActive(true);
             isNear = true;
         }
     }
@@ -67,6 +71,7 @@ public class HiddingTable : MonoBehaviour
     {
         if (collision.CompareTag("Player"))
         {
+            instructionKey.SetActive(false);
             isNear = false;
         }
     }
