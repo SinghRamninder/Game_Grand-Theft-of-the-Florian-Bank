@@ -8,7 +8,6 @@ public class Cutscene : MonoBehaviour
     [SerializeField] private Animator cameraAnimation;
     [SerializeField] private GameObject stealCash;
 
-    private Vector3 cameraStartPos;
 
     private void Awake()
     {

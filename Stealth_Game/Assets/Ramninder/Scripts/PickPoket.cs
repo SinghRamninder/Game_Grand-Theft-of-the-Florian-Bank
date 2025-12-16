@@ -24,11 +24,9 @@ public class PickPoket : MonoBehaviour
                 if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 1")
                 {
                     basement1Key = true;
-                    basement2Key = false;
                 }
                 else if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 2")
                 {
-                    basement1Key = false;
                     basement2Key = true;
                 }
 

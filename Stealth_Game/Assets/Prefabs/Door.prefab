@@ -149,6 +149,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43e7d943879f4824bb787e9e8e058c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  instructionKey1: {fileID: 0}
+  instructionKey2: {fileID: 0}
   teleportLocationA: {fileID: 0}
   allowSecondTeleport: 0
   teleportLocationB: {fileID: 0}
@@ -156,9 +158,13 @@ MonoBehaviour:
   keyToB: 274
   maxDistance: 3
   teleportDelay: 0.5
-  keyRequired: 0
+  keyRequiredForA: 0
+  keyRequiredForB: 0
   basement1Door: 0
   basement2Door: 0
+  hasKeyColor: {r: 0, g: 1, b: 0, a: 1}
+  missingKeyColor: {r: 1, g: 0, b: 0, a: 1}
+  notRequiredColor: {r: 0, g: 1, b: 0, a: 1}
 --- !u!1 &8233224254639185990
 GameObject:
   m_ObjectHideFlags: 0

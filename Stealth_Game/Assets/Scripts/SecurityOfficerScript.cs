@@ -44,8 +44,12 @@ public class SecurityOfficerScript : MonoBehaviour
     private Vector2 playerCurrentPos;
     //private SpriteRenderer sr;
 
+    private Animator bullAnimation;
+
     void Start()
     {
+        bullAnimation = GetComponent<Animator>();
+
         pointA.GetComponent<SpriteRenderer>().enabled = false;
         pointB.GetComponent<SpriteRenderer>().enabled = false;
 
@@ -121,6 +125,7 @@ public class SecurityOfficerScript : MonoBehaviour
 
             if (Vector2.Distance(rb.position, playerCurrentPos) < 0.05f && playerOutOfVision)
             {
+                bullAnimation.SetBool("StopAnimation", true);
                 StartCoroutine(GuardChaseToNormal());
             }
         }
@@ -141,6 +146,7 @@ public class SecurityOfficerScript : MonoBehaviour
         yield return new WaitForSeconds(2f);
         //GetComponent<SpriteRenderer>().color = Color.white;
         chasePlayer = false;
+        bullAnimation.SetBool("StopAnimation", false);
     }
 
     private void HandleHearing()
