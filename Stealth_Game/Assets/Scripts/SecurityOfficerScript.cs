@@ -17,6 +17,8 @@ public class SecurityOfficerScript : MonoBehaviour
     [Tooltip("How far guard can see")]
     [SerializeField] private float maxVisibiltiy;
 
+    [SerializeField] private GameObject gameOverDisplay;
+
     public float hearingRadius;
 
     [SerializeField] private float maxQuiteSpeed;
@@ -55,6 +57,9 @@ public class SecurityOfficerScript : MonoBehaviour
 
         currentTarget = new Vector2(pointA.transform.position.x, rb.position.y);
         hasKey = true;
+
+        gameOverDisplay.SetActive(false);
+        Time.timeScale = 1f;
     }
 
 
@@ -125,7 +130,8 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         if (other.gameObject.CompareTag("Player"))
         {
-            Debug.Log("GAME OVER!!");
+            Debug.LogWarning("GAME OVER!!");
+            gameOverDisplay.SetActive(true);
             Time.timeScale = 0f;
         }
     }
