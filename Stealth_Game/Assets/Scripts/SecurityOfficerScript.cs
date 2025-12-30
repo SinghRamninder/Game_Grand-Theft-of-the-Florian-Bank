@@ -89,7 +89,7 @@ public class SecurityOfficerScript : MonoBehaviour
             playerOutOfVision = true;
         }
 
-        HandleHearing();
+        //HandleHearing();
     }
 
     private void FixedUpdate()
@@ -149,61 +149,13 @@ public class SecurityOfficerScript : MonoBehaviour
         bullAnimation.SetBool("StopAnimation", false);
     }
 
-    private void HandleHearing()
+    public void HearNoise(Vector2 noisePosition)
     {
-        if (player == null || playerRb == null)
-        {
-            Debug.LogWarning("[Hearing] Player or playerRb is null!");
-            return;
-        }
-
-        float distance = Vector2.Distance(transform.position, player.transform.position);
-        Debug.Log($"[Hearing] Distance to player: {distance}");
-
-        if (distance > hearingRadius)
-        {
-            //if (sr != null)
-            //{
-            //    sr.color = Color.white;
-            //}
-            Debug.Log("[Hearing] Player outside hearing radius, resetting color to white.");
-            return;
-        }
-
-        float currentDistance = Mathf.Clamp(distance, 0f, hearingRadius);
-
-        float t = (currentDistance / hearingRadius);
-
-        currentQuiteSpeed = Mathf.Lerp(minQuiteSpeed, maxQuiteSpeed, t);
-
-        float playerSpeed = playerRb.linearVelocity.magnitude;
-
-        Debug.Log(
-            $"[Hearing] currentDistance={currentDistance}, t={t}, " +
-            $"quietSpeed={currentQuiteSpeed}, playerSpeed={playerSpeed}"
-        );
-
-        float noiseFactor = (currentQuiteSpeed > 0f)
-            ? Mathf.Clamp01(playerSpeed / currentQuiteSpeed)
-            : 1f;
-
-        //if (sr != null)
-        //{
-        //    Color targetColor = Color.Lerp(Color.white, Color.red, noiseFactor);
-        //    sr.color = targetColor;
-        //    Debug.Log($"[Hearing] noiseFactor={noiseFactor}, newColor={targetColor}");
-        //}
-
-        if (playerSpeed > currentQuiteSpeed)
-        {
-            float newY = (transform.eulerAngles.y == 0) ? 180f : 0f;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
-            Debug.Log("[Hearing] Player too loud! Guard turned around.");
-        }
-        else
-        {
-            Debug.Log("[Hearing] Player is quiet enough. No reaction.");
-        }
+        Debug.Log("Guard Heard " + gameObject.name);
+        float dir = noisePosition.x - transform.position.x;
+        if (dir > 0f) transform.rotation = Quaternion.Euler(0, 180, 0);
+        else transform.rotation = Quaternion.Euler(0, 0, 0);
     }
+
 
 }
