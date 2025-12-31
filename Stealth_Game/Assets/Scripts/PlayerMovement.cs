@@ -3,7 +3,7 @@ using UnityEngine;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Speeds")]
-    [SerializeField] private float normalSpeed = 3f;
+    public float normalSpeed = 3f;
     [SerializeField] private float sprintSpeed = 5f;
     [SerializeField] private float sneakSpeed = 1.5f;
     [SerializeField] private Animator playerAnimation;
