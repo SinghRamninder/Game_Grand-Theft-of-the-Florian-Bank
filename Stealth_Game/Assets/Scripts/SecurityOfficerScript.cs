@@ -26,13 +26,12 @@ public class SecurityOfficerScript : MonoBehaviour
     [SerializeField] private LayerMask playerMask;
 
     [Header("Hearing Reaction Timings (Inspector Editable)")]
-    [SerializeField] private float turnDelayAfterHearing = 1f; // wait before turning
-    [SerializeField] private float lookDuration = 2f;          // stay turned
+    [SerializeField] private float turnDelayAfterHearing = 1f;
+    [SerializeField] private float lookDuration = 2f;
 
     [Header("Other")]
     [SerializeField] private GameObject gameOverDisplay;
 
-    // Your existing public fields (kept so other scripts don't break)
     public bool hasKey;
     public GameObject key;
     public string keyName;
@@ -80,8 +79,6 @@ public class SecurityOfficerScript : MonoBehaviour
 
     void Update()
     {
-        // Facing logic same style as your original:
-        // y == 0 -> left, y == 180 -> right
         Vector2 direction = Vector2.right;
         if (Mathf.Approximately(transform.rotation.eulerAngles.y, 0f)) direction = Vector2.left;
         else if (Mathf.Abs(transform.rotation.eulerAngles.y) >= 179f) direction = Vector2.right;
@@ -93,7 +90,6 @@ public class SecurityOfficerScript : MonoBehaviour
             playerCurrentPos = new Vector2(hit.collider.transform.position.x, transform.position.y);
             playerOutOfVision = false;
 
-            // Switch to chase (this also cancels suspicious cleanly)
             SetChase(true);
 
             if (visionCone != null) visionCone.SetAlert();
@@ -103,7 +99,6 @@ public class SecurityOfficerScript : MonoBehaviour
         {
             playerOutOfVision = true;
 
-            // Only normal cone if NOT chasing
             if (state != GuardState.Chase && visionCone != null)
                 visionCone.SetNormal();
         }
@@ -111,7 +106,6 @@ public class SecurityOfficerScript : MonoBehaviour
 
     private void FixedUpdate()
     {
-        // Freeze movement during suspicious (prevents the �walk somewhere then rotate� weirdness)
         if (state == GuardState.Suspicious)
         {
             if (rb != null)
@@ -121,7 +115,6 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (state != GuardState.Chase)
         {
-            // PATROL
             Vector2 newPos = Vector2.MoveTowards(rb.position, currentTarget, speed * Time.fixedDeltaTime);
             rb.MovePosition(newPos);
 
@@ -145,7 +138,6 @@ public class SecurityOfficerScript : MonoBehaviour
         }
         else
         {
-            // CHASE
             Vector2 newPos = Vector2.MoveTowards(rb.position, playerCurrentPos, chaseSpeed * Time.fixedDeltaTime);
             rb.MovePosition(newPos);
 
@@ -183,12 +175,9 @@ public class SecurityOfficerScript : MonoBehaviour
         {
             state = GuardState.Chase;
 
-            // IMPORTANT FIX:
-            // If chase starts while we were suspicious, make sure animation is not stuck paused
             if (bullAnimation != null)
                 bullAnimation.SetBool("StopAnimation", false);
 
-            // Cancel suspicious if running
             if (suspiciousRoutine != null)
             {
                 StopCoroutine(suspiciousRoutine);
@@ -204,13 +193,10 @@ public class SecurityOfficerScript : MonoBehaviour
         }
     }
 
-    // CALLED BY YOUR NOISE RING SCRIPT
     public void HearNoise(Vector2 noisePosition)
     {
-        // Don�t interrupt chase
         if (state == GuardState.Chase) return;
 
-        // Restart suspicious cleanly
         if (suspiciousRoutine != null) StopCoroutine(suspiciousRoutine);
         suspiciousRoutine = StartCoroutine(SuspiciousReaction(noisePosition));
     }
@@ -221,42 +207,34 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(true);
 
-        // Pause walk animation while suspicious
         if (bullAnimation != null)
             bullAnimation.SetBool("StopAnimation", true);
 
         Quaternion originalRot = transform.rotation;
 
-        // Wait before turning
         yield return new WaitForSeconds(turnDelayAfterHearing);
 
-        // If during the wait we started chasing, stop this routine
         if (state == GuardState.Chase)
         {
             suspiciousRoutine = null;
             yield break;
         }
 
-        // Turn toward noise
         float dir = noisePosition.x - transform.position.x;
         transform.rotation = (dir > 0f) ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
 
-        // Stay turned
         yield return new WaitForSeconds(lookDuration);
 
-        // If we started chasing while looking, do NOT restore rotation or icon
         if (state == GuardState.Chase)
         {
             suspiciousRoutine = null;
             yield break;
         }
 
-        // Restore
         transform.rotation = originalRot;
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        // Resume patrol animation
         if (bullAnimation != null)
             bullAnimation.SetBool("StopAnimation", false);
 
