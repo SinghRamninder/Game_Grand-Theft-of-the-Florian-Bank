@@ -149,7 +149,7 @@ public class DoorScript : MonoBehaviour
         // Must choose exactly one
         if (basement1Door == basement2Door)
         {
-            Debug.LogWarning($"{name}: Set ONLY one of basement1Door or basement2Door to true.");
+            //Debug.LogWarning($"{name}: Set ONLY one of basement1Door or basement2Door to true.");
             return false;
         }
 

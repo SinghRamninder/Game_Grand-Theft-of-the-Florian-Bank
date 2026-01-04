@@ -80,13 +80,22 @@ public class NoiseRing : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (hasAlerted) return;
+        //if (hasAlerted)
+        //{
+        //    Debug.LogWarning("Alerted already");
+        //    return;
+        //}
 
         // Only react to guards in the mask
-        if (((1 << other.gameObject.layer) & guardMask) == 0) return;
+        if (!other.CompareTag("Guard"))
+        {
+            Debug.LogWarning("Not Guard " + other.gameObject.name);
+            return;
+        }
 
         if (other.TryGetComponent<SecurityOfficerScript>(out var guard))
         {
+            Debug.LogWarning("Guard Alerted");
             hasAlerted = true;
             guard.HearNoise(transform.position);
         }
