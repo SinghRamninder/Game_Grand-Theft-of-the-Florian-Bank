@@ -335,6 +335,7 @@ MonoBehaviour:
   speedIncrement: 50
   numbersDisplay: {fileID: 6069681527534437316}
   indicationArrow: {fileID: 1112649925582196357}
+  vaultPuzzleParent: {fileID: 2429191938950790202}
 --- !u!1 &5336940170182617892
 GameObject:
   m_ObjectHideFlags: 0

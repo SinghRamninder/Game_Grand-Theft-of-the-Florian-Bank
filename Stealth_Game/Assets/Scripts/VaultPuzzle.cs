@@ -13,6 +13,8 @@ public class VaultPuzzle : MonoBehaviour
 
     [SerializeField] private Image indicationArrow;
 
+    [SerializeField] private GameObject vaultPuzzleParent;
+
     private float speed;
 
     private float angle;
@@ -119,6 +121,6 @@ public class VaultPuzzle : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         //sound
-        gameObject.SetActive(false);
+        vaultPuzzleParent.SetActive(false);
     }
 }
