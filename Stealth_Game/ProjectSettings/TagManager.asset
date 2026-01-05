@@ -5,6 +5,8 @@ TagManager:
   serializedVersion: 3
   tags:
   - Chest
+  - Guard
+  - No Sound
   layers:
   - Default
   - TransparentFX
@@ -12,8 +14,8 @@ TagManager:
   - Player
   - Water
   - UI
-  - 
-  - 
+  - Guard
+  - Walls
   - 
   - 
   - 

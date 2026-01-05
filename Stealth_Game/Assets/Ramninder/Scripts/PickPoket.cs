@@ -2,52 +2,59 @@ using UnityEngine;
 
 public class PickPoket : MonoBehaviour
 {
-    [SerializeField] private Transform guardPosition;
-    [SerializeField] private GameObject key;
+    //[SerializeField] private GameObject instructionKey;
     [SerializeField] private float pickPocketDistance;
-    [SerializeField] private GameObject door;
 
-    private GameObject chest;
+    private GameObject securityGuard;
 
-    private bool hasKey;
-    private bool canOpenChest;
+    public bool basement1Key;
+    public bool basement2Key;
 
     void Update()
     {
-        if(Vector2.Distance(transform.position, guardPosition.position) < pickPocketDistance)
+        if (securityGuard != null && securityGuard.GetComponent<SecurityOfficerScript>().hasKey)
         {
+            //instructionKey.SetActive(true);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
             if (Input.GetKeyDown(KeyCode.C))
             {
-                key.transform.SetParent(gameObject.transform);
-                key.transform.position = transform.position;
+                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.SetParent(gameObject.transform);
+                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.position = transform.position;
 
-                hasKey = true;
+                if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 1")
+                {
+                    basement1Key = true;
+                }
+                else if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 2")
+                {
+                    basement2Key = true;
+                }
+
+                securityGuard.GetComponent<SecurityOfficerScript>().hasKey = false;
             }
         }
-
-        if (Input.GetKeyDown(KeyCode.O) && canOpenChest)
+        else
         {
-            Destroy(chest);
-            Destroy(key);
-            canOpenChest = false;
-            door.GetComponent<DoorScript>().enabled = true;
+            //instructionKey.SetActive(false);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Chest") && hasKey)
+        if (collision.CompareTag("Guard"))
         {
-            chest = collision.gameObject;
-            canOpenChest = true;
+            securityGuard = collision.gameObject;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Chest"))
+        if (collision.CompareTag("Guard"))
         {
-            canOpenChest = false;
+            //instructionKey.SetActive(false);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            securityGuard = null;
         }
     }
 }

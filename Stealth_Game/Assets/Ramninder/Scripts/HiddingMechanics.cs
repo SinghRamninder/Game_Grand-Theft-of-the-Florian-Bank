@@ -6,29 +6,40 @@ public class HiddingMechanics : MonoBehaviour
     private bool isNear = false;
     private bool isHidden = false;
 
+    private Vector3 originalScale;
+
+    private void Awake()
+    {
+        originalScale = transform.localScale;
+    }
+
     void Update()
     {
         if (Input.GetKeyDown(KeyCode.Z) && isNear && !isHidden)
         {
             player.transform.position = transform.position;
-            Destroy(player.GetComponent<Rigidbody2D>());
-            player.GetComponent<BoxCollider2D>().enabled = false;
+            player.GetComponent<Rigidbody2D>().gravityScale = 0f;
+            player.GetComponent<Rigidbody2D>().linearVelocity = Vector2.zero;
+            player.GetComponent<CapsuleCollider2D>().enabled = false;
+            player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
-            Color c = player.GetComponent<SpriteRenderer>().color;
-            c.a = 0.45f;
-            player.GetComponent<SpriteRenderer>().color = c;
+            transform.localScale = originalScale * 1.2f;
+            //Color c = player.GetComponent<SpriteRenderer>().color;
+            //c.a = 0.45f;
+            //player.GetComponent<SpriteRenderer>().color = c;
 
             isHidden = true;
         }
 
         else if (Input.GetKeyDown(KeyCode.Z) && isHidden)
         {
-            player.GetComponent<BoxCollider2D>().enabled = true;
-            player.AddComponent<Rigidbody2D>();
+            player.GetComponent<CapsuleCollider2D>().enabled = true;
+            player.GetComponent<Rigidbody2D>().gravityScale = 1f;
             player.GetComponent<PlayerMovement>().enabled = true;
-            Color c = player.GetComponent<SpriteRenderer>().color;
-            c.a = 1f;
-            player.GetComponent<SpriteRenderer>().color = c;
+            transform.localScale = originalScale;
+            //Color c = player.GetComponent<SpriteRenderer>().color;
+            //c.a = 1f;
+            //player.GetComponent<SpriteRenderer>().color = c;
 
             isHidden = false;
         }
