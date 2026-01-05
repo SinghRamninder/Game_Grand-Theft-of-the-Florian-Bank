@@ -223,3 +223,6 @@ MonoBehaviour:
   guardMask:
     serializedVersion: 2
     m_Bits: 64
+  wallMask:
+    serializedVersion: 2
+    m_Bits: 128
