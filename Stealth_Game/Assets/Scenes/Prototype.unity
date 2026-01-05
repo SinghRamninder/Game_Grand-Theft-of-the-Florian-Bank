@@ -9160,7 +9160,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 6497356718486262366, guid: 72c43842a97155a43ae54308a9bb6104, type: 3}
       propertyPath: basement1Door
-      value: 1
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 6497356718486262366, guid: 72c43842a97155a43ae54308a9bb6104, type: 3}
       propertyPath: teleportLocation
