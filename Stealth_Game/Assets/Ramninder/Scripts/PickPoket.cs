@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class PickPoket : MonoBehaviour
 {
-    [SerializeField] private GameObject instructionKey;
+    //[SerializeField] private GameObject instructionKey;
     [SerializeField] private float pickPocketDistance;
 
     private GameObject securityGuard;
@@ -14,8 +14,8 @@ public class PickPoket : MonoBehaviour
     {
         if (securityGuard != null && securityGuard.GetComponent<SecurityOfficerScript>().hasKey)
         {
-            instructionKey.SetActive(true);
-            instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            //instructionKey.SetActive(true);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
             if (Input.GetKeyDown(KeyCode.C))
             {
                 securityGuard.GetComponent<SecurityOfficerScript>().key.transform.SetParent(gameObject.transform);
@@ -35,8 +35,8 @@ public class PickPoket : MonoBehaviour
         }
         else
         {
-            instructionKey.SetActive(false);
-            instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            //instructionKey.SetActive(false);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
         }
     }
 
@@ -52,8 +52,8 @@ public class PickPoket : MonoBehaviour
     {
         if (collision.CompareTag("Guard"))
         {
-            instructionKey.SetActive(false);
-            instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            //instructionKey.SetActive(false);
+            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
             securityGuard = null;
         }
     }

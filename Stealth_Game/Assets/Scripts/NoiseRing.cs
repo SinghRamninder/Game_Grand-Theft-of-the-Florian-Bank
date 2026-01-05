@@ -14,6 +14,7 @@ public class NoiseRing : MonoBehaviour
 
     [Header("Collision")]
     [SerializeField] private LayerMask guardMask;
+    [SerializeField] private LayerMask wallMask;
 
     private LineRenderer lr;
     private CircleCollider2D col;
@@ -80,15 +81,30 @@ public class NoiseRing : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (hasAlerted) return;
+        //if (hasAlerted)
+        //{
+        //    Debug.LogWarning("Alerted already");
+        //    return;
+        //}
 
         // Only react to guards in the mask
-        if (((1 << other.gameObject.layer) & guardMask) == 0) return;
+        if (!other.CompareTag("Guard"))
+        {
+            return;
+        }
 
         if (other.TryGetComponent<SecurityOfficerScript>(out var guard))
         {
+            Vector2 soundPos = transform.position;
+            Vector2 guardPos = guard.transform.position;
+
+            if (Physics2D.Linecast(soundPos, guardPos, wallMask))
+            {
+                return;
+            }
+
             hasAlerted = true;
-            guard.HearNoise(transform.position);
+            guard.HearNoise(soundPos);
         }
     }
 }

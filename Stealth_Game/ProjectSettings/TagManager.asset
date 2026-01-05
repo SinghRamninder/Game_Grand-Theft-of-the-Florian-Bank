@@ -6,6 +6,7 @@ TagManager:
   tags:
   - Chest
   - Guard
+  - No Sound
   layers:
   - Default
   - TransparentFX
@@ -14,7 +15,7 @@ TagManager:
   - Water
   - UI
   - Guard
-  - 
+  - Walls
   - 
   - 
   - 

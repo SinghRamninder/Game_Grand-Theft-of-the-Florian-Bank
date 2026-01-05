@@ -21,6 +21,8 @@ public class NoiseEmitter : MonoBehaviour
 
     private float stepTimer;
 
+    public bool noSoundRing = false;
+
     private void Reset()
     {
         playerRb = GetComponent<Rigidbody2D>();
@@ -28,7 +30,12 @@ public class NoiseEmitter : MonoBehaviour
 
     private void Update()
     {
-        if (playerRb == null || ringPrefab == null) return;
+        if (noSoundRing)
+        {
+            return;
+        }
+
+        if ((playerRb == null || ringPrefab == null)) return;
 
         float speed = playerRb.linearVelocity.magnitude;
 
@@ -55,6 +62,23 @@ public class NoiseEmitter : MonoBehaviour
     private void SpawnRing(float radius, float strength)
     {
         NoiseRing ring = Instantiate(ringPrefab, transform.position, Quaternion.identity);
+        Debug.Log(ring.transform.position);
         ring.Configure(radius, strength, guardMask);
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("No Sound"))
+        {
+            noSoundRing = true;
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("No Sound"))
+        {
+            noSoundRing = false;
+        }
     }
 }
