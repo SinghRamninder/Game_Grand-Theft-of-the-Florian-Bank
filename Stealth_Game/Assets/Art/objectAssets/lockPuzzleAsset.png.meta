@@ -1,13 +1,10 @@
 fileFormatVersion: 2
-guid: 39aaeddaa5620c14b975fb554416ede9
+guid: 46b2320272a3c0648b17827a58a6043f
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8871293488371442664
-    second: assets5_0
-  - first:
-      213: 1689374599549099321
-    second: assets5_1
+      213: 3196527441830079133
+    second: lockPuzzleAsset_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -103,13 +100,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: assets5_0
+      name: lockPuzzleAsset_0
       rect:
         serializedVersion: 2
-        x: 70
-        y: 383
-        width: 739
-        height: 603
+        x: 567
+        y: 536
+        width: 931
+        height: 939
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -118,30 +115,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 81c526f0395d2e480800000000000000
-      internalID: -8871293488371442664
-      vertices: []
-      indices: 
-      edges: []
-      weights: []
-    - serializedVersion: 2
-      name: assets5_1
-      rect:
-        serializedVersion: 2
-        x: 1035
-        y: 429
-        width: 1356
-        height: 641
-      alignment: 0
-      pivot: {x: 0, y: 0}
-      border: {x: 0, y: 0, z: 0, w: 0}
-      customData: 
-      outline: []
-      physicsShape: []
-      tessellationDetail: -1
-      bones: []
-      spriteID: 93d11b26f3dd17710800000000000000
-      internalID: 1689374599549099321
+      spriteID: d9ae11db5c85c5c20800000000000000
+      internalID: 3196527441830079133
       vertices: []
       indices: 
       edges: []
@@ -160,8 +135,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      assets5_0: -8871293488371442664
-      assets5_1: 1689374599549099321
+      lockPuzzleAsset_0: 3196527441830079133
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
