@@ -39,9 +39,16 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = normalSpeed;
 
         if (Input.GetKeyDown(KeyCode.LeftControl))
+        {
             moveSpeed = sneakSpeed;
+            playerAnimation.SetBool("Crouch", true);
+        }
+            
         if (Input.GetKeyUp(KeyCode.LeftControl))
+        {
             moveSpeed = normalSpeed;
+            playerAnimation.SetBool("Crouch", false);
+        }
     }
 
     void FixedUpdate()
