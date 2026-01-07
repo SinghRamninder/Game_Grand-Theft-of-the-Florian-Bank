@@ -1546,6 +1546,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CellingLamp (10)
       objectReference: {fileID: 0}
+    - target: {fileID: 5367457514536333867, guid: 66fe6bcda410d40448afc64aef29cd5d, type: 3}
+      propertyPath: m_Intensity
+      value: 0.3
+      objectReference: {fileID: 0}
     - target: {fileID: 5548585889739689454, guid: 66fe6bcda410d40448afc64aef29cd5d, type: 3}
       propertyPath: m_LocalPosition.x
       value: 9.030001
@@ -12855,6 +12859,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: CellingLamp (4)
       objectReference: {fileID: 0}
+    - target: {fileID: 5367457514536333867, guid: 66fe6bcda410d40448afc64aef29cd5d, type: 3}
+      propertyPath: m_Intensity
+      value: 0.4
+      objectReference: {fileID: 0}
     - target: {fileID: 5548585889739689454, guid: 66fe6bcda410d40448afc64aef29cd5d, type: 3}
       propertyPath: m_LocalPosition.x
       value: -10.539999
@@ -18863,15 +18871,15 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 4193189615735009292, guid: 0a191b31323597c4a8c3a414b50bcbb3, type: 3}
       propertyPath: m_Color.b
-      value: 0.2637344
+      value: 0.21365404
       objectReference: {fileID: 0}
     - target: {fileID: 4193189615735009292, guid: 0a191b31323597c4a8c3a414b50bcbb3, type: 3}
       propertyPath: m_Color.g
-      value: 0.24482022
+      value: 0.19891062
       objectReference: {fileID: 0}
     - target: {fileID: 4193189615735009292, guid: 0a191b31323597c4a8c3a414b50bcbb3, type: 3}
       propertyPath: m_Color.r
-      value: 0.4339623
+      value: 0.3433962
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
