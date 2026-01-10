@@ -25,7 +25,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
     [Header("Vision")]
     [Tooltip("How far guard can see")]
-    [SerializeField] private float maxVisibiltiy = 6f;
+    [SerializeField] private float maxDisVisibiltiy = 6f;
+    [SerializeField] private float maxAngleVisibiltiy = 60f;
     [SerializeField] private LayerMask playerMask;
 
     [Header("Hearing Reaction Timings (Inspector Editable)")]
@@ -80,19 +81,22 @@ public class SecurityOfficerScript : MonoBehaviour
 
     void Update()
     {
-        // Determine facing direction from rotation Y (your existing logic)
-        Vector2 direction = Vector2.right;
+        Vector2 disFromPlayer = player.transform.position - transform.position;
+        if (disFromPlayer.magnitude > maxDisVisibiltiy) return;
+
+        Vector2 guardFacing = Vector2.right;
 
         if (Mathf.Approximately(transform.rotation.eulerAngles.y, 0f))
-            direction = Vector2.left;
+            guardFacing = Vector2.left;
         else if (Mathf.Abs(transform.rotation.eulerAngles.y) >= 179f)
-            direction = Vector2.right;
+            guardFacing = Vector2.right;
 
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, maxVisibiltiy, playerMask);
+        if (Vector2.Angle(guardFacing, disFromPlayer) > maxAngleVisibiltiy) return;
+
+        RaycastHit2D hit = Physics2D.Raycast(transform.position, disFromPlayer.normalized, disFromPlayer.magnitude, playerMask);
 
         if (hit.collider != null && hit.collider.CompareTag("Player"))
         {
-            // IMPORTANT: don't force Y here. Let physics handle vertical.
             playerCurrentPos = new Vector2(hit.collider.transform.position.x, 0f);
             playerOutOfVision = false;
 
@@ -114,23 +118,22 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         if (rb == null) return;
 
-        // If suspicious: stop completely
         if (state == GuardState.Suspicious)
         {
             rb.linearVelocity = Vector2.zero;
             return;
         }
 
-        // Decide target X and speed
         float moveSpeed = (state == GuardState.Chase) ? chaseSpeed : speed;
         float targetX = (state == GuardState.Chase) ? playerCurrentPos.x : currentTarget.x;
 
-        // Are we close enough to the target X?
         float dx = targetX - rb.position.x;
+
+        if (state == GuardState.Patrol)
+            transform.rotation = (dx > 0f) ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
 
         if (Mathf.Abs(dx) <= reachXThreshold)
         {
-            // stop horizontal movement, keep gravity/vertical as-is
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
             if (state != GuardState.Chase)
@@ -139,7 +142,6 @@ public class SecurityOfficerScript : MonoBehaviour
             }
             else
             {
-                // reached last seen pos
                 if (playerOutOfVision)
                 {
                     if (bullAnimation != null) bullAnimation.SetBool("StopAnimation", true);
@@ -153,12 +155,6 @@ public class SecurityOfficerScript : MonoBehaviour
         // Move horizontally using velocity (BEST for slopes/stairs)
         float dir = Mathf.Sign(dx);
         rb.linearVelocity = new Vector2(dir * moveSpeed, rb.linearVelocity.y);
-
-        // Optional: keep rotation consistent with direction (so raycast direction matches)
-        if (dir > 0f)
-            transform.rotation = Quaternion.Euler(0, 180, 0);
-        else if (dir < 0f)
-            transform.rotation = Quaternion.Euler(0, 0, 0);
     }
 
     private void SwapPatrolTarget()
@@ -192,8 +188,6 @@ public class SecurityOfficerScript : MonoBehaviour
 
     private IEnumerator GuardChaseToNormal()
     {
-        // If Time.timeScale can become 0 elsewhere, WaitForSeconds can stop.
-        // If you want it to always finish, use WaitForSecondsRealtime.
         yield return new WaitForSeconds(2f);
 
         SetChase(false);
@@ -241,7 +235,6 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         state = GuardState.Suspicious;
 
-        // Stop movement immediately
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
