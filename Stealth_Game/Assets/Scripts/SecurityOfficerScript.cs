@@ -55,6 +55,12 @@ public class SecurityOfficerScript : MonoBehaviour
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
 
+    private void OnDrawGizmos()
+    {
+        Gizmos.color = Color.cyan;
+        Gizmos.DrawSphere(transform.position, 0.05f);
+    }
+
     void Start()
     {
         bullAnimation = GetComponent<Animator>();
@@ -132,6 +138,9 @@ public class SecurityOfficerScript : MonoBehaviour
         float targetX = (state == GuardState.Chase) ? playerCurrentPos.x : currentTarget.x;
 
         float dx = targetX - rb.position.x;
+        Debug.Log(dx);
+        Debug.Log($"Position: {rb.position}");
+        Debug.Log($"Target position: {currentTarget}");
 
         if (state == GuardState.Patrol)
             transform.rotation = (dx > 0f) ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
