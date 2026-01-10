@@ -25,8 +25,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
     [Header("Vision")]
     [Tooltip("How far guard can see")]
-    [SerializeField] private float maxDisVisibiltiy = 6f;
-    [SerializeField] private float maxAngleVisibiltiy = 60f;
+    private float maxDisVisibiltiy;
+    private float maxAngleVisibiltiy;
     [SerializeField] private LayerMask playerMask;
 
     [Header("Hearing Reaction Timings (Inspector Editable)")]
@@ -44,8 +44,8 @@ public class SecurityOfficerScript : MonoBehaviour
     private Rigidbody2D rb;
     private GameObject player;
 
-    private Vector2 currentTarget;      // we only care about X for patrol
-    private Vector2 playerCurrentPos;   // we only care about X for chase
+    private Vector2 currentTarget;
+    private Vector2 playerCurrentPos;
 
     private bool playerOutOfVision = true;
     private Animator bullAnimation;
@@ -73,7 +73,11 @@ public class SecurityOfficerScript : MonoBehaviour
         Time.timeScale = 1f;
 
         if (!visionCone)
+        {
             visionCone = GetComponentInChildren<VisionCone2D>();
+            maxDisVisibiltiy = visionCone.viewDistance;
+            maxAngleVisibiltiy = visionCone.viewAngle;
+        }
 
         if (suspicionIcon)
             suspicionIcon.SetActive(false);
@@ -225,7 +229,7 @@ public class SecurityOfficerScript : MonoBehaviour
 
     public void HearNoise(Vector2 noisePosition)
     {
-        if (state == GuardState.Chase) return;
+        if (state == GuardState.Chase || state == GuardState.Suspicious) return;
 
         if (suspiciousRoutine != null) StopCoroutine(suspiciousRoutine);
         suspiciousRoutine = StartCoroutine(SuspiciousReaction(noisePosition));
