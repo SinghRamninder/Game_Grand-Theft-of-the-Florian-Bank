@@ -35,6 +35,11 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private float blinkSpeed = 1f;
 
+    [Header("All Guards")]
+    [SerializeField] private SecurityOfficerScript basement2Guard;
+    [SerializeField] private SecurityOfficerScript basement1Guard;
+    [SerializeField] private SecurityOfficerScript firstGuard;
+
     [Header("Bull Guard Spawn")]
     [SerializeField] private GameObject bullGuard;
     [SerializeField] private Vector3 bullSpawnPosition = new Vector3(-28.63387f, 5.05f, -0.1599123f);
@@ -55,7 +60,7 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private float returnZoomSpeed = 6f;
 
     [Header("Countdown")]
-    [SerializeField] private float countdownSeconds = 30f;
+    public float countdownSeconds = 30f;
     [SerializeField] private GameObject timerCanvas;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private GameObject timeUpCanvas;
@@ -75,6 +80,9 @@ public class StealMoney : MonoBehaviour
 
     private Coroutine countdownRoutine;
     private bool countdownStarted;
+
+    private SecurityOfficerScript bullGuardScript;
+    private float bullOriginalSpeed;
 
     private void Start()
     {
@@ -119,6 +127,17 @@ public class StealMoney : MonoBehaviour
 
             audioManager.StopMusic();
             audioManager.PlaySFXLoop(audioManager.siren);
+
+            float initBase2Speed = basement2Guard.speed;
+            basement2Guard.speed += 2f;
+
+            float initBase1Speed = basement1Guard.speed;
+            basement1Guard.speed += 2f;
+
+            float initFirstSpeed = firstGuard.speed;
+            firstGuard.speed += 2f;
+
+            player.GetComponent<CheckPoint>().moneyStolen = true;
 
             StartCoroutine(startCutscene());
         }
@@ -347,12 +366,24 @@ public class StealMoney : MonoBehaviour
 
         spawnedBull = Instantiate(bullGuard, bullSpawnPosition, bullGuard.transform.rotation);
 
+        Transform bullGuardChild = FindDeepChild(spawnedBull.transform, bullCameraTargetChildName);
+        if (bullGuardChild != null)
+        {
+            bullGuardScript = bullGuardChild.GetComponent<SecurityOfficerScript>();
+            if (bullGuardScript != null)
+            {
+                bullOriginalSpeed = bullGuardScript.speed;
+                bullGuardScript.speed += 2f;
+            }
+        }
+
         Transform pointA = FindDeepChild(spawnedBull.transform, bullPointAChildName);
         if (pointA != null)
         {
             pointA.localPosition = bullPointALocalPosition;
         }
     }
+
 
     private IEnumerator MoveZoomToTarget(Transform camT, CameraStep step)
     {

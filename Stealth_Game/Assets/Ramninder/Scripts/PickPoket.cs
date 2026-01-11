@@ -1,10 +1,12 @@
 using NUnit.Framework;
 using UnityEngine;
 using System.Collections.Generic;
+using System.Collections;
 
 public class PickPoket : MonoBehaviour
 {
     [SerializeField] private GameObject instructionKey;
+    [SerializeField] private GameObject keyStolen;
 
     private GameObject key;
 
@@ -26,6 +28,7 @@ public class PickPoket : MonoBehaviour
                 //key.transform.position = transform.position;
                 keysHave.Add(key.name);
                 key.SetActive(false);
+                StartCoroutine(KeyTextHideShow());
                 key = null;
                 instructionKey.SetActive(false);
             }
@@ -70,5 +73,14 @@ public class PickPoket : MonoBehaviour
         {
             return false;
         }
+    }
+
+    private IEnumerator KeyTextHideShow()
+    {
+        keyStolen.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        keyStolen.SetActive(false);
     }
 }

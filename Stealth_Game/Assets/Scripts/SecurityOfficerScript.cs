@@ -9,10 +9,10 @@ public class SecurityOfficerScript : MonoBehaviour
 
     [Header("Movement")]
     [Tooltip("Control the movement speed of the guard")]
-    [SerializeField] private float speed = 2f;
+    public float speed = 2f;
 
     [Tooltip("Guard speed during chase")]
-    [SerializeField] private float chaseSpeed = 4f;
+    public float chaseSpeed = 4f;
 
     [Tooltip("Guard will move between point A to point B (Enter x value)")]
     [SerializeField] private GameObject pointA;
@@ -47,19 +47,13 @@ public class SecurityOfficerScript : MonoBehaviour
     private Vector2 currentTarget;
     private Vector2 playerCurrentPos;
 
-    private bool playerOutOfVision = true;
+    public bool playerOutOfVision = true;
     private Animator bullAnimation;
 
     private Coroutine suspiciousRoutine;
 
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
-
-    //private void OnDrawGizmos()
-    //{
-    //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawSphere(transform.position, 0.1f);
-    //}
 
     void Start()
     {
@@ -162,7 +156,6 @@ public class SecurityOfficerScript : MonoBehaviour
             return;
         }
 
-        // Move horizontally using velocity (BEST for slopes/stairs)
         float dir = Mathf.Sign(dx);
         rb.linearVelocity = new Vector2(dir * moveSpeed, rb.linearVelocity.y);
     }
@@ -283,5 +276,20 @@ public class SecurityOfficerScript : MonoBehaviour
 
         state = GuardState.Patrol;
         suspiciousRoutine = null;
+    }
+
+    public void ForceStopChaseToPatrol()
+    {
+        if (state != GuardState.Chase) return;
+
+        SetChase(false);
+
+        if (bullAnimation != null)
+            bullAnimation.SetBool("StopAnimation", false);
+
+        if (visionCone != null)
+            visionCone.SetNormal();
+
+        playerOutOfVision = true;
     }
 }
