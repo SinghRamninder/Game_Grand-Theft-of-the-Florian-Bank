@@ -1,224 +1,147 @@
 using System.Collections;
+using UnityEditor.Rendering;
 using UnityEngine;
+using UnityEngine.Rendering.Universal;
 
 public class DoorScript : MonoBehaviour
 {
-    [Header("Instruction Objects (shown near door)")]
-    [SerializeField] private GameObject instructionKey1; // for Location A
-    [SerializeField] private GameObject instructionKey2; // for Location B
-
     [Header("Teleport Locations")]
-    [SerializeField] private Transform teleportLocationA;
-    [SerializeField] private bool allowSecondTeleport = false;
-    [SerializeField] private Transform teleportLocationB;
-
-    [Header("Input Keys")]
-    [SerializeField] private KeyCode keyToA = KeyCode.E;
-    [SerializeField] private KeyCode keyToB = KeyCode.Q;
+    [SerializeField] private Transform teleportUp;
+    [SerializeField] private Transform teleportDown;
 
     [Header("Settings")]
-    [SerializeField] private float maxDistance = 3f;
-    [SerializeField] private float teleportDelay = 0.5f;
+    [SerializeField] private KeyCode upKey = KeyCode.E;
+    [SerializeField] private KeyCode downKey = KeyCode.Q;
+    [SerializeField] private bool isUpAllow;
+    [SerializeField] private bool isDownAllow;
 
-    [Header("Key Requirement")]
-    [SerializeField] private bool keyRequiredForA = false;
-    [SerializeField] private bool keyRequiredForB = false;
+    [Header("Key Required to Unlock")]
+    [SerializeField] private string keyNameUp;
+    [SerializeField] private string keyNameDown;
+    [SerializeField] private bool isUpUnlocked = false;
+    [SerializeField] private bool isDownUnlocked = false;
 
-    [Tooltip("Enable this if this door should be unlocked by Basement 1 Key")]
-    [SerializeField] private bool basement1Door = false;
+    [Header("Indicators")]
+    [SerializeField] private SpriteRenderer upIndicator;
+    [SerializeField] private SpriteRenderer downIndicator;
+    [SerializeField] private Light2D indicatorLight;
+    [SerializeField] private float blinkDuration;
 
-    [Tooltip("Enable this if this door should be unlocked by Basement 2 Key")]
-    [SerializeField] private bool basement2Door = false;
-
-    [Header("Instruction Colors")]
-    [SerializeField] private Color hasKeyColor = Color.green;
-    [SerializeField] private Color missingKeyColor = Color.red;
-    [SerializeField] private Color notRequiredColor = Color.white;
-
-    private bool isPlayerInside = false;
     private Transform player;
+    private bool playerInside = false;
     private PickPoket pickPoket;
-    private bool isTeleporting = false;
+    private Coroutine blinkRoutine;
 
-    // Permanent unlock per destination (optional but useful)
-    private bool locationAUnlocked = false;
-    private bool locationBUnlocked = false;
-
-    // Cached sprite renderers
-    private SpriteRenderer instruction1SR;
-    private SpriteRenderer instruction2SR;
-
-    private void Awake()
+    private void Update()
     {
-        instruction1SR = instructionKey1 ? instructionKey1.GetComponent<SpriteRenderer>() : null;
-        instruction2SR = instructionKey2 ? instructionKey2.GetComponent<SpriteRenderer>() : null;
+        if (!playerInside) return;
 
-        // start hidden
-        if (instructionKey1) instructionKey1.SetActive(false);
-        if (instructionKey2) instructionKey2.SetActive(false);
-    }
+        if (Input.GetKeyDown(upKey) && isUpAllow)
+        {
+            if (isUpUnlocked)
+            {
+                player.position = teleportUp.position;
+            }
+            else
+            {
+                if (pickPoket.hasKey(keyNameUp))
+                {
+                    StartCoroutine(doorUnlocked(upIndicator, true, teleportUp));
+                }
+                else
+                {
+                    if (blinkRoutine != null)
+                        StopCoroutine(blinkRoutine);
 
-    private void Start()
-    {
-        player = GameObject.FindGameObjectWithTag("Player")?.transform;
-        if (player != null) pickPoket = player.GetComponent<PickPoket>();
+                    blinkRoutine = StartCoroutine(BlinkRoutine());
+                }
+            }
+        }
+
+        if (Input.GetKeyDown(downKey) && isDownAllow)
+        {
+            if (isDownUnlocked)
+            {
+                player.position = teleportDown.position;
+            }
+            else
+            {
+                if (pickPoket.hasKey(keyNameDown))
+                {
+                    StartCoroutine(doorUnlocked(downIndicator, false, teleportDown));
+                }
+                else
+                {
+                    if (blinkRoutine != null)
+                        StopCoroutine(blinkRoutine);
+
+                    blinkRoutine = StartCoroutine(BlinkRoutine());
+                }
+            }
+        }
     }
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-
-        isPlayerInside = true;
-
-        player = other.transform;
-        pickPoket = other.GetComponent<PickPoket>();
-
-        if (instructionKey1) instructionKey1.SetActive(true);
-        if (instructionKey2) instructionKey2.SetActive(true);
-
-        UpdateInstructionColors();
+        if (other.CompareTag("Player"))
+        {
+            pickPoket = other.GetComponent<PickPoket>();
+            playerInside = true;
+            player = other.transform;
+        }
     }
 
     private void OnTriggerExit2D(Collider2D other)
     {
-        if (!other.CompareTag("Player")) return;
-
-        isPlayerInside = false;
-
-        if (instructionKey1) instructionKey1.SetActive(false);
-        if (instructionKey2) instructionKey2.SetActive(false);
-    }
-
-    private void Update()
-    {
-        if (!isPlayerInside || isTeleporting) return;
-        if (!IsPlayerActuallyNear()) return;
-
-        // Keep colors updated (in case key is picked while standing near door)
-        UpdateInstructionColors();
-
-        // Teleport to A
-        if (Input.GetKeyDown(keyToA))
+        if (other.CompareTag("Player"))
         {
-            if (CanUseTeleportA())
-                TryTeleport(teleportLocationA);
-            return;
-        }
-
-        // Teleport to B
-        if (allowSecondTeleport && Input.GetKeyDown(keyToB))
-        {
-            if (CanUseTeleportB())
-                TryTeleport(teleportLocationB);
+            pickPoket = null;
+            playerInside = false;
+            player = null;
         }
     }
 
-    // ---------- Key Checks ----------
-    private bool CanUseTeleportA()
+    private IEnumerator doorUnlocked(SpriteRenderer indicator, bool isUp, Transform teleportPosition)
     {
-        if (teleportLocationA == null) return false;
+        ColorUtility.TryParseHtmlString("#04C100", out Color green);
+        indicator.color = green;
 
-        if (!keyRequiredForA) return true;
-        if (locationAUnlocked) return true;
+        yield return new WaitForSeconds(1f);
 
-        if (!HasCorrectKeyForThisDoor()) return false;
+        if (isUp)
+            isUpUnlocked = true;
+        else
+            isDownUnlocked = true;
 
-        locationAUnlocked = true;
-        return true;
+        if (player != null)
+            player.position = teleportPosition.position;
     }
 
-    private bool CanUseTeleportB()
+    private IEnumerator BlinkRoutine()
     {
-        if (!allowSecondTeleport) return false;
-        if (teleportLocationB == null) return false;
+        // Blink 1
+        yield return Fade(0f, 1f);
+        yield return Fade(1f, 0f);
 
-        if (!keyRequiredForB) return true;
-        if (locationBUnlocked) return true;
+        // Blink 2
+        yield return Fade(0f, 1f);
+        yield return Fade(1f, 0f);
 
-        if (!HasCorrectKeyForThisDoor()) return false;
-
-        locationBUnlocked = true;
-        return true;
+        blinkRoutine = null;
     }
 
-    // This door requires either basement1Key or basement2Key depending on inspector
-    private bool HasCorrectKeyForThisDoor()
+    private IEnumerator Fade(float from, float to)
     {
-        if (pickPoket == null) return false;
+        float elapsed = 0f;
 
-        // Must choose exactly one
-        if (basement1Door == basement2Door)
+        while (elapsed < blinkDuration)
         {
-            //Debug.LogWarning($"{name}: Set ONLY one of basement1Door or basement2Door to true.");
-            return false;
+            elapsed += Time.deltaTime;
+            float t = elapsed / blinkDuration;
+            indicatorLight.intensity = Mathf.Lerp(from, to, t);
+            yield return null;
         }
 
-        if (basement1Door) return pickPoket.basement1Key;
-        if (basement2Door) return pickPoket.basement2Key;
-
-        return false;
-    }
-
-    // ---------- Instruction Colors ----------
-    private void UpdateInstructionColors()
-    {
-        bool hasKey = HasCorrectKeyForThisDoor();
-
-        // Instruction 1 = Location A
-        if (instruction1SR != null)
-        {
-            if (!keyRequiredForA) instruction1SR.color = notRequiredColor;
-            else instruction1SR.color = hasKey ? hasKeyColor : missingKeyColor;
-        }
-
-        // Instruction 2 = Location B
-        if (instruction2SR != null)
-        {
-            if (!keyRequiredForB) instruction2SR.color = notRequiredColor;
-            else instruction2SR.color = hasKey ? hasKeyColor : missingKeyColor;
-        }
-
-        // If B is not allowed, you may want to hide instruction 2 completely
-        if (instructionKey2 != null)
-            instructionKey2.SetActive(allowSecondTeleport && isPlayerInside);
-    }
-
-    // ---------- Range + Teleport ----------
-    private bool IsPlayerActuallyNear()
-    {
-        if (player == null) return false;
-
-        float distance = Vector2.Distance(player.position, transform.position);
-        bool isNear = distance <= maxDistance;
-
-        if (!isNear) isPlayerInside = false;
-
-        return isNear;
-    }
-
-    private void TryTeleport(Transform target)
-    {
-        if (player == null || target == null) return;
-        StartCoroutine(TeleportWithDelay(target));
-    }
-
-    private IEnumerator TeleportWithDelay(Transform target)
-    {
-        isTeleporting = true;
-        isPlayerInside = false;
-
-        yield return new WaitForSeconds(teleportDelay);
-
-        if (player != null && target != null)
-            player.position = target.position;
-
-        yield return new WaitForSeconds(0.05f);
-        isTeleporting = false;
-    }
-
-    private void OnDisable()
-    {
-        isPlayerInside = false;
-        isTeleporting = false;
+        indicatorLight.intensity = to;
     }
 }

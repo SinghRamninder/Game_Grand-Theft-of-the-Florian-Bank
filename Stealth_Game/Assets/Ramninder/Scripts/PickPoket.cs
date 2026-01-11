@@ -1,60 +1,74 @@
+using NUnit.Framework;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PickPoket : MonoBehaviour
 {
-    //[SerializeField] private GameObject instructionKey;
-    [SerializeField] private float pickPocketDistance;
+    [SerializeField] private GameObject instructionKey;
 
-    private GameObject securityGuard;
+    private GameObject key;
 
-    public bool basement1Key;
-    public bool basement2Key;
+    private List<string> keysHave = new List<string>();
 
     void Update()
     {
-        if (securityGuard != null && securityGuard.GetComponent<SecurityOfficerScript>().hasKey)
+        if (key != null)
         {
-            //instructionKey.SetActive(true);
-            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            if (instructionKey != null)
+            {
+                instructionKey.SetActive(true);
+                instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            }
+
             if (Input.GetKeyDown(KeyCode.C))
             {
-                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.SetParent(gameObject.transform);
-                securityGuard.GetComponent<SecurityOfficerScript>().key.transform.position = transform.position;
-
-                if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 1")
-                {
-                    basement1Key = true;
-                }
-                else if (securityGuard.GetComponent<SecurityOfficerScript>().keyName == "Basement 2")
-                {
-                    basement2Key = true;
-                }
-
-                securityGuard.GetComponent<SecurityOfficerScript>().hasKey = false;
+                //key.transform.SetParent(gameObject.transform);
+                //key.transform.position = transform.position;
+                keysHave.Add(key.name);
+                key.SetActive(false);
+                key = null;
+                instructionKey.SetActive(false);
             }
         }
         else
         {
-            //instructionKey.SetActive(false);
-            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
+            if (instructionKey != null)
+            {
+                instructionKey.SetActive(false);
+            }
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.CompareTag("Guard"))
+        if (collision.CompareTag("Key"))
         {
-            securityGuard = collision.gameObject;
+            key = collision.gameObject;
         }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
-        if (collision.CompareTag("Guard"))
+        if (collision.CompareTag("Key"))
         {
-            //instructionKey.SetActive(false);
-            //instructionKey.transform.rotation = Quaternion.Euler(instructionKey.transform.rotation.x, 0, instructionKey.transform.rotation.z);
-            securityGuard = null;
+            if (instructionKey != null)
+            {
+                instructionKey.SetActive(false);
+            }
+
+            key = null;
+        }
+    }
+
+    public bool hasKey(string key)
+    {
+        if (keysHave.Contains(key))
+        {
+            return true;
+        }
+        else
+        {
+            return false;
         }
     }
 }
