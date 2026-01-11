@@ -22,9 +22,10 @@ public class PickPoket : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                key.transform.SetParent(gameObject.transform);
-                key.transform.position = transform.position;
+                //key.transform.SetParent(gameObject.transform);
+                //key.transform.position = transform.position;
                 keysHave.Add(key.name);
+                key.SetActive(false);
                 key = null;
                 instructionKey.SetActive(false);
             }
