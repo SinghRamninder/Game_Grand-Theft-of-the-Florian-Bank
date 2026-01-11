@@ -84,7 +84,7 @@ public class StealMoney : MonoBehaviour
     private Coroutine countdownRoutine;
     private bool isTimeUp;
 
-    private SecurityOfficerScript bullGuardScript;
+    public SecurityOfficerScript bullGuardScript;
     private float bullOriginalSpeed;
 
     private void Start()

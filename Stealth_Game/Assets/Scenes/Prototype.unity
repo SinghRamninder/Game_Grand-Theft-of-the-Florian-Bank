@@ -19219,6 +19219,7 @@ MonoBehaviour:
   timeUpCanvas: {fileID: 49227106}
   blink: 0
   playerMovement: {fileID: 0}
+  bullGuardScript: {fileID: 0}
 --- !u!4 &1280867422
 Transform:
   m_ObjectHideFlags: 0
@@ -25969,6 +25970,7 @@ MonoBehaviour:
   waitBeforeSceneLoad: 2
   sceneToLoad: Start
   timerDisplay: {fileID: 1720149733}
+  groundGuard: {fileID: 1280867421}
 --- !u!61 &1710065215
 BoxCollider2D:
   m_ObjectHideFlags: 0

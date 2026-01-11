@@ -65,6 +65,7 @@ public class EndCredits : MonoBehaviour
     [SerializeField] private string sceneToLoad = "Start";
 
     [SerializeField] private GameObject timerDisplay;
+    [SerializeField] private StealMoney groundGuard;
 
     private CinemachineBrain brain;
 
@@ -217,6 +218,7 @@ public class EndCredits : MonoBehaviour
         }
 
         timerDisplay.SetActive(false);
+        groundGuard.bullGuardScript.ForceStopChaseAndTurnAround();
         StartCoroutine(Sequence());
     }
 

@@ -135,7 +135,6 @@ public class SecurityOfficerScript : MonoBehaviour
         }
     }
 
-
     private void FixedUpdate()
     {
         if (rb == null) return;
@@ -311,6 +310,36 @@ public class SecurityOfficerScript : MonoBehaviour
         playerOutOfVision = true;
     }
 
+    public void ForceStopChaseAndTurnAround()
+    {
+        if (state == GuardState.Suspicious) return;
+
+        if (suspiciousRoutine != null)
+        {
+            StopCoroutine(suspiciousRoutine);
+            suspiciousRoutine = null;
+        }
+
+        SetChase(false);
+
+        if (rb != null)
+            rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
+
+        float y = transform.rotation.eulerAngles.y;
+        float newY = (y >= 179f) ? 0f : 180f;
+        transform.rotation = Quaternion.Euler(0, newY, 0);
+
+        if (suspicionIcon) suspicionIcon.SetActive(false);
+
+        if (bullAnimation != null)
+            bullAnimation.SetBool("StopAnimation", false);
+
+        if (visionCone != null)
+            visionCone.SetNormal();
+
+        playerOutOfVision = true;
+    }
+
     public void TeleportToStart()
     {
         if (suspiciousRoutine != null)
@@ -337,5 +366,4 @@ public class SecurityOfficerScript : MonoBehaviour
 
         playerOutOfVision = true;
     }
-
 }
