@@ -64,6 +64,8 @@ public class EndCredits : MonoBehaviour
     [SerializeField] private float waitBeforeSceneLoad = 2f;
     [SerializeField] private string sceneToLoad = "Start";
 
+    [SerializeField] private GameObject timerDisplay;
+
     private CinemachineBrain brain;
 
     // Debug helpers
@@ -214,6 +216,7 @@ public class EndCredits : MonoBehaviour
             audioManager.StopSFX();
         }
 
+        timerDisplay.SetActive(false);
         StartCoroutine(Sequence());
     }
 
