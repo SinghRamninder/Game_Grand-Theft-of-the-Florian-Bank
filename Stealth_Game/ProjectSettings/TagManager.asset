@@ -8,6 +8,7 @@ TagManager:
   - Guard
   - No Sound
   - Key
+  - Money
   layers:
   - Default
   - TransparentFX

@@ -4376,9 +4376,10 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 341875778}
+  - component: {fileID: 341875779}
   m_Layer: 0
   m_Name: VaultCash
-  m_TagString: Untagged
+  m_TagString: Money
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -4419,8 +4420,57 @@ Transform:
   - {fileID: 595729803}
   - {fileID: 17084376}
   - {fileID: 1230409604}
+  - {fileID: 568474753}
+  - {fileID: 953376508}
+  - {fileID: 1850006478}
   m_Father: {fileID: 1755721941}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!61 &341875779
+BoxCollider2D:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 341875777}
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Density: 1
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_ForceSendLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ForceReceiveLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_ContactCaptureLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_CallbackLayers:
+    serializedVersion: 2
+    m_Bits: 4294967295
+  m_IsTrigger: 1
+  m_UsedByEffector: 0
+  m_CompositeOperation: 0
+  m_CompositeOrder: 0
+  m_Offset: {x: 60.479378, y: -5.25224}
+  m_SpriteTilingProperty:
+    border: {x: 0, y: 0, z: 0, w: 0}
+    pivot: {x: 0, y: 0}
+    oldSize: {x: 0, y: 0}
+    newSize: {x: 0, y: 0}
+    adaptiveTilingThreshold: 0
+    drawMode: 0
+    adaptiveTiling: 0
+  m_AutoTiling: 0
+  m_Size: {x: 5.15942, y: 2.3174992}
+  m_EdgeRadius: 0
 --- !u!1 &344445672
 GameObject:
   m_ObjectHideFlags: 0
@@ -6920,7 +6970,7 @@ Transform:
   m_LocalScale: {x: 0.1231466, y: 0.1231466, z: 0.1231466}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1755721941}
+  m_Father: {fileID: 341875778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &568474754
 SpriteRenderer:
@@ -10172,7 +10222,7 @@ Transform:
   m_LocalScale: {x: 0.08178412, y: 0.08178412, z: 0.08178412}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1755721941}
+  m_Father: {fileID: 341875778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &953376509
 SpriteRenderer:
@@ -20280,9 +20330,6 @@ Transform:
   - {fileID: 1234418141}
   - {fileID: 1668982779}
   - {fileID: 341875778}
-  - {fileID: 568474753}
-  - {fileID: 953376508}
-  - {fileID: 1850006478}
   - {fileID: 258775825}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -21021,7 +21068,7 @@ Transform:
   m_LocalScale: {x: 0.1345746, y: 0.13709116, z: 0.1345746}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 1755721941}
+  m_Father: {fileID: 341875778}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!212 &1850006479
 SpriteRenderer:
