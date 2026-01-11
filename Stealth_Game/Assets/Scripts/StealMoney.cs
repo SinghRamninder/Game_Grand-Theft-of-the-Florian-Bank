@@ -1,4 +1,5 @@
 using System.Collections;
+using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
@@ -35,14 +36,14 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private float blinkSpeed = 1f;
 
     [Header("Bull Guard Spawn")]
-    [SerializeField] private GameObject bullGuard; // prefab
+    [SerializeField] private GameObject bullGuard;
     [SerializeField] private Vector3 bullSpawnPosition = new Vector3(-28.63387f, 5.05f, -0.1599123f);
     [SerializeField] private Vector3 bullPointALocalPosition = new Vector3(6.9f, -1.466668f, 1.066082f);
     [SerializeField] private string bullCameraTargetChildName = "Bull (Guard)";
     [SerializeField] private string bullPointAChildName = "PointA";
 
     [Header("Bull Camera Step")]
-    [SerializeField] private CameraStep bullCameraStep; // set moveSpeed, waitTime, zoom, followDuration here
+    [SerializeField] private CameraStep bullCameraStep;
 
     [Header("Camera Path")]
     [SerializeField] private CameraStep[] cameraSteps;
@@ -52,6 +53,12 @@ public class StealMoney : MonoBehaviour
 
     [Header("Return Zoom")]
     [SerializeField] private float returnZoomSpeed = 6f;
+
+    [Header("Countdown")]
+    [SerializeField] private float countdownSeconds = 30f;
+    [SerializeField] private GameObject timerCanvas;
+    [SerializeField] private TMP_Text timerText;
+    [SerializeField] private GameObject timeUpCanvas;
 
     public bool blink = false;
     private Coroutine blinkRoutine;
@@ -66,6 +73,9 @@ public class StealMoney : MonoBehaviour
 
     private GameObject spawnedBull;
 
+    private Coroutine countdownRoutine;
+    private bool countdownStarted;
+
     private void Start()
     {
         playerMovement = player.GetComponent<PlayerMovement>();
@@ -77,6 +87,9 @@ public class StealMoney : MonoBehaviour
 
         if (cam != null)
             originalOrthoSize = cam.orthographicSize;
+
+        if (timerCanvas != null) timerCanvas.SetActive(false);
+        if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
     }
 
     private void Update()
@@ -163,7 +176,6 @@ public class StealMoney : MonoBehaviour
 
         Transform camT = mainCamera.transform;
 
-        // 1) Normal camera steps
         foreach (CameraStep step in cameraSteps)
         {
             if (step == null || step.target == null)
@@ -182,19 +194,36 @@ public class StealMoney : MonoBehaviour
                 yield return new WaitForSeconds(step.waitTime);
         }
 
-        // 2) Spawn bull guard and setup its PointA
         SpawnBullGuardAndSetup();
 
-        // 3) Go to Bull (Guard) child and follow it using bullCameraStep settings
         if (spawnedBull != null && bullCameraStep != null)
         {
             Transform bullCamTarget = FindDeepChild(spawnedBull.transform, bullCameraTargetChildName);
 
             if (bullCamTarget != null)
             {
-                bullCameraStep.target = bullCamTarget;
+                while (Vector3.Distance(camT.position, new Vector3(bullCamTarget.position.x, bullCamTarget.position.y, camT.position.z)) > 0.01f)
+                {
+                    Vector3 movingTargetPos = bullCamTarget.position;
+                    movingTargetPos.z = camT.position.z;
 
-                yield return StartCoroutine(MoveZoomToTarget(camT, bullCameraStep));
+                    camT.position = Vector3.MoveTowards(
+                        camT.position,
+                        movingTargetPos,
+                        bullCameraStep.moveSpeed * Time.deltaTime
+                    );
+
+                    if (cam != null && bullCameraStep.changeOrthoSize)
+                    {
+                        cam.orthographicSize = Mathf.MoveTowards(
+                            cam.orthographicSize,
+                            bullCameraStep.orthographicSize,
+                            bullCameraStep.zoomSpeed * Time.deltaTime
+                        );
+                    }
+
+                    yield return null;
+                }
 
                 if (bullCameraStep.followTarget && bullCameraStep.followDuration > 0f)
                 {
@@ -205,7 +234,12 @@ public class StealMoney : MonoBehaviour
 
                         Vector3 pos = bullCamTarget.position;
                         pos.z = camT.position.z;
-                        camT.position = pos;
+
+                        camT.position = Vector3.MoveTowards(
+                            camT.position,
+                            pos,
+                            bullCameraStep.moveSpeed * Time.deltaTime
+                        );
 
                         if (cam != null && bullCameraStep.changeOrthoSize)
                         {
@@ -225,7 +259,6 @@ public class StealMoney : MonoBehaviour
             }
         }
 
-        // 4) Return to player + restore ortho size
         Vector3 playerPos = player.transform.position;
         playerPos.z = camT.position.z;
 
@@ -262,7 +295,6 @@ public class StealMoney : MonoBehaviour
             }
         }
 
-        // 5) Restore gameplay
         cinemachineBrain.enabled = true;
         playerMovement.enabled = true;
 
@@ -270,6 +302,42 @@ public class StealMoney : MonoBehaviour
 
         audioManager.SetSFXVolume(0.03f);
         audioManager.PlayChaseMusic();
+
+        if (!countdownStarted)
+        {
+            countdownStarted = true;
+            if (countdownRoutine != null) StopCoroutine(countdownRoutine);
+            countdownRoutine = StartCoroutine(Countdown());
+        }
+    }
+
+    private IEnumerator Countdown()
+    {
+        if (timerCanvas != null) timerCanvas.SetActive(true);
+        if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
+
+        float remaining = Mathf.Max(0f, countdownSeconds);
+
+        while (remaining > 0f)
+        {
+            remaining -= Time.deltaTime;
+
+            if (timerText != null)
+            {
+                int secondsInt = Mathf.CeilToInt(remaining);
+                timerText.text = secondsInt.ToString();
+            }
+
+            yield return null;
+        }
+
+        if (timerText != null) timerText.text = "0";
+        if (timerCanvas != null) timerCanvas.SetActive(false);
+
+        playerMovement.enabled = false;
+        audioManager.StopMusic();
+
+        if (timeUpCanvas != null) timeUpCanvas.SetActive(true);
     }
 
     private void SpawnBullGuardAndSetup()
