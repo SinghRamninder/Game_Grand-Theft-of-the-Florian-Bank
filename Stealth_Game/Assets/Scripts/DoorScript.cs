@@ -144,4 +144,22 @@ public class DoorScript : MonoBehaviour
 
         indicatorLight.intensity = to;
     }
+
+    public void lockAllDoors()
+    {
+        ColorUtility.TryParseHtmlString("#C10000", out Color red);
+
+        isUpUnlocked = false;
+        isDownUnlocked = false;
+
+        if (upIndicator != null)
+        {
+            upIndicator.color = red;
+        }
+        if (downIndicator != null)
+        {
+            downIndicator.color = red;
+        }
+
+    }
 }

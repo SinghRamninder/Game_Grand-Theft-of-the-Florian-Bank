@@ -58,7 +58,7 @@ public class SecurityOfficerScript : MonoBehaviour
     //private void OnDrawGizmos()
     //{
     //    Gizmos.color = Color.cyan;
-    //    Gizmos.DrawSphere(transform.position, 0.05f);
+    //    Gizmos.DrawSphere(transform.position, 0.1f);
     //}
 
     void Start()
