@@ -15327,33 +15327,55 @@ MonoBehaviour:
   alretLight3: {fileID: 1410546945}
   instructionKey: {fileID: 464131191}
   blinkSpeed: 2.3
+  bullGuard: {fileID: 1659238276158194930, guid: 4483fcdc024c6b141a07eec6523d073e, type: 3}
+  bullSpawnPosition: {x: -28.63387, y: 5.05, z: -0.1599123}
+  bullPointALocalPosition: {x: 6.9, y: -1.466668, z: 1.066082}
+  bullCameraTargetChildName: Bull (Guard)
+  bullPointAChildName: PointA
+  bullCameraStep:
+    target: {fileID: 0}
+    moveSpeed: 4
+    waitTime: 2
+    changeOrthoSize: 0
+    orthographicSize: 5
+    zoomSpeed: 6
+    followTarget: 1
+    followDuration: 2
   cameraSteps:
   - target: {fileID: 6056459244385488632}
-    moveSpeed: 8
-    waitTime: 2
-    changeOrthoSize: 0
-    orthographicSize: 5
-    zoomSpeed: 6
+    moveSpeed: 50
+    waitTime: 0.5
+    changeOrthoSize: 1
+    orthographicSize: 3.14
+    zoomSpeed: 3
+    followTarget: 0
+    followDuration: 2
   - target: {fileID: 1215068657}
-    moveSpeed: 5
-    waitTime: 2
+    moveSpeed: 15
+    waitTime: 0.5
     changeOrthoSize: 0
     orthographicSize: 5
     zoomSpeed: 6
+    followTarget: 0
+    followDuration: 2
   - target: {fileID: 1532660658}
-    moveSpeed: 5
-    waitTime: 2
+    moveSpeed: 15
+    waitTime: 0.5
     changeOrthoSize: 0
     orthographicSize: 5
     zoomSpeed: 6
+    followTarget: 0
+    followDuration: 2
   - target: {fileID: 1596086770}
-    moveSpeed: 5
-    waitTime: 2
+    moveSpeed: 15
+    waitTime: 0.5
     changeOrthoSize: 0
     orthographicSize: 5
     zoomSpeed: 6
-  returnSpeed: 9
-  returnZoomSpeed: 6
+    followTarget: 0
+    followDuration: 2
+  returnSpeed: 30
+  returnZoomSpeed: 3
   blink: 0
 --- !u!4 &1280867422
 Transform:

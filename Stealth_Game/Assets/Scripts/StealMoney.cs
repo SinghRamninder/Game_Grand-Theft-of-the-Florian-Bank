@@ -18,6 +18,10 @@ public class StealMoney : MonoBehaviour
         public bool changeOrthoSize = false;
         public float orthographicSize = 5f;
         public float zoomSpeed = 6f;
+
+        [Header("Follow (optional)")]
+        public bool followTarget = false;
+        public float followDuration = 2f;
     }
 
     [SerializeField] private GameObject mainCamera;
@@ -29,6 +33,16 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private Light2D alretLight3;
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private float blinkSpeed = 1f;
+
+    [Header("Bull Guard Spawn")]
+    [SerializeField] private GameObject bullGuard; // prefab
+    [SerializeField] private Vector3 bullSpawnPosition = new Vector3(-28.63387f, 5.05f, -0.1599123f);
+    [SerializeField] private Vector3 bullPointALocalPosition = new Vector3(6.9f, -1.466668f, 1.066082f);
+    [SerializeField] private string bullCameraTargetChildName = "Bull (Guard)";
+    [SerializeField] private string bullPointAChildName = "PointA";
+
+    [Header("Bull Camera Step")]
+    [SerializeField] private CameraStep bullCameraStep; // set moveSpeed, waitTime, zoom, followDuration here
 
     [Header("Camera Path")]
     [SerializeField] private CameraStep[] cameraSteps;
@@ -49,6 +63,8 @@ public class StealMoney : MonoBehaviour
 
     private Camera cam;
     private float originalOrthoSize;
+
+    private GameObject spawnedBull;
 
     private void Start()
     {
@@ -147,46 +163,13 @@ public class StealMoney : MonoBehaviour
 
         Transform camT = mainCamera.transform;
 
+        // 1) Normal camera steps
         foreach (CameraStep step in cameraSteps)
         {
             if (step == null || step.target == null)
                 continue;
 
-            Vector3 targetPos = step.target.position;
-            targetPos.z = camT.position.z;
-
-            while (Vector3.Distance(camT.position, targetPos) > 0.01f)
-            {
-                camT.position = Vector3.MoveTowards(
-                    camT.position,
-                    targetPos,
-                    step.moveSpeed * Time.deltaTime
-                );
-
-                if (cam != null && step.changeOrthoSize)
-                {
-                    cam.orthographicSize = Mathf.MoveTowards(
-                        cam.orthographicSize,
-                        step.orthographicSize,
-                        step.zoomSpeed * Time.deltaTime
-                    );
-                }
-
-                yield return null;
-            }
-
-            if (cam != null && step.changeOrthoSize)
-            {
-                while (Mathf.Abs(cam.orthographicSize - step.orthographicSize) > 0.01f)
-                {
-                    cam.orthographicSize = Mathf.MoveTowards(
-                        cam.orthographicSize,
-                        step.orthographicSize,
-                        step.zoomSpeed * Time.deltaTime
-                    );
-                    yield return null;
-                }
-            }
+            yield return StartCoroutine(MoveZoomToTarget(camT, step));
 
             DoorScript stepDoor = step.target.GetComponent<DoorScript>();
             if (stepDoor != null)
@@ -199,6 +182,50 @@ public class StealMoney : MonoBehaviour
                 yield return new WaitForSeconds(step.waitTime);
         }
 
+        // 2) Spawn bull guard and setup its PointA
+        SpawnBullGuardAndSetup();
+
+        // 3) Go to Bull (Guard) child and follow it using bullCameraStep settings
+        if (spawnedBull != null && bullCameraStep != null)
+        {
+            Transform bullCamTarget = FindDeepChild(spawnedBull.transform, bullCameraTargetChildName);
+
+            if (bullCamTarget != null)
+            {
+                bullCameraStep.target = bullCamTarget;
+
+                yield return StartCoroutine(MoveZoomToTarget(camT, bullCameraStep));
+
+                if (bullCameraStep.followTarget && bullCameraStep.followDuration > 0f)
+                {
+                    float t = 0f;
+                    while (t < bullCameraStep.followDuration)
+                    {
+                        t += Time.deltaTime;
+
+                        Vector3 pos = bullCamTarget.position;
+                        pos.z = camT.position.z;
+                        camT.position = pos;
+
+                        if (cam != null && bullCameraStep.changeOrthoSize)
+                        {
+                            cam.orthographicSize = Mathf.MoveTowards(
+                                cam.orthographicSize,
+                                bullCameraStep.orthographicSize,
+                                bullCameraStep.zoomSpeed * Time.deltaTime
+                            );
+                        }
+
+                        yield return null;
+                    }
+                }
+
+                if (bullCameraStep.waitTime > 0f)
+                    yield return new WaitForSeconds(bullCameraStep.waitTime);
+            }
+        }
+
+        // 4) Return to player + restore ortho size
         Vector3 playerPos = player.transform.position;
         playerPos.z = camT.position.z;
 
@@ -235,7 +262,84 @@ public class StealMoney : MonoBehaviour
             }
         }
 
+        // 5) Restore gameplay
         cinemachineBrain.enabled = true;
         playerMovement.enabled = true;
+
+        blink = false;
+
+        audioManager.SetSFXVolume(0.03f);
+        audioManager.PlayChaseMusic();
+    }
+
+    private void SpawnBullGuardAndSetup()
+    {
+        if (bullGuard == null) return;
+        if (spawnedBull != null) return;
+
+        spawnedBull = Instantiate(bullGuard, bullSpawnPosition, bullGuard.transform.rotation);
+
+        Transform pointA = FindDeepChild(spawnedBull.transform, bullPointAChildName);
+        if (pointA != null)
+        {
+            pointA.localPosition = bullPointALocalPosition;
+        }
+    }
+
+    private IEnumerator MoveZoomToTarget(Transform camT, CameraStep step)
+    {
+        Vector3 targetPos = step.target.position;
+        targetPos.z = camT.position.z;
+
+        while (Vector3.Distance(camT.position, targetPos) > 0.01f)
+        {
+            camT.position = Vector3.MoveTowards(
+                camT.position,
+                targetPos,
+                step.moveSpeed * Time.deltaTime
+            );
+
+            if (cam != null && step.changeOrthoSize)
+            {
+                cam.orthographicSize = Mathf.MoveTowards(
+                    cam.orthographicSize,
+                    step.orthographicSize,
+                    step.zoomSpeed * Time.deltaTime
+                );
+            }
+
+            yield return null;
+        }
+
+        if (cam != null && step.changeOrthoSize)
+        {
+            while (Mathf.Abs(cam.orthographicSize - step.orthographicSize) > 0.01f)
+            {
+                cam.orthographicSize = Mathf.MoveTowards(
+                    cam.orthographicSize,
+                    step.orthographicSize,
+                    step.zoomSpeed * Time.deltaTime
+                );
+                yield return null;
+            }
+        }
+    }
+
+    private Transform FindDeepChild(Transform parent, string childName)
+    {
+        if (parent == null) return null;
+
+        for (int i = 0; i < parent.childCount; i++)
+        {
+            Transform child = parent.GetChild(i);
+            if (child.name == childName)
+                return child;
+
+            Transform result = FindDeepChild(child, childName);
+            if (result != null)
+                return result;
+        }
+
+        return null;
     }
 }
