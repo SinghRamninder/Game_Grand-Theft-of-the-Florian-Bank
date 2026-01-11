@@ -25947,7 +25947,7 @@ MonoBehaviour:
   blackFadeInDuration: 0.8
   credits:
   - text: {fileID: 903107490}
-    delayBefore: 0
+    delayBefore: 1
     holdTime: 5.6
   - text: {fileID: 486394388}
     delayBefore: 0
