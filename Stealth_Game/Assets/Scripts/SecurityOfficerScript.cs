@@ -52,11 +52,17 @@ public class SecurityOfficerScript : MonoBehaviour
 
     private Coroutine suspiciousRoutine;
 
+    private Vector3 startPosition;
+    private Quaternion startRotation;
+
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
 
     void Start()
     {
+        startPosition = transform.position;
+        startRotation = transform.rotation;
+
         bullAnimation = GetComponent<Animator>();
 
         if (pointA) pointA.GetComponent<SpriteRenderer>().enabled = false;
@@ -86,7 +92,13 @@ public class SecurityOfficerScript : MonoBehaviour
     void Update()
     {
         Vector2 disFromPlayer = player.transform.position - transform.position;
-        if (disFromPlayer.magnitude > maxDisVisibiltiy) return;
+
+        if (disFromPlayer.magnitude > maxDisVisibiltiy)
+        {
+            playerOutOfVision = true;
+            if (state != GuardState.Chase && visionCone != null) visionCone.SetNormal();
+            return;
+        }
 
         Vector2 guardFacing = Vector2.right;
 
@@ -95,7 +107,12 @@ public class SecurityOfficerScript : MonoBehaviour
         else if (Mathf.Abs(transform.rotation.eulerAngles.y) >= 179f)
             guardFacing = Vector2.right;
 
-        if (Vector2.Angle(guardFacing, disFromPlayer) > maxAngleVisibiltiy) return;
+        if (Vector2.Angle(guardFacing, disFromPlayer) > maxAngleVisibiltiy)
+        {
+            playerOutOfVision = true;
+            if (state != GuardState.Chase && visionCone != null) visionCone.SetNormal();
+            return;
+        }
 
         RaycastHit2D hit = Physics2D.Raycast(transform.position, disFromPlayer.normalized, disFromPlayer.magnitude, playerMask);
 
@@ -117,6 +134,7 @@ public class SecurityOfficerScript : MonoBehaviour
                 visionCone.SetNormal();
         }
     }
+
 
     private void FixedUpdate()
     {
@@ -292,4 +310,32 @@ public class SecurityOfficerScript : MonoBehaviour
 
         playerOutOfVision = true;
     }
+
+    public void TeleportToStart()
+    {
+        if (suspiciousRoutine != null)
+        {
+            StopCoroutine(suspiciousRoutine);
+            suspiciousRoutine = null;
+        }
+
+        SetChase(false);
+
+        if (rb != null)
+            rb.linearVelocity = Vector2.zero;
+
+        transform.position = startPosition;
+        transform.rotation = startRotation;
+
+        if (suspicionIcon) suspicionIcon.SetActive(false);
+
+        if (bullAnimation != null)
+            bullAnimation.SetBool("StopAnimation", false);
+
+        if (visionCone != null)
+            visionCone.SetNormal();
+
+        playerOutOfVision = true;
+    }
+
 }

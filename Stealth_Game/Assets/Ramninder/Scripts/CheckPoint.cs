@@ -4,7 +4,8 @@ public class CheckPoint : MonoBehaviour
 {
     [SerializeField] private GameObject guardCaughtDisplay;
     [SerializeField] private GameObject timesUpDisplay;
-    [SerializeField] private StealMoney countdownTime;
+    [SerializeField] private GameObject timerDisplay;
+    [SerializeField] private StealMoney stealMoney;
     [SerializeField] private DoorScript basement1Door;
     [SerializeField] private DoorScript basement2Door;
     [SerializeField] private DoorScript groundDoor;
@@ -43,20 +44,23 @@ public class CheckPoint : MonoBehaviour
             transform.position = check1Transform.position;
             guardCaughtDisplay.SetActive(false);
             Time.timeScale = 1f;
-            firstGuard.ForceStopChaseToPatrol();
-            basement1Guard.ForceStopChaseToPatrol();
-            basement2Guard.ForceStopChaseToPatrol();
+            firstGuard.TeleportToStart();
+            basement1Guard.TeleportToStart();
+            basement2Guard.TeleportToStart();
         }
         if (moneyStolen)
         {
             transform.position = check2Transform.position;
             timesUpDisplay.SetActive(false);
             guardCaughtDisplay.SetActive(false);
-            countdownTime.countdownSeconds = 60f;
+            stealMoney.ResetTimeUpUI();      // hides "time up" canvas
+            stealMoney.playerMovement.enabled = true; // only if you want to re-enable (or do it your way)
+            stealMoney.StartCountdown(60f);
             Time.timeScale = 1f;
-            firstGuard.ForceStopChaseToPatrol();
-            basement1Guard.ForceStopChaseToPatrol();
-            basement2Guard.ForceStopChaseToPatrol();
+            timerDisplay.SetActive(true);
+            firstGuard.TeleportToStart();
+            basement1Guard.TeleportToStart();
+            basement2Guard.TeleportToStart();
             basement1Door.lockAllDoors();
             basement2Door.lockAllDoors();
             groundDoor.lockAllDoors();

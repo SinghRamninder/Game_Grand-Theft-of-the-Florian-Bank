@@ -61,6 +61,8 @@ public class StealMoney : MonoBehaviour
 
     [Header("Countdown")]
     public float countdownSeconds = 30f;
+    public float remaining;
+
     [SerializeField] private GameObject timerCanvas;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private GameObject timeUpCanvas;
@@ -69,7 +71,7 @@ public class StealMoney : MonoBehaviour
     private Coroutine blinkRoutine;
 
     private bool isNear;
-    private PlayerMovement playerMovement;
+    public PlayerMovement playerMovement;
     private CinemachineBrain cinemachineBrain;
     private Coroutine cameraRoutine;
 
@@ -79,7 +81,7 @@ public class StealMoney : MonoBehaviour
     private GameObject spawnedBull;
 
     private Coroutine countdownRoutine;
-    private bool countdownStarted;
+    private bool isTimeUp;
 
     private SecurityOfficerScript bullGuardScript;
     private float bullOriginalSpeed;
@@ -102,6 +104,7 @@ public class StealMoney : MonoBehaviour
 
     private void Update()
     {
+        // Blink lights
         if (blink && blinkRoutine == null)
         {
             blinkRoutine = StartCoroutine(Blink());
@@ -115,6 +118,7 @@ public class StealMoney : MonoBehaviour
             alretLight3.intensity = 0f;
         }
 
+        // Trigger heist
         if (Input.GetKeyDown(KeyCode.C) && isNear)
         {
             playerMovement.enabled = false;
@@ -122,22 +126,19 @@ public class StealMoney : MonoBehaviour
 
             instructionKey.SetActive(false);
             money.SetActive(false);
+            GetComponent<BoxCollider2D>().enabled = false;
 
             blink = true;
 
             audioManager.StopMusic();
             audioManager.PlaySFXLoop(audioManager.siren);
 
-            float initBase2Speed = basement2Guard.speed;
-            basement2Guard.speed += 2f;
+            if (basement2Guard != null) basement2Guard.speed += 2f;
+            if (basement1Guard != null) basement1Guard.speed += 2f;
+            if (firstGuard != null) firstGuard.speed += 2f;
 
-            float initBase1Speed = basement1Guard.speed;
-            basement1Guard.speed += 2f;
-
-            float initFirstSpeed = firstGuard.speed;
-            firstGuard.speed += 2f;
-
-            player.GetComponent<CheckPoint>().moneyStolen = true;
+            var cp = player.GetComponent<CheckPoint>();
+            if (cp != null) cp.moneyStolen = true;
 
             StartCoroutine(startCutscene());
         }
@@ -195,6 +196,7 @@ public class StealMoney : MonoBehaviour
 
         Transform camT = mainCamera.transform;
 
+        // 1) Camera steps
         foreach (CameraStep step in cameraSteps)
         {
             if (step == null || step.target == null)
@@ -213,14 +215,17 @@ public class StealMoney : MonoBehaviour
                 yield return new WaitForSeconds(step.waitTime);
         }
 
+        // 2) Spawn bull guard
         SpawnBullGuardAndSetup();
 
+        // 3) Bull camera follow
         if (spawnedBull != null && bullCameraStep != null)
         {
             Transform bullCamTarget = FindDeepChild(spawnedBull.transform, bullCameraTargetChildName);
 
             if (bullCamTarget != null)
             {
+                // Follow while approaching (no snap)
                 while (Vector3.Distance(camT.position, new Vector3(bullCamTarget.position.x, bullCamTarget.position.y, camT.position.z)) > 0.01f)
                 {
                     Vector3 movingTargetPos = bullCamTarget.position;
@@ -278,6 +283,7 @@ public class StealMoney : MonoBehaviour
             }
         }
 
+        // 4) Return to player + restore zoom
         Vector3 playerPos = player.transform.position;
         playerPos.z = camT.position.z;
 
@@ -314,6 +320,7 @@ public class StealMoney : MonoBehaviour
             }
         }
 
+        // 5) Restore gameplay
         cinemachineBrain.enabled = true;
         playerMovement.enabled = true;
 
@@ -322,12 +329,53 @@ public class StealMoney : MonoBehaviour
         audioManager.SetSFXVolume(0.03f);
         audioManager.PlayChaseMusic();
 
-        if (!countdownStarted)
+        // Start countdown (can be restarted later)
+        StartCountdown();
+    }
+
+    // ---------------------- COUNTDOWN (Restartable) ----------------------
+
+    public void StartCountdown(float seconds = -1f)
+    {
+        if (seconds > 0f)
+            countdownSeconds = seconds;
+
+        isTimeUp = false;
+
+        if (countdownRoutine != null)
+            StopCoroutine(countdownRoutine);
+
+        countdownRoutine = StartCoroutine(Countdown());
+    }
+
+    public void StopCountdown(bool hideUI = true)
+    {
+        if (countdownRoutine != null)
         {
-            countdownStarted = true;
-            if (countdownRoutine != null) StopCoroutine(countdownRoutine);
-            countdownRoutine = StartCoroutine(Countdown());
+            StopCoroutine(countdownRoutine);
+            countdownRoutine = null;
         }
+
+        remaining = 0f;
+        isTimeUp = false;
+
+        if (hideUI)
+        {
+            if (timerCanvas != null) timerCanvas.SetActive(false);
+            if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
+        }
+    }
+
+    public void ResetTimeUpUI()
+    {
+        isTimeUp = false;
+        if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
+        if (timerCanvas != null) timerCanvas.SetActive(false);
+    }
+
+    public bool IsTimeUp()
+    {
+        return isTimeUp;
     }
 
     private IEnumerator Countdown()
@@ -335,11 +383,12 @@ public class StealMoney : MonoBehaviour
         if (timerCanvas != null) timerCanvas.SetActive(true);
         if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
 
-        float remaining = Mathf.Max(0f, countdownSeconds);
+        remaining = Mathf.Max(0f, countdownSeconds);
 
         while (remaining > 0f)
         {
-            remaining -= Time.deltaTime;
+            // unscaled so it works even if you pause timescale somewhere
+            remaining -= Time.unscaledDeltaTime;
 
             if (timerText != null)
             {
@@ -350,14 +399,23 @@ public class StealMoney : MonoBehaviour
             yield return null;
         }
 
+        remaining = 0f;
         if (timerText != null) timerText.text = "0";
-        if (timerCanvas != null) timerCanvas.SetActive(false);
 
+        // Time up
+        isTimeUp = true;
+
+        // Stop player + music, show canvas
         playerMovement.enabled = false;
         audioManager.StopMusic();
 
         if (timeUpCanvas != null) timeUpCanvas.SetActive(true);
+
+        // If you want to freeze the whole game, do it elsewhere and unpause when restarting:
+        // Time.timeScale = 0f;
     }
+
+    // ---------------------- SPAWN BULL ----------------------
 
     private void SpawnBullGuardAndSetup()
     {
@@ -366,6 +424,7 @@ public class StealMoney : MonoBehaviour
 
         spawnedBull = Instantiate(bullGuard, bullSpawnPosition, bullGuard.transform.rotation);
 
+        // Script is on child "Bull (Guard)"
         Transform bullGuardChild = FindDeepChild(spawnedBull.transform, bullCameraTargetChildName);
         if (bullGuardChild != null)
         {
@@ -384,6 +443,7 @@ public class StealMoney : MonoBehaviour
         }
     }
 
+    // ---------------------- HELPERS ----------------------
 
     private IEnumerator MoveZoomToTarget(Transform camT, CameraStep step)
     {
