@@ -34,6 +34,7 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private Light2D alretLight3;
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private float blinkSpeed = 1f;
+    [SerializeField] private GameObject endCreditTrigger;
 
     [Header("All Guards")]
     [SerializeField] private SecurityOfficerScript basement2Guard;
@@ -139,6 +140,8 @@ public class StealMoney : MonoBehaviour
 
             var cp = player.GetComponent<CheckPoint>();
             if (cp != null) cp.moneyStolen = true;
+
+            endCreditTrigger.SetActive(true);
 
             StartCoroutine(startCutscene());
         }
