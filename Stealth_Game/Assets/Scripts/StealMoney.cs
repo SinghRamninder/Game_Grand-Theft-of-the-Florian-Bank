@@ -328,8 +328,6 @@ public class StealMoney : MonoBehaviour
         cinemachineBrain.enabled = true;
         playerMovement.enabled = true;
 
-        blink = false;
-
         audioManager.SetSFXVolume(0.03f);
         audioManager.PlayChaseMusic();
 
