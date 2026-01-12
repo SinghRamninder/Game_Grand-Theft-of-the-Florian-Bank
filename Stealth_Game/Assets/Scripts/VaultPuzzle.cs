@@ -15,9 +15,6 @@ public class VaultPuzzle : MonoBehaviour
 
     [SerializeField] private GameObject vaultPuzzleParent;
 
-    [SerializeField] private GameObject vaultOpenDoor;
-    [SerializeField] private GameObject vaultClosedDoor;
-
     private float speed;
 
     private float angle;
@@ -124,8 +121,6 @@ public class VaultPuzzle : MonoBehaviour
         yield return new WaitForSeconds(2f);
 
         //sound
-        vaultClosedDoor.SetActive(false);
-        vaultOpenDoor.SetActive(true);
         vaultPuzzleParent.SetActive(false);
     }
 }
