@@ -22504,6 +22504,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 327038757}
     - target: {fileID: 7391374407651067618, guid: 54eff059916d7664387652814d5e8c34, type: 3}
+      propertyPath: speedIncrement
+      value: 50
+      objectReference: {fileID: 0}
+    - target: {fileID: 7391374407651067618, guid: 54eff059916d7664387652814d5e8c34, type: 3}
       propertyPath: vaultClosedDoor
       value: 
       objectReference: {fileID: 753943652}
