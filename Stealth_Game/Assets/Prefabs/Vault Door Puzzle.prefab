@@ -15,7 +15,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &2395616267109356987
 Transform:
   m_ObjectHideFlags: 0
@@ -32,81 +32,6 @@ Transform:
   - {fileID: 5860132386501401375}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1 &3884095859515418290
-GameObject:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 2997846565086374832}
-  - component: {fileID: 6834114088343799059}
-  - component: {fileID: 339205593299154493}
-  m_Layer: 5
-  m_Name: InstructionKey
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!224 &2997846565086374832
-RectTransform:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3884095859515418290}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 0
-  m_Children: []
-  m_Father: {fileID: 5860132386501401375}
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0}
-  m_AnchorMax: {x: 1, y: 0}
-  m_AnchoredPosition: {x: -158.6, y: 82.7}
-  m_SizeDelta: {x: 185.0876, y: 96.8251}
-  m_Pivot: {x: 0.5, y: 0.5}
---- !u!222 &6834114088343799059
-CanvasRenderer:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3884095859515418290}
-  m_CullTransparentMesh: 1
---- !u!114 &339205593299154493
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3884095859515418290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: fe87c0e1cc204ed48ad3b37840f39efc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
-  m_RaycastTarget: 1
-  m_RaycastPadding: {x: 0, y: 0, z: 0, w: 0}
-  m_Maskable: 1
-  m_OnCullStateChanged:
-    m_PersistentCalls:
-      m_Calls: []
-  m_Sprite: {fileID: 7253652341725546674, guid: 41d95ad22f8ed664ab4d26e469e3ecdb, type: 3}
-  m_Type: 0
-  m_PreserveAspect: 0
-  m_FillCenter: 1
-  m_FillMethod: 4
-  m_FillAmount: 1
-  m_FillClockwise: 1
-  m_FillOrigin: 0
-  m_UseSpriteMesh: 0
-  m_PixelsPerUnitMultiplier: 1
 --- !u!1 &3906277576283287841
 GameObject:
   m_ObjectHideFlags: 0
@@ -199,7 +124,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &7709612096365192614
 RectTransform:
   m_ObjectHideFlags: 0
@@ -384,7 +309,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_Sprite: {fileID: 3196527441830079133, guid: 46b2320272a3c0648b17827a58a6043f, type: 3}
+  m_Sprite: {fileID: -6767045631932367515, guid: 58e9649a2a2f65d4ab0533f02bf083d1, type: 3}
   m_Type: 0
   m_PreserveAspect: 0
   m_FillCenter: 1
@@ -406,13 +331,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 21e318a8e46e9164ca848da5fdebfcb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  normalSpeed: 100.9
-  speedIncrement: 100.9
+  normalSpeed: 50
+  speedIncrement: 50
   numbersDisplay: {fileID: 6069681527534437316}
   indicationArrow: {fileID: 1112649925582196357}
   vaultPuzzleParent: {fileID: 2429191938950790202}
-  vaultOpenDoor: {fileID: 0}
-  vaultClosedDoor: {fileID: 0}
 --- !u!1 &5336940170182617892
 GameObject:
   m_ObjectHideFlags: 0
@@ -441,7 +364,7 @@ RectTransform:
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
-  m_ConstrainProportionsScale: 1
+  m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 5860132386501401375}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
@@ -523,7 +446,6 @@ RectTransform:
   - {fileID: 2343028265573274147}
   - {fileID: 2152755241069988276}
   - {fileID: 7709612096365192614}
-  - {fileID: 2997846565086374832}
   m_Father: {fileID: 2395616267109356987}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}

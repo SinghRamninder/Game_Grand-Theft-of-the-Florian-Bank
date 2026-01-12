@@ -15,9 +15,6 @@ public class HiddingTable : MonoBehaviour
 
     void Update()
     {
-        if (Time.timeScale == 0f)
-            return;
-
         if (Input.GetKeyDown(KeyCode.Z) && isNear && !isHidden)
         {
             player.transform.position = transform.position;
@@ -26,7 +23,6 @@ public class HiddingTable : MonoBehaviour
             player.GetComponent<CapsuleCollider2D>().enabled = false;
             player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
-            player.GetComponent<PickPoket>().enabled = false;
             player.transform.localScale = new Vector3(0.06f, 0.06f, 0.06f);
             player.transform.localRotation = Quaternion.Euler(0f, 0f, 90f);
             instructionKey.SetActive(true);
@@ -42,7 +38,6 @@ public class HiddingTable : MonoBehaviour
             player.GetComponent<CapsuleCollider2D>().enabled = true;
             player.GetComponent<Rigidbody2D>().gravityScale = 1f;
             player.GetComponent<PlayerMovement>().enabled = true;
-            player.GetComponent<PickPoket>().enabled = true;
             player.transform.localScale = originalScale;
             player.transform.localRotation = originalRotation;
             //Color c = player.GetComponent<SpriteRenderer>().color;

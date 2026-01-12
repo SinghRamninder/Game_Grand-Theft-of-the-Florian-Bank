@@ -4,12 +4,12 @@ using UnityEngine;
 public class VisionCone2D : MonoBehaviour
 {
     [Header("Colors")]
-    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 0.25f);
-    [SerializeField] private Color alertColor = new Color(1f, 0f, 0f, 0.35f);
+    [SerializeField] private Color normalColor = new Color(1f, 1f, 1f, 0.25f); // white transparent
+    [SerializeField] private Color alertColor = new Color(1f, 0f, 0f, 0.35f); // red transparent
 
     [Header("Shape")]
-    public float viewDistance = 6f;
-    [Range(1f, 179f)] public float viewAngle = 60f;
+    [SerializeField] private float viewDistance = 6f;
+    [SerializeField, Range(1f, 179f)] private float viewAngle = 60f;
     [SerializeField, Range(5, 200)] private int segments = 40;
 
     [Header("Optional: stop cone when something blocks it")]
@@ -17,8 +17,8 @@ public class VisionCone2D : MonoBehaviour
     [SerializeField] private LayerMask obstacleMask;
 
     [Header("Follow")]
-    [SerializeField] private Transform guardTransform;
-    public Vector2 localOffset = Vector2.zero;
+    [SerializeField] private Transform guardTransform;   // drag guard here
+    [SerializeField] private Vector2 localOffset = Vector2.zero;
 
     private Mesh _mesh;
     private MeshRenderer meshRenderer;
