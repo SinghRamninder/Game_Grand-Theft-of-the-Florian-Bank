@@ -35,6 +35,7 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private float blinkSpeed = 1f;
     [SerializeField] private GameObject endCreditTrigger;
+    [SerializeField] private GameObject gameOverDisplay;
 
     [Header("All Guards")]
     [SerializeField] private SecurityOfficerScript basement2Guard;
@@ -374,6 +375,7 @@ public class StealMoney : MonoBehaviour
         isTimeUp = false;
         if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
         if (timerCanvas != null) timerCanvas.SetActive(false);
+        audioManager.PlayChaseMusic();
     }
 
     public bool IsTimeUp()
@@ -432,6 +434,7 @@ public class StealMoney : MonoBehaviour
         if (bullGuardChild != null)
         {
             bullGuardScript = bullGuardChild.GetComponent<SecurityOfficerScript>();
+            bullGuardScript.gameOverDisplay = gameOverDisplay;
             if (bullGuardScript != null)
             {
                 bullOriginalSpeed = bullGuardScript.speed;

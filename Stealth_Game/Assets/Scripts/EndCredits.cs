@@ -219,6 +219,8 @@ public class EndCredits : MonoBehaviour
 
         timerDisplay.SetActive(false);
         groundGuard.bullGuardScript.ForceStopChaseAndTurnAround();
+        groundGuard.StopCountdown();
+        groundGuard.enabled = false;
         StartCoroutine(Sequence());
     }
 

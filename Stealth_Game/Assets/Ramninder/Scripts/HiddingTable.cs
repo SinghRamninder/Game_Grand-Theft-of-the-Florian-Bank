@@ -15,6 +15,9 @@ public class HiddingTable : MonoBehaviour
 
     void Update()
     {
+        if (Time.timeScale == 0f)
+            return;
+
         if (Input.GetKeyDown(KeyCode.Z) && isNear && !isHidden)
         {
             player.transform.position = transform.position;

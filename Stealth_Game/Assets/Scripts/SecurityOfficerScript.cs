@@ -34,7 +34,7 @@ public class SecurityOfficerScript : MonoBehaviour
     [SerializeField] private float lookDuration = 2f;
 
     [Header("Other")]
-    [SerializeField] private GameObject gameOverDisplay;
+    public GameObject gameOverDisplay;
 
     public bool hasKey;
     public GameObject key;
@@ -348,7 +348,7 @@ public class SecurityOfficerScript : MonoBehaviour
             suspiciousRoutine = null;
         }
 
-        SetChase(false);
+        state = GuardState.Patrol;
 
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
@@ -366,4 +366,5 @@ public class SecurityOfficerScript : MonoBehaviour
 
         playerOutOfVision = true;
     }
+
 }
