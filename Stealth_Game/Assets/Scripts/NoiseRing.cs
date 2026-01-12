@@ -22,7 +22,6 @@ public class NoiseRing : MonoBehaviour
     private float elapsed;
     private float endRadius;
     private float strength;
-    private bool hasAlerted;
 
     // Better than reflection: configure the ring properly
     public void Configure(float endRadius, float strength, LayerMask guardMask)
@@ -81,12 +80,6 @@ public class NoiseRing : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        //if (hasAlerted)
-        //{
-        //    Debug.LogWarning("Alerted already");
-        //    return;
-        //}
-
         // Only react to guards in the mask
         if (!other.CompareTag("Guard"))
         {
@@ -102,8 +95,6 @@ public class NoiseRing : MonoBehaviour
             {
                 return;
             }
-
-            hasAlerted = true;
             guard.HearNoise(soundPos);
         }
     }
