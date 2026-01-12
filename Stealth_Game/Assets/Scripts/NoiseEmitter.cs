@@ -62,7 +62,6 @@ public class NoiseEmitter : MonoBehaviour
     private void SpawnRing(float radius, float strength)
     {
         NoiseRing ring = Instantiate(ringPrefab, transform.position, Quaternion.identity);
-        Debug.Log(ring.transform.position);
         ring.Configure(radius, strength, guardMask);
     }
 

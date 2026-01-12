@@ -7,6 +7,12 @@ TagManager:
   - Chest
   - Guard
   - No Sound
+  - Key
+  - Money
+  - Checkpoint1
+  - Checkpoint2
+  - Checkpoint3
+  - GuardCaught
   layers:
   - Default
   - TransparentFX
@@ -43,6 +49,12 @@ TagManager:
   m_SortingLayers:
   - name: Default
     uniqueID: 0
+    locked: 0
+  - name: InstructionKey
+    uniqueID: 1462643637
+    locked: 0
+  - name: Key
+    uniqueID: 4003888371
     locked: 0
   m_RenderingLayers:
   - Default
