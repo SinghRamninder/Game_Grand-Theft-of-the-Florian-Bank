@@ -48,7 +48,7 @@ public class SecurityOfficerScript : MonoBehaviour
     private Vector2 playerCurrentPos;
 
     public bool playerOutOfVision = true;
-    private Animator bullAnimation;
+    private Animator guardAnimation;
 
     private Coroutine suspiciousRoutine;
 
@@ -58,12 +58,18 @@ public class SecurityOfficerScript : MonoBehaviour
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
 
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.cyan;
+    //    Gizmos.DrawSphere(transform.position, 0.1f);
+    //}
+
     void Start()
     {
         startPosition = transform.position;
         startRotation = transform.rotation;
 
-        bullAnimation = GetComponent<Animator>();
+        guardAnimation = GetComponent<Animator>();
 
         if (pointA) pointA.GetComponent<SpriteRenderer>().enabled = false;
         if (pointB) pointB.GetComponent<SpriteRenderer>().enabled = false;
@@ -81,9 +87,10 @@ public class SecurityOfficerScript : MonoBehaviour
         if (!visionCone)
         {
             visionCone = GetComponentInChildren<VisionCone2D>();
-            maxDisVisibiltiy = visionCone.viewDistance;
-            maxAngleVisibiltiy = visionCone.viewAngle;
         }
+
+        maxDisVisibiltiy = visionCone.viewDistance;
+        maxAngleVisibiltiy = visionCone.viewAngle;
 
         if (suspicionIcon)
             suspicionIcon.SetActive(false);
@@ -165,7 +172,7 @@ public class SecurityOfficerScript : MonoBehaviour
             {
                 if (playerOutOfVision)
                 {
-                    if (bullAnimation != null) bullAnimation.SetBool("StopAnimation", true);
+                    if (guardAnimation != null) guardAnimation.SetBool("StopAnimation", true);
                     StartCoroutine(GuardChaseToNormal());
                 }
             }
@@ -212,8 +219,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         SetChase(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -225,8 +232,8 @@ public class SecurityOfficerScript : MonoBehaviour
         {
             state = GuardState.Chase;
 
-            if (bullAnimation != null)
-                bullAnimation.SetBool("StopAnimation", false);
+            if (guardAnimation != null)
+                guardAnimation.SetBool("StopAnimation", false);
 
             if (suspiciousRoutine != null)
             {
@@ -260,8 +267,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(true);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", true);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", true);
 
         Quaternion originalRot = transform.rotation;
 
@@ -288,8 +295,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         state = GuardState.Patrol;
         suspiciousRoutine = null;
@@ -301,8 +308,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         SetChase(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -331,8 +338,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -358,8 +365,8 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
