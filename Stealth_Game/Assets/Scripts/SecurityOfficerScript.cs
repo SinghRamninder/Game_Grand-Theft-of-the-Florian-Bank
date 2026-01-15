@@ -58,11 +58,11 @@ public class SecurityOfficerScript : MonoBehaviour
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
 
-    private void OnDrawGizmos()
-    {
-        Gizmos.color = Color.cyan;
-        Gizmos.DrawSphere(transform.position, 0.1f);
-    }
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.cyan;
+    //    Gizmos.DrawSphere(transform.position, 0.1f);
+    //}
 
     void Start()
     {
