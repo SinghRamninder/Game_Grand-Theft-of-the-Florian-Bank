@@ -77,6 +77,20 @@ public class AudioManager : MonoBehaviour
         musicFadeRoutine = StartCoroutine(FadeTo(backgroundMusic, musicBaseVolume, fadeDuration));
     }
 
+    public void PlayMusicOnce(AudioClip clip, float fadeDuration = -1f)
+    {
+        if (!backgroundMusic || clip == null) return;
+        if (fadeDuration < 0f) fadeDuration = defaultFadeDuration;
+
+        if (musicFadeRoutine != null)
+            StopCoroutine(musicFadeRoutine);
+
+        backgroundMusic.loop = false;
+
+        musicFadeRoutine = StartCoroutine(PlayOnceRoutine(clip, fadeDuration));
+    }
+
+
     public float GetMusicVolume()
     {
         return musicBaseVolume;
@@ -184,4 +198,20 @@ public class AudioManager : MonoBehaviour
 
         source.volume = target;
     }
+
+    private IEnumerator PlayOnceRoutine(AudioClip clip, float fadeDuration)
+    {
+        yield return FadeTo(backgroundMusic, 0f, fadeDuration);
+
+        backgroundMusic.clip = clip;
+        backgroundMusic.volume = 0f;
+        backgroundMusic.Play();
+
+        yield return FadeTo(backgroundMusic, musicBaseVolume, fadeDuration);
+
+        yield return new WaitForSecondsRealtime(clip.length);
+
+        // Do nothing after this — music ends naturally
+    }
+
 }

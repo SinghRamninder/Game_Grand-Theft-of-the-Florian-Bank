@@ -395,8 +395,7 @@ public class StealMoney : MonoBehaviour
 
         while (remaining > 0f)
         {
-            // unscaled so it works even if you pause timescale somewhere
-            remaining -= Time.unscaledDeltaTime;
+            remaining -= Time.deltaTime;
 
             if (timerText != null)
             {
@@ -406,6 +405,7 @@ public class StealMoney : MonoBehaviour
 
             yield return null;
         }
+
 
         remaining = 0f;
         if (timerText != null) timerText.text = "0";

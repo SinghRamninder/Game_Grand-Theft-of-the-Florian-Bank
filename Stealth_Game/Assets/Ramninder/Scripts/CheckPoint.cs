@@ -62,9 +62,13 @@ public class CheckPoint : MonoBehaviour
             basement1Guard.TeleportToStart();
             basement2Guard.TeleportToStart();
             basement1Door.lockAllDoors();
+            basement1Door.ChangeIsCalled();
             basement2Door.lockAllDoors();
+            basement2Door.ChangeIsCalled();
             groundDoor.lockAllDoors();
+            groundDoor.ChangeIsCalled();
             firstDoor.lockAllDoors();
+            firstDoor.ChangeIsCalled();
         }
     }
 }

@@ -215,7 +215,7 @@ public class EndCredits : MonoBehaviour
         if (audioManager != null)
         {
             DLog("Audio: PlayEndCredits + StopSFX");
-            audioManager.PlayEndCredits(1f);
+            audioManager.PlayMusicOnce(audioManager.endCredits, 1f);
             audioManager.StopSFX();
         }
 
