@@ -27,7 +27,7 @@ public class HiddingDesk : MonoBehaviour
             player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            sr.sortingOrder = 10;
+            sr.sortingOrder = 16;
             player.transform.localScale = new Vector3(0.11f, 0.11f, 0.11f);
             instructionKey.SetActive(true);
             //Color c = player.GetComponent<SpriteRenderer>().color;
