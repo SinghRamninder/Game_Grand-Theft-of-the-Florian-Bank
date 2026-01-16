@@ -133,7 +133,7 @@ public class StealMoney : MonoBehaviour
             blink = true;
 
             audioManager.StopMusic();
-            audioManager.PlaySFXLoop(audioManager.siren);
+            audioManager.PlaySFXLoop(audioManager.siren,0f);
 
             if (basement2Guard != null) basement2Guard.speed += 2f;
             if (basement1Guard != null) basement1Guard.speed += 2f;
@@ -329,7 +329,7 @@ public class StealMoney : MonoBehaviour
         playerMovement.enabled = true;
 
         audioManager.SetSFXVolume(0.03f);
-        audioManager.PlayChaseMusic();
+        audioManager.PlayChaseMusic(0f);
 
         // Start countdown (can be restarted later)
         StartCountdown();

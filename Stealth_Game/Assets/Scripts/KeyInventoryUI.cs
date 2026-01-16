@@ -126,10 +126,8 @@ public class KeyInventoryUI : MonoBehaviour
 
     private IEnumerator UseFlyRoutine(KeyUIEntry entry, string keyId, Vector3 worldTo, Camera worldCam)
     {
-        Vector2 startScreen = RectTransformUtility.WorldToScreenPoint(null, entry.icon.rectTransform.position);
-        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRoot, startScreen, null, out var startLocal);
-
-        Vector2 endLocal = WorldToCanvasPosition(worldTo, worldCam, canvasRoot);
+        Vector2 startScreenPos = RectTransformUtility.WorldToScreenPoint(null, entry.icon.rectTransform.position);
+        RectTransformUtility.ScreenPointToLocalPointInRectangle(canvasRoot, startScreenPos, null, out var startLocal);
 
         Image fly = Instantiate(flyImagePrefab, canvasRoot);
         fly.sprite = entry.sprite != null ? entry.sprite : entry.icon.sprite;
@@ -149,6 +147,9 @@ public class KeyInventoryUI : MonoBehaviour
         {
             t += Time.deltaTime / dur;
             float e = flyEase.Evaluate(Mathf.Clamp01(t));
+
+            Vector2 endLocal = WorldToCanvasPosition(worldTo, worldCam, canvasRoot);
+
             flyRt.anchoredPosition = Vector2.LerpUnclamped(startLocal, endLocal, e);
             yield return null;
         }
@@ -156,6 +157,7 @@ public class KeyInventoryUI : MonoBehaviour
         Destroy(fly.gameObject);
         SetOwned(keyId, true, true);
     }
+
 
     private void BlinkCheck(string keyId)
     {
