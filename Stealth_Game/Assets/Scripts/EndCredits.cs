@@ -67,6 +67,7 @@ public class EndCredits : MonoBehaviour
     [SerializeField] private GameObject timerDisplay;
     [SerializeField] private StealMoney groundGuard;
     [SerializeField] private GameObject keyInventoryDisplay;
+    [SerializeField] private GameObject playerGameObject;
 
     private CinemachineBrain brain;
 
@@ -223,6 +224,7 @@ public class EndCredits : MonoBehaviour
         groundGuard.bullGuardScript.ForceStopChaseAndTurnAround();
         groundGuard.StopCountdown();
         groundGuard.enabled = false;
+        playerGameObject.tag = "Untagged";
         StartCoroutine(Sequence());
     }
 

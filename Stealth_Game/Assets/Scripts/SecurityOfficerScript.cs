@@ -37,6 +37,7 @@ public class SecurityOfficerScript : MonoBehaviour
     public GameObject gameOverDisplay;
     [SerializeField] private float waitTimeAtTarget = 2f;
     [SerializeField] private float chaseLoseSightDuration = 2f;
+    [SerializeField] private ShowKeyInstruction showKeyInstruction;
 
     public bool hasKey;
     public GameObject key;
@@ -241,6 +242,8 @@ public class SecurityOfficerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             if (gameOverDisplay) gameOverDisplay.SetActive(true);
+            if (showKeyInstruction != null)
+                showKeyInstruction.stopCouritineCall();
             Time.timeScale = 0f;
         }
     }

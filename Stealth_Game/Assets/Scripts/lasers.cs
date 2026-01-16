@@ -10,6 +10,8 @@ public class lasers : MonoBehaviour
     [SerializeField] private GameObject lasersGameobject;
     [SerializeField] private string keyName;
     [SerializeField] private GameObject lockTransform;
+    [SerializeField] private GameObject instructionText;
+    [SerializeField] private GameObject instructionKey;
 
     private Coroutine blinkRoutine;
 
@@ -19,6 +21,11 @@ public class lasers : MonoBehaviour
 
     private void Update()
     {
+        if (!isLaserWorking)
+        {
+            instructionKey.SetActive(false);
+        }
+
         if (Input.GetKeyDown(KeyCode.Z) && isLaserWorking && playerNear)
         {
             if (pickPoket.hasKey(keyName))
@@ -26,6 +33,7 @@ public class lasers : MonoBehaviour
                 pickPoket.PlayUseKeyFly(keyName, lockTransform.transform.position);
 
                 lasersGameobject.SetActive(false);
+                StartCoroutine(showandhidetext());
 
                 isLaserWorking = false;
             }
@@ -73,6 +81,7 @@ public class lasers : MonoBehaviour
         {
             pickPoket = other.GetComponent<PickPoket>();
             playerNear = true;
+            instructionKey.SetActive(true);
         }
     }
 
@@ -82,6 +91,16 @@ public class lasers : MonoBehaviour
         {
             pickPoket = null;
             playerNear = false;
+            instructionKey.SetActive(false);
         }
+    }
+
+    IEnumerator showandhidetext()
+    {
+        instructionText.SetActive(true);
+
+        yield return new WaitForSeconds(3f);
+
+        instructionText.SetActive(false);
     }
 }

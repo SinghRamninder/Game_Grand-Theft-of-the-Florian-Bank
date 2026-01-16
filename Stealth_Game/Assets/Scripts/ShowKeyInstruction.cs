@@ -5,11 +5,14 @@ public class ShowKeyInstruction : MonoBehaviour
 {
     [SerializeField] private GameObject instructionText;
 
+    private Coroutine showAndHide;
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Player"))
         {
-            StartCoroutine(showandhidetext());
+            if (showAndHide == null)
+                showAndHide = StartCoroutine(showandhidetext());
         }
     }
 
@@ -17,10 +20,17 @@ public class ShowKeyInstruction : MonoBehaviour
     {
         instructionText.SetActive(true);
 
-        yield return new WaitForSeconds(3f);
+        yield return new WaitForSeconds(4f);
 
         instructionText.SetActive(false);
 
         Destroy(gameObject);
+    }
+
+    public void stopCouritineCall()
+    {
+        StopCoroutine(showAndHide);
+        instructionText.SetActive(false);
+        showAndHide = null;
     }
 }
