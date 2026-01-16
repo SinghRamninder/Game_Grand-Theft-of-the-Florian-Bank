@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
 
 public class StealMoney : MonoBehaviour
 {
@@ -68,6 +69,9 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private GameObject timerCanvas;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private GameObject timeUpCanvas;
+    [SerializeField] private List<HiddingBin> hidingBin = new List<HiddingBin>();
+    [SerializeField] private List<HiddingTable> hidingTable = new List<HiddingTable>();
+    [SerializeField] private HiddingDesk hidingDesk;
 
     public bool blink = false;
     private Coroutine blinkRoutine;
@@ -414,6 +418,28 @@ public class StealMoney : MonoBehaviour
         audioManager.StopMusic();
 
         if (timeUpCanvas != null) timeUpCanvas.SetActive(true);
+
+        foreach (HiddingBin bin in hidingBin)
+        {
+            if (bin == null) continue;
+
+            if (bin.isHidden)
+            {
+                bin.removeHiding();
+            }
+        }
+
+        foreach (HiddingTable table in hidingTable)
+        {
+            if (table == null) continue;
+
+            if (table.isHidden)
+            {
+                table.removeHiding();
+            }
+        }
+
+        if (hidingDesk.isHidden) hidingDesk.removeHiding();
 
         // If you want to freeze the whole game, do it elsewhere and unpause when restarting:
         // Time.timeScale = 0f;

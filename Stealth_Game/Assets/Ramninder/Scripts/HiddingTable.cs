@@ -9,7 +9,7 @@ public class HiddingTable : MonoBehaviour
 
     private GameObject player;
     private bool isNear = false;
-    private bool isHidden = false;
+    public bool isHidden = false;
     private bool isAligning = false;
 
     private Vector3 originalScale;
@@ -141,5 +141,10 @@ public class HiddingTable : MonoBehaviour
     {
         t = Mathf.Clamp01(t);
         return t * t * (3f - 2f * t);
+    }
+
+    public void removeHiding()
+    {
+        ExitHide();
     }
 }
