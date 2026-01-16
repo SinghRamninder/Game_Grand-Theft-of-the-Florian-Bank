@@ -213,6 +213,7 @@ public class StealMoney : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.5f);
                 stepDoor.lockAllDoors();
+                stepDoor.ChangeIsCalled();
             }
 
             if (step.waitTime > 0f)

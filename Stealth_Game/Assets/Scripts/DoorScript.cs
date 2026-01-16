@@ -39,6 +39,9 @@ public class DoorScript : MonoBehaviour
     private PickPoket pickPoket;
     private Coroutine blinkRoutine;
 
+    private bool isUpCalled = false;
+    private bool isDownCalled = false;
+
     private void Update()
     {
         if (!playerInside) return;
@@ -51,7 +54,7 @@ public class DoorScript : MonoBehaviour
             }
             else
             {
-                if (pickPoket.hasKey(keyNameUp1))
+                if (pickPoket.hasKey(keyNameUp1) && !isUpCalled)
                 {
                     if (keyNameUp1 != null && upLock1 != null)
                         pickPoket.PlayUseKeyFly(keyNameUp1, upLock1.transform.position);
@@ -60,6 +63,8 @@ public class DoorScript : MonoBehaviour
                         pickPoket.PlayUseKeyFly(keyNameUp2, upLock2.transform.position);
 
                     StartCoroutine(doorUnlocked(upIndicator, true, teleportUp));
+
+                    isUpCalled = true;
                 }
                 else
                 {
@@ -79,7 +84,7 @@ public class DoorScript : MonoBehaviour
             }
             else
             {
-                if (pickPoket.hasKey(keyNameDown1))
+                if (pickPoket.hasKey(keyNameDown1) && !isDownCalled)
                 {
                     if (keyNameDown1 != null && downLock1 != null)
                         pickPoket.PlayUseKeyFly(keyNameDown1, downLock1.transform.position);
@@ -88,6 +93,8 @@ public class DoorScript : MonoBehaviour
                         pickPoket.PlayUseKeyFly(keyNameDown2, downLock2.transform.position);
 
                     StartCoroutine(doorUnlocked(downIndicator, false, teleportDown));
+
+                    isDownCalled = true;
                 }
                 else
                 {
@@ -182,5 +189,11 @@ public class DoorScript : MonoBehaviour
             downIndicator.color = red;
         }
 
+    }
+
+    public void ChangeIsCalled()
+    {
+        isUpCalled = false;
+        isDownCalled = false;
     }
 }
