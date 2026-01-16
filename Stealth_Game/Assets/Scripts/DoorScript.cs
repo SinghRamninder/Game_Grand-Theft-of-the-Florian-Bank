@@ -15,8 +15,10 @@ public class DoorScript : MonoBehaviour
     [SerializeField] private bool isDownAllow;
 
     [Header("Key Required to Unlock")]
-    [SerializeField] private string keyNameUp;
-    [SerializeField] private string keyNameDown;
+    [SerializeField] private string keyNameUp1;
+    [SerializeField] private string keyNameUp2;
+    [SerializeField] private string keyNameDown1;
+    [SerializeField] private string keyNameDown2;
     [SerializeField] private bool isUpUnlocked = false;
     [SerializeField] private bool isDownUnlocked = false;
 
@@ -26,10 +28,19 @@ public class DoorScript : MonoBehaviour
     [SerializeField] private Light2D indicatorLight;
     [SerializeField] private float blinkDuration;
 
+    [Header("Locks")]
+    [SerializeField] private GameObject upLock1;
+    [SerializeField] private GameObject upLock2;
+    [SerializeField] private GameObject downLock1;
+    [SerializeField] private GameObject downLock2;
+
     private Transform player;
     private bool playerInside = false;
     private PickPoket pickPoket;
     private Coroutine blinkRoutine;
+
+    private bool isUpCalled = false;
+    private bool isDownCalled = false;
 
     private void Update()
     {
@@ -43,9 +54,17 @@ public class DoorScript : MonoBehaviour
             }
             else
             {
-                if (pickPoket.hasKey(keyNameUp))
+                if (pickPoket.hasKey(keyNameUp1) && !isUpCalled)
                 {
+                    if (keyNameUp1 != null && upLock1 != null)
+                        pickPoket.PlayUseKeyFly(keyNameUp1, upLock1.transform.position);
+
+                    if (keyNameUp2 != null && upLock2 != null)
+                        pickPoket.PlayUseKeyFly(keyNameUp2, upLock2.transform.position);
+
                     StartCoroutine(doorUnlocked(upIndicator, true, teleportUp));
+
+                    isUpCalled = true;
                 }
                 else
                 {
@@ -65,9 +84,17 @@ public class DoorScript : MonoBehaviour
             }
             else
             {
-                if (pickPoket.hasKey(keyNameDown))
+                if (pickPoket.hasKey(keyNameDown1) && !isDownCalled)
                 {
+                    if (keyNameDown1 != null && downLock1 != null)
+                        pickPoket.PlayUseKeyFly(keyNameDown1, downLock1.transform.position);
+
+                    if (keyNameDown2 != null && downLock2 != null)
+                        pickPoket.PlayUseKeyFly(keyNameDown2, downLock2.transform.position);
+
                     StartCoroutine(doorUnlocked(downIndicator, false, teleportDown));
+
+                    isDownCalled = true;
                 }
                 else
                 {
@@ -102,6 +129,8 @@ public class DoorScript : MonoBehaviour
 
     private IEnumerator doorUnlocked(SpriteRenderer indicator, bool isUp, Transform teleportPosition)
     {
+        yield return new WaitForSeconds(1f);
+
         ColorUtility.TryParseHtmlString("#04C100", out Color green);
         indicator.color = green;
 
@@ -160,5 +189,11 @@ public class DoorScript : MonoBehaviour
             downIndicator.color = red;
         }
 
+    }
+
+    public void ChangeIsCalled()
+    {
+        isUpCalled = false;
+        isDownCalled = false;
     }
 }

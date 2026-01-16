@@ -35,11 +35,17 @@ public class SecurityOfficerScript : MonoBehaviour
 
     [Header("Other")]
     public GameObject gameOverDisplay;
+    [SerializeField] private float waitTimeAtTarget = 2f;
+    [SerializeField] private float chaseLoseSightDuration = 2f;
+    [SerializeField] private ShowKeyInstruction showKeyInstruction;
 
     public bool hasKey;
     public GameObject key;
     public string keyName;
     public float hearingRadius;
+
+    [Header("Rotation Smoothness")]
+    [SerializeField] private float turnDuration = 0.12f;
 
     private Rigidbody2D rb;
     private GameObject player;
@@ -48,22 +54,35 @@ public class SecurityOfficerScript : MonoBehaviour
     private Vector2 playerCurrentPos;
 
     public bool playerOutOfVision = true;
-    private Animator bullAnimation;
+    private Animator guardAnimation;
 
     private Coroutine suspiciousRoutine;
+    private Coroutine turnRoutine;
+    private Coroutine waitRoutine;
+    private Coroutine chaseLoseRoutine;
+
+    private float currentTurnTargetY = 0f;
 
     private Vector3 startPosition;
     private Quaternion startRotation;
 
+    private bool isWaiting = false;
+
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;
+
+    //private void OnDrawGizmos()
+    //{
+    //    Gizmos.color = Color.cyan;
+    //    Gizmos.DrawSphere(transform.position, 0.1f);
+    //}
 
     void Start()
     {
         startPosition = transform.position;
         startRotation = transform.rotation;
 
-        bullAnimation = GetComponent<Animator>();
+        guardAnimation = GetComponent<Animator>();
 
         if (pointA) pointA.GetComponent<SpriteRenderer>().enabled = false;
         if (pointB) pointB.GetComponent<SpriteRenderer>().enabled = false;
@@ -81,9 +100,12 @@ public class SecurityOfficerScript : MonoBehaviour
         if (!visionCone)
         {
             visionCone = GetComponentInChildren<VisionCone2D>();
-            maxDisVisibiltiy = visionCone.viewDistance;
-            maxAngleVisibiltiy = visionCone.viewAngle;
         }
+
+        maxDisVisibiltiy = visionCone.viewDistance;
+        maxAngleVisibiltiy = visionCone.viewAngle;
+
+        currentTurnTargetY = SnapToFacingY(transform.rotation.eulerAngles.y);
 
         if (suspicionIcon)
             suspicionIcon.SetActive(false);
@@ -96,20 +118,24 @@ public class SecurityOfficerScript : MonoBehaviour
         if (disFromPlayer.magnitude > maxDisVisibiltiy)
         {
             playerOutOfVision = true;
+
+            if (state == GuardState.Chase && chaseLoseRoutine == null)
+                chaseLoseRoutine = StartCoroutine(ExitChaseAfterLoseSight());
+
             if (state != GuardState.Chase && visionCone != null) visionCone.SetNormal();
             return;
         }
 
-        Vector2 guardFacing = Vector2.right;
-
-        if (Mathf.Approximately(transform.rotation.eulerAngles.y, 0f))
-            guardFacing = Vector2.left;
-        else if (Mathf.Abs(transform.rotation.eulerAngles.y) >= 179f)
-            guardFacing = Vector2.right;
+        float yForFacing = (turnRoutine != null) ? currentTurnTargetY : transform.rotation.eulerAngles.y;
+        Vector2 guardFacing = IsFacingRightFromY(yForFacing) ? Vector2.right : Vector2.left;
 
         if (Vector2.Angle(guardFacing, disFromPlayer) > maxAngleVisibiltiy)
         {
             playerOutOfVision = true;
+
+            if (state == GuardState.Chase && chaseLoseRoutine == null)
+                chaseLoseRoutine = StartCoroutine(ExitChaseAfterLoseSight());
+
             if (state != GuardState.Chase && visionCone != null) visionCone.SetNormal();
             return;
         }
@@ -121,6 +147,12 @@ public class SecurityOfficerScript : MonoBehaviour
             playerCurrentPos = new Vector2(hit.collider.transform.position.x, 0f);
             playerOutOfVision = false;
 
+            if (chaseLoseRoutine != null)
+            {
+                StopCoroutine(chaseLoseRoutine);
+                chaseLoseRoutine = null;
+            }
+
             SetChase(true);
 
             if (visionCone != null) visionCone.SetAlert();
@@ -129,6 +161,9 @@ public class SecurityOfficerScript : MonoBehaviour
         else
         {
             playerOutOfVision = true;
+
+            if (state == GuardState.Chase && chaseLoseRoutine == null)
+                chaseLoseRoutine = StartCoroutine(ExitChaseAfterLoseSight());
 
             if (state != GuardState.Chase && visionCone != null)
                 visionCone.SetNormal();
@@ -151,27 +186,32 @@ public class SecurityOfficerScript : MonoBehaviour
         float dx = targetX - rb.position.x;
 
         if (state == GuardState.Patrol)
-            transform.rotation = (dx > 0f) ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
+            SmoothSetYRotation((dx > 0f) ? 180f : 0f);
 
-        if (Mathf.Abs(dx) <= reachXThreshold)
+        if (Mathf.Abs(dx) <= reachXThreshold && !isWaiting)
         {
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
             if (state != GuardState.Chase)
             {
-                SwapPatrolTarget();
+                if (guardAnimation != null) guardAnimation.SetBool("StopAnimation", true);
+                if (waitRoutine != null) StopCoroutine(waitRoutine);
+                waitRoutine = StartCoroutine(waitAtTarget());
+                isWaiting = true;
             }
             else
             {
                 if (playerOutOfVision)
                 {
-                    if (bullAnimation != null) bullAnimation.SetBool("StopAnimation", true);
+                    if (guardAnimation != null) guardAnimation.SetBool("StopAnimation", true);
                     StartCoroutine(GuardChaseToNormal());
                 }
             }
 
             return;
         }
+
+        if (isWaiting) return;
 
         float dir = Mathf.Sign(dx);
         rb.linearVelocity = new Vector2(dir * moveSpeed, rb.linearVelocity.y);
@@ -186,12 +226,12 @@ public class SecurityOfficerScript : MonoBehaviour
         if (Mathf.Approximately(currentTarget.x, pointA.transform.position.x))
         {
             targetX = pointB.transform.position.x;
-            transform.rotation = Quaternion.Euler(0, 180, 0);
+            SmoothSetYRotation(180f);
         }
         else
         {
             targetX = pointA.transform.position.x;
-            transform.rotation = Quaternion.Euler(0, 0, 0);
+            SmoothSetYRotation(0f);
         }
 
         currentTarget = new Vector2(targetX, 0f);
@@ -202,6 +242,8 @@ public class SecurityOfficerScript : MonoBehaviour
         if (other.gameObject.CompareTag("Player"))
         {
             if (gameOverDisplay) gameOverDisplay.SetActive(true);
+            if (showKeyInstruction != null)
+                showKeyInstruction.stopCouritineCall();
             Time.timeScale = 0f;
         }
     }
@@ -210,10 +252,12 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         yield return new WaitForSeconds(2f);
 
+        if (state != GuardState.Chase || !playerOutOfVision) yield break;
+
         SetChase(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -225,8 +269,15 @@ public class SecurityOfficerScript : MonoBehaviour
         {
             state = GuardState.Chase;
 
-            if (bullAnimation != null)
-                bullAnimation.SetBool("StopAnimation", false);
+            if (waitRoutine != null)
+            {
+                StopCoroutine(waitRoutine);
+                waitRoutine = null;
+            }
+            isWaiting = false;
+
+            if (guardAnimation != null)
+                guardAnimation.SetBool("StopAnimation", false);
 
             if (suspiciousRoutine != null)
             {
@@ -247,6 +298,13 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         if (state == GuardState.Chase || state == GuardState.Suspicious) return;
 
+        if (waitRoutine != null)
+        {
+            StopCoroutine(waitRoutine);
+            waitRoutine = null;
+        }
+        isWaiting = false;
+
         if (suspiciousRoutine != null) StopCoroutine(suspiciousRoutine);
         suspiciousRoutine = StartCoroutine(SuspiciousReaction(noisePosition));
     }
@@ -260,10 +318,11 @@ public class SecurityOfficerScript : MonoBehaviour
 
         if (suspicionIcon) suspicionIcon.SetActive(true);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", true);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", true);
 
-        Quaternion originalRot = transform.rotation;
+        float originalFacingY = SnapToFacingY((turnRoutine != null) ? currentTurnTargetY : transform.rotation.eulerAngles.y);
+        StopSmoothTurn();
 
         yield return new WaitForSeconds(turnDelayAfterHearing);
 
@@ -274,7 +333,7 @@ public class SecurityOfficerScript : MonoBehaviour
         }
 
         float dir = noisePosition.x - transform.position.x;
-        transform.rotation = (dir > 0f) ? Quaternion.Euler(0, 180, 0) : Quaternion.Euler(0, 0, 0);
+        SmoothSetYRotation((dir > 0f) ? 180f : 0f);
 
         yield return new WaitForSeconds(lookDuration);
 
@@ -284,12 +343,12 @@ public class SecurityOfficerScript : MonoBehaviour
             yield break;
         }
 
-        transform.rotation = originalRot;
+        SmoothSetYRotation(originalFacingY);
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         state = GuardState.Patrol;
         suspiciousRoutine = null;
@@ -299,10 +358,16 @@ public class SecurityOfficerScript : MonoBehaviour
     {
         if (state != GuardState.Chase) return;
 
+        if (chaseLoseRoutine != null)
+        {
+            StopCoroutine(chaseLoseRoutine);
+            chaseLoseRoutine = null;
+        }
+
         SetChase(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -320,19 +385,26 @@ public class SecurityOfficerScript : MonoBehaviour
             suspiciousRoutine = null;
         }
 
+        if (chaseLoseRoutine != null)
+        {
+            StopCoroutine(chaseLoseRoutine);
+            chaseLoseRoutine = null;
+        }
+
         SetChase(false);
 
         if (rb != null)
             rb.linearVelocity = new Vector2(0f, rb.linearVelocity.y);
 
-        float y = transform.rotation.eulerAngles.y;
-        float newY = (y >= 179f) ? 0f : 180f;
-        transform.rotation = Quaternion.Euler(0, newY, 0);
+        float y = (turnRoutine != null) ? currentTurnTargetY : transform.rotation.eulerAngles.y;
+        float snapped = SnapToFacingY(y);
+        float newY = (Mathf.Abs(Mathf.DeltaAngle(snapped, 180f)) < 0.01f) ? 0f : 180f;
+        SmoothSetYRotation(newY);
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -348,18 +420,33 @@ public class SecurityOfficerScript : MonoBehaviour
             suspiciousRoutine = null;
         }
 
+        if (waitRoutine != null)
+        {
+            StopCoroutine(waitRoutine);
+            waitRoutine = null;
+        }
+        isWaiting = false;
+
+        if (chaseLoseRoutine != null)
+        {
+            StopCoroutine(chaseLoseRoutine);
+            chaseLoseRoutine = null;
+        }
+
         state = GuardState.Patrol;
 
         if (rb != null)
             rb.linearVelocity = Vector2.zero;
 
+        StopSmoothTurn();
         transform.position = startPosition;
         transform.rotation = startRotation;
+        currentTurnTargetY = SnapToFacingY(startRotation.eulerAngles.y);
 
         if (suspicionIcon) suspicionIcon.SetActive(false);
 
-        if (bullAnimation != null)
-            bullAnimation.SetBool("StopAnimation", false);
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
 
         if (visionCone != null)
             visionCone.SetNormal();
@@ -367,4 +454,109 @@ public class SecurityOfficerScript : MonoBehaviour
         playerOutOfVision = true;
     }
 
+    private IEnumerator waitAtTarget()
+    {
+        yield return new WaitForSeconds(waitTimeAtTarget);
+
+        if (state != GuardState.Patrol)
+        {
+            isWaiting = false;
+            waitRoutine = null;
+            yield break;
+        }
+
+        SwapPatrolTarget();
+
+        if (guardAnimation != null)
+            guardAnimation.SetBool("StopAnimation", false);
+
+        isWaiting = false;
+        waitRoutine = null;
+    }
+
+    private IEnumerator ExitChaseAfterLoseSight()
+    {
+        yield return new WaitForSeconds(chaseLoseSightDuration);
+
+        if (state == GuardState.Chase && playerOutOfVision)
+        {
+            SetChase(false);
+
+            if (guardAnimation != null)
+                guardAnimation.SetBool("StopAnimation", false);
+
+            if (visionCone != null)
+                visionCone.SetNormal();
+        }
+
+        chaseLoseRoutine = null;
+    }
+
+    private void SmoothSetYRotation(float targetY)
+    {
+        float snappedTarget = SnapToFacingY(targetY);
+
+        if (turnRoutine != null && Mathf.Abs(Mathf.DeltaAngle(currentTurnTargetY, snappedTarget)) < 0.01f)
+            return;
+
+        float currentY = transform.rotation.eulerAngles.y;
+        currentTurnTargetY = snappedTarget;
+
+        if (Mathf.Abs(Mathf.DeltaAngle(currentY, snappedTarget)) < 0.01f)
+        {
+            transform.rotation = Quaternion.Euler(0f, snappedTarget, 0f);
+            return;
+        }
+
+        if (turnRoutine != null)
+        {
+            StopCoroutine(turnRoutine);
+            visionCone.enabled = true;
+            turnRoutine = null;
+        }
+
+        turnRoutine = StartCoroutine(SmoothTurnToY(snappedTarget));
+    }
+
+    private IEnumerator SmoothTurnToY(float targetY)
+    {
+        float startY = transform.rotation.eulerAngles.y;
+        float t = 0f;
+        float dur = Mathf.Max(0.0001f, turnDuration);
+
+        visionCone.enabled = false;
+        while (t < 1f)
+        {
+            t += Time.deltaTime / dur;
+            float y = Mathf.LerpAngle(startY, targetY, t);
+            transform.rotation = Quaternion.Euler(0f, y, 0f);
+            yield return null;
+        }
+
+        visionCone.enabled = true;
+        transform.rotation = Quaternion.Euler(0f, targetY, 0f);
+        turnRoutine = null;
+    }
+
+    private void StopSmoothTurn()
+    {
+        if (turnRoutine != null)
+        {
+            StopCoroutine(turnRoutine);
+            visionCone.enabled = true;
+            turnRoutine = null;
+        }
+    }
+
+    private bool IsFacingRightFromY(float y)
+    {
+        float d0 = Mathf.Abs(Mathf.DeltaAngle(y, 0f));
+        float d180 = Mathf.Abs(Mathf.DeltaAngle(y, 180f));
+        return d180 < d0;
+    }
+
+    private float SnapToFacingY(float y)
+    {
+        return IsFacingRightFromY(y) ? 180f : 0f;
+    }
 }

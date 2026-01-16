@@ -1,0 +1,1144 @@
+fileFormatVersion: 2
+guid: 8f995b8d8a9560849b83106a1383ef00
+TextureImporter:
+  internalIDToNameTable:
+  - first:
+      213: -5181569760566094280
+    second: Logo_UE-University-of-Europe_0
+  - first:
+      213: 1318610768379209958
+    second: Logo_UE-University-of-Europe_1
+  - first:
+      213: 1869265788303593020
+    second: Logo_UE-University-of-Europe_2
+  - first:
+      213: 5879337403562908907
+    second: Logo_UE-University-of-Europe_3
+  - first:
+      213: 342619470807919005
+    second: Logo_UE-University-of-Europe_4
+  - first:
+      213: 7410350295737192005
+    second: Logo_UE-University-of-Europe_5
+  - first:
+      213: 9192441345805892949
+    second: Logo_UE-University-of-Europe_6
+  - first:
+      213: 8731190685732369512
+    second: Logo_UE-University-of-Europe_7
+  - first:
+      213: 185064172703768355
+    second: Logo_UE-University-of-Europe_8
+  - first:
+      213: 1035737971733024341
+    second: Logo_UE-University-of-Europe_9
+  - first:
+      213: 1961213430882786080
+    second: Logo_UE-University-of-Europe_10
+  - first:
+      213: 7280443644876139607
+    second: Logo_UE-University-of-Europe_11
+  - first:
+      213: -2646881472181882359
+    second: Logo_UE-University-of-Europe_12
+  - first:
+      213: 171097558515093266
+    second: Logo_UE-University-of-Europe_13
+  - first:
+      213: -7030116511160602438
+    second: Logo_UE-University-of-Europe_14
+  - first:
+      213: 5843825609732999977
+    second: Logo_UE-University-of-Europe_15
+  - first:
+      213: 7184301402486372383
+    second: Logo_UE-University-of-Europe_16
+  - first:
+      213: -5327169803893837523
+    second: Logo_UE-University-of-Europe_17
+  - first:
+      213: 3927734495616083361
+    second: Logo_UE-University-of-Europe_18
+  - first:
+      213: 3647554187111737535
+    second: Logo_UE-University-of-Europe_19
+  - first:
+      213: -5070106403131163420
+    second: Logo_UE-University-of-Europe_20
+  - first:
+      213: 7466848167802164826
+    second: Logo_UE-University-of-Europe_21
+  - first:
+      213: 2899646450114802404
+    second: Logo_UE-University-of-Europe_22
+  - first:
+      213: 1468175192509058818
+    second: Logo_UE-University-of-Europe_23
+  - first:
+      213: -6371176312162854510
+    second: Logo_UE-University-of-Europe_24
+  - first:
+      213: 4444765932597597419
+    second: Logo_UE-University-of-Europe_25
+  - first:
+      213: 8483883520839128215
+    second: Logo_UE-University-of-Europe_26
+  - first:
+      213: -2775596146191657665
+    second: Logo_UE-University-of-Europe_27
+  - first:
+      213: -7883668366891930423
+    second: Logo_UE-University-of-Europe_28
+  - first:
+      213: 5791825076097441260
+    second: Logo_UE-University-of-Europe_29
+  - first:
+      213: -7010301659532825913
+    second: Logo_UE-University-of-Europe_30
+  - first:
+      213: -5247323730862300798
+    second: Logo_UE-University-of-Europe_31
+  - first:
+      213: 3869788858159623179
+    second: Logo_UE-University-of-Europe_32
+  - first:
+      213: 455092082840106836
+    second: Logo_UE-University-of-Europe_33
+  - first:
+      213: -6509990312995103427
+    second: Logo_UE-University-of-Europe_34
+  - first:
+      213: -5348794939865071976
+    second: Logo_UE-University-of-Europe_35
+  - first:
+      213: -2146158329364203928
+    second: Logo_UE-University-of-Europe_36
+  - first:
+      213: -7543194137710227784
+    second: Logo_UE-University-of-Europe_37
+  - first:
+      213: -3056060035559606582
+    second: Logo_UE-University-of-Europe_38
+  externalObjects: {}
+  serializedVersion: 13
+  mipmaps:
+    mipMapMode: 0
+    enableMipMap: 0
+    sRGBTexture: 1
+    linearTexture: 0
+    fadeOut: 0
+    borderMipMap: 0
+    mipMapsPreserveCoverage: 0
+    alphaTestReferenceValue: 0.5
+    mipMapFadeDistanceStart: 1
+    mipMapFadeDistanceEnd: 3
+  bumpmap:
+    convertToNormalMap: 0
+    externalNormalMap: 0
+    heightScale: 0.25
+    normalMapFilter: 0
+    flipGreenChannel: 0
+  isReadable: 0
+  streamingMipmaps: 0
+  streamingMipmapsPriority: 0
+  vTOnly: 0
+  ignoreMipmapLimit: 0
+  grayScaleToAlpha: 0
+  generateCubemap: 6
+  cubemapConvolution: 0
+  seamlessCubemap: 0
+  textureFormat: 1
+  maxTextureSize: 2048
+  textureSettings:
+    serializedVersion: 2
+    filterMode: 0
+    aniso: 1
+    mipBias: 0
+    wrapU: 1
+    wrapV: 1
+    wrapW: 1
+  nPOTScale: 0
+  lightmap: 0
+  compressionQuality: 50
+  spriteMode: 1
+  spriteExtrude: 1
+  spriteMeshType: 1
+  alignment: 0
+  spritePivot: {x: 0.5, y: 0.5}
+  spritePixelsToUnits: 100
+  spriteBorder: {x: 0, y: 0, z: 0, w: 0}
+  spriteGenerateFallbackPhysicsShape: 1
+  alphaUsage: 1
+  alphaIsTransparency: 1
+  spriteTessellationDetail: -1
+  textureType: 8
+  textureShape: 1
+  singleChannelComponent: 0
+  flipbookRows: 1
+  flipbookColumns: 1
+  maxTextureSizeSet: 0
+  compressionQualitySet: 0
+  textureFormatSet: 0
+  ignorePngGamma: 0
+  applyGammaDecoding: 0
+  swizzle: 50462976
+  cookieLightType: 0
+  platformSettings:
+  - serializedVersion: 4
+    buildTarget: DefaultTexturePlatform
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: Standalone
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  - serializedVersion: 4
+    buildTarget: WebGL
+    maxTextureSize: 2048
+    resizeAlgorithm: 0
+    textureFormat: -1
+    textureCompression: 1
+    compressionQuality: 50
+    crunchedCompression: 0
+    allowsAlphaSplitting: 0
+    overridden: 0
+    ignorePlatformSupport: 0
+    androidETC2FallbackOverride: 0
+    forceMaximumCompressionQuality_BC6H_BC7: 0
+  spriteSheet:
+    serializedVersion: 2
+    sprites:
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_0
+      rect:
+        serializedVersion: 2
+        x: 79
+        y: 71
+        width: 131
+        height: 165
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8365d8281cd5718b0800000000000000
+      internalID: -5181569760566094280
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_1
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 202
+        width: 102
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 6e86f3ee185ac4210800000000000000
+      internalID: 1318610768379209958
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_2
+      rect:
+        serializedVersion: 2
+        x: 353
+        y: 186
+        width: 42
+        height: 50
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: c3e40a6a457f0f910800000000000000
+      internalID: 1869265788303593020
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_3
+      rect:
+        serializedVersion: 2
+        x: 438
+        y: 224
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: becd80ee73a979150800000000000000
+      internalID: 5879337403562908907
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_4
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 224
+        width: 12
+        height: 13
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d9963aae79a31c400800000000000000
+      internalID: 342619470807919005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_5
+      rect:
+        serializedVersion: 2
+        x: 596
+        y: 186
+        width: 25
+        height: 45
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 54e40ae055ad6d660800000000000000
+      internalID: 7410350295737192005
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_6
+      rect:
+        serializedVersion: 2
+        x: 401
+        y: 187
+        width: 32
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55dbf5b43bc129f70800000000000000
+      internalID: 9192441345805892949
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_7
+      rect:
+        serializedVersion: 2
+        x: 439
+        y: 187
+        width: 11
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 864f6493bab6b2970800000000000000
+      internalID: 8731190685732369512
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_8
+      rect:
+        serializedVersion: 2
+        x: 452
+        y: 187
+        width: 37
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 32fd8a272ea719200800000000000000
+      internalID: 185064172703768355
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_9
+      rect:
+        serializedVersion: 2
+        x: 488
+        y: 186
+        width: 33
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 55ec78d923eaf5e00800000000000000
+      internalID: 1035737971733024341
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_10
+      rect:
+        serializedVersion: 2
+        x: 526
+        y: 187
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 02b5e747931a73b10800000000000000
+      internalID: 1961213430882786080
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_11
+      rect:
+        serializedVersion: 2
+        x: 549
+        y: 186
+        width: 30
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 75ca71cebe4590560800000000000000
+      internalID: 7280443644876139607
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_12
+      rect:
+        serializedVersion: 2
+        x: 582
+        y: 187
+        width: 11
+        height: 34
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 90239082353644bd0800000000000000
+      internalID: -2646881472181882359
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_13
+      rect:
+        serializedVersion: 2
+        x: 621
+        y: 173
+        width: 37
+        height: 48
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 21f8a3da25cdf5200800000000000000
+      internalID: 171097558515093266
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_14
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 140
+        width: 84
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ab0f9aeb742007e90800000000000000
+      internalID: -7030116511160602438
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_15
+      rect:
+        serializedVersion: 2
+        x: 351
+        y: 123
+        width: 37
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 92b477d1e60791150800000000000000
+      internalID: 5843825609732999977
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_16
+      rect:
+        serializedVersion: 2
+        x: 389
+        y: 124
+        width: 24
+        height: 52
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f187a8ebf04c3b360800000000000000
+      internalID: 7184301402486372383
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_17
+      rect:
+        serializedVersion: 2
+        x: 431
+        y: 124
+        width: 31
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d2178b4b9471216b0800000000000000
+      internalID: -5327169803893837523
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_18
+      rect:
+        serializedVersion: 2
+        x: 466
+        y: 123
+        width: 32
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 1a5ae37b6bd128630800000000000000
+      internalID: 3927734495616083361
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_19
+      rect:
+        serializedVersion: 2
+        x: 505
+        y: 124
+        width: 22
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: fb8a8c52537be9230800000000000000
+      internalID: 3647554187111737535
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_20
+      rect:
+        serializedVersion: 2
+        x: 527
+        y: 123
+        width: 37
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4ecfee3c61d53a9b0800000000000000
+      internalID: -5070106403131163420
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_21
+      rect:
+        serializedVersion: 2
+        x: 568
+        y: 110
+        width: 34
+        height: 49
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: a56df99f8d29f9760800000000000000
+      internalID: 7466848167802164826
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_22
+      rect:
+        serializedVersion: 2
+        x: 605
+        y: 123
+        width: 33
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 4e2b059551d9d3820800000000000000
+      internalID: 2899646450114802404
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_23
+      rect:
+        serializedVersion: 2
+        x: 232
+        y: 78
+        width: 102
+        height: 35
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 20f0b811f81006410800000000000000
+      internalID: 1468175192509058818
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_24
+      rect:
+        serializedVersion: 2
+        x: 356
+        y: 78
+        width: 12
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 299562866e80597a0800000000000000
+      internalID: -6371176312162854510
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_25
+      rect:
+        serializedVersion: 2
+        x: 367
+        y: 77
+        width: 20
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: be4dc3af01bfead30800000000000000
+      internalID: 4444765932597597419
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_26
+      rect:
+        serializedVersion: 2
+        x: 388
+        y: 78
+        width: 11
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7941867dc1fccb570800000000000000
+      internalID: 8483883520839128215
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_27
+      rect:
+        serializedVersion: 2
+        x: 405
+        y: 78
+        width: 25
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: f359d42c20a1b79d0800000000000000
+      internalID: -2775596146191657665
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_28
+      rect:
+        serializedVersion: 2
+        x: 430
+        y: 70
+        width: 18
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 9cc2c68c365979290800000000000000
+      internalID: -7883668366891930423
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_29
+      rect:
+        serializedVersion: 2
+        x: 449
+        y: 70
+        width: 24
+        height: 36
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ceddcf56832b06050800000000000000
+      internalID: 5791825076097441260
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_30
+      rect:
+        serializedVersion: 2
+        x: 476
+        y: 77
+        width: 24
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 7cae63768c766be90800000000000000
+      internalID: -7010301659532825913
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_31
+      rect:
+        serializedVersion: 2
+        x: 501
+        y: 77
+        width: 18
+        height: 29
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 281a9784ed2cd27b0800000000000000
+      internalID: -5247323730862300798
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_32
+      rect:
+        serializedVersion: 2
+        x: 528
+        y: 77
+        width: 18
+        height: 28
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: b0c6e56a67044b530800000000000000
+      internalID: 3869788858159623179
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_33
+      rect:
+        serializedVersion: 2
+        x: 546
+        y: 77
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 457f6c196dfc05600800000000000000
+      internalID: 455092082840106836
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_34
+      rect:
+        serializedVersion: 2
+        x: 564
+        y: 77
+        width: 24
+        height: 27
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: d3d51be3d4ed7a5a0800000000000000
+      internalID: -6509990312995103427
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_35
+      rect:
+        serializedVersion: 2
+        x: 590
+        y: 78
+        width: 17
+        height: 19
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 89e7fe0675345c5b0800000000000000
+      internalID: -5348794939865071976
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_36
+      rect:
+        serializedVersion: 2
+        x: 608
+        y: 77
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 866308ace505732e0800000000000000
+      internalID: -2146158329364203928
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_37
+      rect:
+        serializedVersion: 2
+        x: 625
+        y: 77
+        width: 18
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: 8be09f5b5e0315790800000000000000
+      internalID: -7543194137710227784
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    - serializedVersion: 2
+      name: Logo_UE-University-of-Europe_38
+      rect:
+        serializedVersion: 2
+        x: 643
+        y: 77
+        width: 16
+        height: 20
+      alignment: 0
+      pivot: {x: 0, y: 0}
+      border: {x: 0, y: 0, z: 0, w: 0}
+      customData: 
+      outline: []
+      physicsShape: []
+      tessellationDetail: -1
+      bones: []
+      spriteID: ac6b330e691b695d0800000000000000
+      internalID: -3056060035559606582
+      vertices: []
+      indices: 
+      edges: []
+      weights: []
+    outline: []
+    customData: 
+    physicsShape: []
+    bones: []
+    spriteID: 5e97eb03825dee720800000000000000
+    internalID: 0
+    vertices: []
+    indices: 
+    edges: []
+    weights: []
+    secondaryTextures: []
+    spriteCustomMetadata:
+      entries: []
+    nameFileIdTable:
+      Logo_UE-University-of-Europe_0: -5181569760566094280
+      Logo_UE-University-of-Europe_1: 1318610768379209958
+      Logo_UE-University-of-Europe_10: 1961213430882786080
+      Logo_UE-University-of-Europe_11: 7280443644876139607
+      Logo_UE-University-of-Europe_12: -2646881472181882359
+      Logo_UE-University-of-Europe_13: 171097558515093266
+      Logo_UE-University-of-Europe_14: -7030116511160602438
+      Logo_UE-University-of-Europe_15: 5843825609732999977
+      Logo_UE-University-of-Europe_16: 7184301402486372383
+      Logo_UE-University-of-Europe_17: -5327169803893837523
+      Logo_UE-University-of-Europe_18: 3927734495616083361
+      Logo_UE-University-of-Europe_19: 3647554187111737535
+      Logo_UE-University-of-Europe_2: 1869265788303593020
+      Logo_UE-University-of-Europe_20: -5070106403131163420
+      Logo_UE-University-of-Europe_21: 7466848167802164826
+      Logo_UE-University-of-Europe_22: 2899646450114802404
+      Logo_UE-University-of-Europe_23: 1468175192509058818
+      Logo_UE-University-of-Europe_24: -6371176312162854510
+      Logo_UE-University-of-Europe_25: 4444765932597597419
+      Logo_UE-University-of-Europe_26: 8483883520839128215
+      Logo_UE-University-of-Europe_27: -2775596146191657665
+      Logo_UE-University-of-Europe_28: -7883668366891930423
+      Logo_UE-University-of-Europe_29: 5791825076097441260
+      Logo_UE-University-of-Europe_3: 5879337403562908907
+      Logo_UE-University-of-Europe_30: -7010301659532825913
+      Logo_UE-University-of-Europe_31: -5247323730862300798
+      Logo_UE-University-of-Europe_32: 3869788858159623179
+      Logo_UE-University-of-Europe_33: 455092082840106836
+      Logo_UE-University-of-Europe_34: -6509990312995103427
+      Logo_UE-University-of-Europe_35: -5348794939865071976
+      Logo_UE-University-of-Europe_36: -2146158329364203928
+      Logo_UE-University-of-Europe_37: -7543194137710227784
+      Logo_UE-University-of-Europe_38: -3056060035559606582
+      Logo_UE-University-of-Europe_4: 342619470807919005
+      Logo_UE-University-of-Europe_5: 7410350295737192005
+      Logo_UE-University-of-Europe_6: 9192441345805892949
+      Logo_UE-University-of-Europe_7: 8731190685732369512
+      Logo_UE-University-of-Europe_8: 185064172703768355
+      Logo_UE-University-of-Europe_9: 1035737971733024341
+  mipmapLimitGroupName: 
+  pSDRemoveMatte: 0
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 

@@ -6,7 +6,7 @@ public class HiddingDesk : MonoBehaviour
 
     private GameObject player;
     private bool isNear = false;
-    private bool isHidden = false;
+    public bool isHidden = false;
 
     private Vector3 originalScale;
     private Quaternion originalRotation;
@@ -27,7 +27,7 @@ public class HiddingDesk : MonoBehaviour
             player.GetComponent<Animator>().SetBool("Walk", false);
             player.GetComponent<PlayerMovement>().enabled = false;
             SpriteRenderer sr = GetComponent<SpriteRenderer>();
-            sr.sortingOrder = 10;
+            sr.sortingOrder = 16;
             player.transform.localScale = new Vector3(0.11f, 0.11f, 0.11f);
             instructionKey.SetActive(true);
             //Color c = player.GetComponent<SpriteRenderer>().color;
@@ -78,5 +78,20 @@ public class HiddingDesk : MonoBehaviour
             instructionKey.SetActive(false);
             isNear = false;
         }
+    }
+
+    public void removeHiding()
+    {
+        player.GetComponent<CapsuleCollider2D>().enabled = true;
+        player.GetComponent<Rigidbody2D>().gravityScale = 1f;
+        player.GetComponent<PlayerMovement>().enabled = true;
+        player.transform.localScale = originalScale;
+        SpriteRenderer sr = GetComponent<SpriteRenderer>();
+        sr.sortingOrder = 1;
+        //Color c = player.GetComponent<SpriteRenderer>().color;
+        //c.a = 1f;
+        //player.GetComponent<SpriteRenderer>().color = c;
+
+        isHidden = false;
     }
 }

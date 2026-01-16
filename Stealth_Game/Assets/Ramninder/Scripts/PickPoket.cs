@@ -1,16 +1,22 @@
-using NUnit.Framework;
+using System.Collections;
 using UnityEngine;
 using System.Collections.Generic;
-using System.Collections;
 
 public class PickPoket : MonoBehaviour
 {
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private GameObject keyStolen;
 
-    private GameObject key;
+    [SerializeField] private KeyInventoryUI keyUI;
+    [SerializeField] private Camera worldCamera;
 
+    private GameObject key;
     private List<string> keysHave = new List<string>();
+
+    void Start()
+    {
+        if (worldCamera == null) worldCamera = Camera.main;
+    }
 
     void Update()
     {
@@ -24,63 +30,55 @@ public class PickPoket : MonoBehaviour
 
             if (Input.GetKeyDown(KeyCode.C))
             {
-                //key.transform.SetParent(gameObject.transform);
-                //key.transform.position = transform.position;
                 keysHave.Add(key.name);
+
+                if (keyUI != null && worldCamera != null)
+                    keyUI.PlayPickupFly(key.name, key.transform.position, worldCamera);
+
                 key.SetActive(false);
-                StartCoroutine(KeyTextHideShow());
+                //StartCoroutine(KeyTextHideShow());
                 key = null;
-                instructionKey.SetActive(false);
+                if (instructionKey != null) instructionKey.SetActive(false);
             }
         }
         else
         {
-            if (instructionKey != null)
-            {
-                instructionKey.SetActive(false);
-            }
+            if (instructionKey != null) instructionKey.SetActive(false);
         }
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
         if (collision.CompareTag("Key"))
-        {
             key = collision.gameObject;
-        }
     }
 
     private void OnTriggerExit2D(Collider2D collision)
     {
         if (collision.CompareTag("Key"))
         {
-            if (instructionKey != null)
-            {
-                instructionKey.SetActive(false);
-            }
-
+            if (instructionKey != null) instructionKey.SetActive(false);
             key = null;
         }
     }
 
     public bool hasKey(string key)
     {
-        if (keysHave.Contains(key))
-        {
-            return true;
-        }
-        else
-        {
-            return false;
-        }
+        return keysHave.Contains(key);
     }
 
-    private IEnumerator KeyTextHideShow()
+    public void PlayUseKeyFly(string keyId, Vector3 worldTargetPosition)
     {
-        keyStolen.SetActive(true);
+        if (!hasKey(keyId)) return;
+        if (keyUI == null || worldCamera == null) return;
 
-        yield return new WaitForSeconds(3f);
-
-        keyStolen.SetActive(false);
+        keyUI.PlayUseFly(keyId, worldTargetPosition, worldCamera);
     }
+
+    //private IEnumerator KeyTextHideShow()
+    //{
+    //    if (keyStolen != null) keyStolen.SetActive(true);
+    //    yield return new WaitForSeconds(3f);
+    //    if (keyStolen != null) keyStolen.SetActive(false);
+    //}
 }

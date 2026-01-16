@@ -3,6 +3,7 @@ using TMPro;
 using Unity.Cinemachine;
 using UnityEngine;
 using UnityEngine.Rendering.Universal;
+using System.Collections.Generic;
 
 public class StealMoney : MonoBehaviour
 {
@@ -68,6 +69,9 @@ public class StealMoney : MonoBehaviour
     [SerializeField] private GameObject timerCanvas;
     [SerializeField] private TMP_Text timerText;
     [SerializeField] private GameObject timeUpCanvas;
+    [SerializeField] private List<HiddingBin> hidingBin = new List<HiddingBin>();
+    [SerializeField] private List<HiddingTable> hidingTable = new List<HiddingTable>();
+    [SerializeField] private HiddingDesk hidingDesk;
 
     public bool blink = false;
     private Coroutine blinkRoutine;
@@ -133,7 +137,7 @@ public class StealMoney : MonoBehaviour
             blink = true;
 
             audioManager.StopMusic();
-            audioManager.PlaySFXLoop(audioManager.siren);
+            audioManager.PlaySFXLoop(audioManager.siren,0f);
 
             if (basement2Guard != null) basement2Guard.speed += 2f;
             if (basement1Guard != null) basement1Guard.speed += 2f;
@@ -213,6 +217,7 @@ public class StealMoney : MonoBehaviour
             {
                 yield return new WaitForSeconds(0.5f);
                 stepDoor.lockAllDoors();
+                stepDoor.ChangeIsCalled();
             }
 
             if (step.waitTime > 0f)
@@ -329,7 +334,7 @@ public class StealMoney : MonoBehaviour
         playerMovement.enabled = true;
 
         audioManager.SetSFXVolume(0.03f);
-        audioManager.PlayChaseMusic();
+        audioManager.PlayChaseMusic(0f);
 
         // Start countdown (can be restarted later)
         StartCountdown();
@@ -390,8 +395,7 @@ public class StealMoney : MonoBehaviour
 
         while (remaining > 0f)
         {
-            // unscaled so it works even if you pause timescale somewhere
-            remaining -= Time.unscaledDeltaTime;
+            remaining -= Time.deltaTime;
 
             if (timerText != null)
             {
@@ -401,6 +405,7 @@ public class StealMoney : MonoBehaviour
 
             yield return null;
         }
+
 
         remaining = 0f;
         if (timerText != null) timerText.text = "0";
@@ -413,6 +418,28 @@ public class StealMoney : MonoBehaviour
         audioManager.StopMusic();
 
         if (timeUpCanvas != null) timeUpCanvas.SetActive(true);
+
+        foreach (HiddingBin bin in hidingBin)
+        {
+            if (bin == null) continue;
+
+            if (bin.isHidden)
+            {
+                bin.removeHiding();
+            }
+        }
+
+        foreach (HiddingTable table in hidingTable)
+        {
+            if (table == null) continue;
+
+            if (table.isHidden)
+            {
+                table.removeHiding();
+            }
+        }
+
+        if (hidingDesk.isHidden) hidingDesk.removeHiding();
 
         // If you want to freeze the whole game, do it elsewhere and unpause when restarting:
         // Time.timeScale = 0f;
