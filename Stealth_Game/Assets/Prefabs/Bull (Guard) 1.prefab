@@ -303,9 +303,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 7823508105097211929}
     m_Modifications:
+    - target: {fileID: 226652704945145512, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 26
+      objectReference: {fileID: 0}
     - target: {fileID: 636383077020043251, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: m_Name
       value: Bull (Guard)
+      objectReference: {fileID: 0}
+    - target: {fileID: 2249343170483985287, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 22
       objectReference: {fileID: 0}
     - target: {fileID: 2541166724031570356, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: useObstacles
@@ -314,6 +322,10 @@ PrefabInstance:
     - target: {fileID: 2541166724031570356, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: obstacleMask.m_Bits
       value: 128
+      objectReference: {fileID: 0}
+    - target: {fileID: 2770306516459426999, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 33
       objectReference: {fileID: 0}
     - target: {fileID: 2958968537025012627, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: pointA
@@ -370,6 +382,10 @@ PrefabInstance:
     - target: {fileID: 4838122094444693912, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: m_LocalRotation.z
       value: 0.00000002983322
+      objectReference: {fileID: 0}
+    - target: {fileID: 4885765152470771101, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 19
       objectReference: {fileID: 0}
     - target: {fileID: 5330289846147259786, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: m_LocalRotation.w
@@ -434,6 +450,10 @@ PrefabInstance:
     - target: {fileID: 6961206358336885623, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: m_LocalRotation.z
       value: -0.00000019380386
+      objectReference: {fileID: 0}
+    - target: {fileID: 7876519631157971413, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
+      propertyPath: m_SortingOrder
+      value: 17
       objectReference: {fileID: 0}
     - target: {fileID: 8000024501777693728, guid: 566efe051de724592a3d231340d4d6f4, type: 3}
       propertyPath: m_LocalRotation.w
