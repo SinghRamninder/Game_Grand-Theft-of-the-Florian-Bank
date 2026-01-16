@@ -63,6 +63,9 @@ public class EndCredits : MonoBehaviour
     [Header("End")]
     [SerializeField] private float waitBeforeSceneLoad = 2f;
     [SerializeField] private string sceneToLoad = "Start";
+    [SerializeField] private Image endImage;
+    [SerializeField] private float endImageFadeInDuration = 0.8f;
+    [SerializeField] private float waitAfterEndImage = 1f;
 
     [SerializeField] private GameObject timerDisplay;
     [SerializeField] private StealMoney groundGuard;
@@ -162,6 +165,13 @@ public class EndCredits : MonoBehaviour
         // Player refs
         if (player == null) DWarn("Player Transform is NULL (will try to auto-fill on trigger).");
         if (playerMovement == null) DWarn("PlayerMovement is NULL (will try to auto-fill on trigger).");
+
+        if (endImage != null)
+        {
+            Color c = endImage.color;
+            endImage.color = new Color(c.r, c.g, c.b, 0f);
+            endImage.gameObject.SetActive(false);
+        }
 
         DLog("Awake() finished.");
     }
@@ -312,10 +322,21 @@ public class EndCredits : MonoBehaviour
         }
 
         // NEW END: keep black screen, wait, then load scene
-        DLog($"Credits finished. Waiting {waitBeforeSceneLoad}s then loading scene '{sceneToLoad}'...");
+        DLog("Credits finished.");
 
-        if (waitBeforeSceneLoad > 0f)
-            yield return new WaitForSeconds(waitBeforeSceneLoad);
+        if (endImage != null)
+        {
+            endImage.gameObject.SetActive(true);
+            yield return StartCoroutine(FadeImageAlpha(endImage, 0f, 1f, endImageFadeInDuration));
+
+            if (waitAfterEndImage > 0f)
+                yield return new WaitForSeconds(waitAfterEndImage);
+        }
+        else
+        {
+            if (waitBeforeSceneLoad > 0f)
+                yield return new WaitForSeconds(waitBeforeSceneLoad);
+        }
 
         if (string.IsNullOrEmpty(sceneToLoad))
         {
@@ -324,6 +345,7 @@ public class EndCredits : MonoBehaviour
         }
 
         SceneManager.LoadScene(sceneToLoad);
+
     }
 
     private IEnumerator MovePlayerThenDisableInput()

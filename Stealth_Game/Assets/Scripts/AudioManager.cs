@@ -90,6 +90,17 @@ public class AudioManager : MonoBehaviour
         musicFadeRoutine = StartCoroutine(PlayOnceRoutine(clip, fadeDuration));
     }
 
+    public void PauseMusic()
+    {
+        if (!backgroundMusic) return;
+        backgroundMusic.Pause();
+    }
+
+    public void ResumeMusic()
+    {
+        if (!backgroundMusic) return;
+        backgroundMusic.UnPause();
+    }
 
     public float GetMusicVolume()
     {
@@ -147,6 +158,18 @@ public class AudioManager : MonoBehaviour
     public float GetSFXVolume()
     {
         return sfxBaseVolume;
+    }
+
+    public void PauseSFX()
+    {
+        if (!sfx) return;
+        sfx.Pause();
+    }
+
+    public void ResumeSFX()
+    {
+        if (!sfx) return;
+        sfx.UnPause();
     }
 
     // -------------------- OPTIONAL: QUICK HELPERS --------------------
