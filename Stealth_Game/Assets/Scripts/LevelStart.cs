@@ -4,6 +4,8 @@ using UnityEngine;
 
 public class LevelStart : MonoBehaviour
 {
+    [HideInInspector] public bool enableCutscene;
+
     [SerializeField] private GameObject mainCamera;
     [SerializeField] private PlayerMovement playerScript;
 
@@ -32,16 +34,24 @@ public class LevelStart : MonoBehaviour
 
     private void Start()
     {
-        if (playerScript != null) playerScript.enabled = false;
-
-        if (keyInventory != null) keyInventory.SetActive(false);
-
         var brain = mainCamera != null ? mainCamera.GetComponent<CinemachineBrain>() : null;
-        if (brain != null) brain.enabled = false;
 
-        cam = mainCamera != null ? mainCamera.GetComponent<Camera>() : null;
+        if (enableCutscene)
+        {
+            if (playerScript != null) playerScript.enabled = false;
 
-        StartCoroutine(IntroSequence(brain));
+            if (keyInventory != null) keyInventory.SetActive(false);
+
+            if (brain != null) brain.enabled = false;
+
+            cam = mainCamera != null ? mainCamera.GetComponent<Camera>() : null;
+
+            StartCoroutine(IntroSequence(brain));
+        }
+        else
+        {
+            if (brain != null) brain.enabled = true;
+        }
     }
 
     private IEnumerator IntroSequence(CinemachineBrain brain)
@@ -98,8 +108,8 @@ public class LevelStart : MonoBehaviour
         {
             elapsed += Time.deltaTime;
 
-            float g = Mathf.Clamp01(elapsed / total);                       // overall progress (for Y)
-            float h = Mathf.Clamp01((elapsed - yOnly) / xPhase);            // X+Zoom progress (starts after yOnlyTime)
+            float g = Mathf.Clamp01(elapsed / total);
+            float h = Mathf.Clamp01((elapsed - yOnly) / xPhase);
 
             float yP = Smooth01(g);
             float xzP = Smooth01(h);
