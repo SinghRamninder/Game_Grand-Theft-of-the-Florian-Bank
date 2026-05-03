@@ -7,8 +7,7 @@ public class LevelEditor : EditorWindow
 
     private string[] tabs = {
     "Basic Settings",
-    "Guard",
-    "Player"};
+    "Guard"};
 
     private string guardName;
     private GameObject guardSprite;
@@ -102,10 +101,6 @@ public class LevelEditor : EditorWindow
 
             case 1:
                 DrawGuardTab();
-                break;
-
-            case 2:
-                DrawPlayerTab();
                 break;
         }
     }
@@ -352,11 +347,6 @@ public class LevelEditor : EditorWindow
         Color color = Color.white;
         ColorUtility.TryParseHtmlString(hex, out color);
         return color;
-    }
-
-    private void DrawPlayerTab()
-    {
-
     }
 
     private void SetupScene()

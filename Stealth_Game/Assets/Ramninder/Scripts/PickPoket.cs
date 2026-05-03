@@ -5,10 +5,10 @@ using System.Collections.Generic;
 public class PickPoket : MonoBehaviour
 {
     [SerializeField] private GameObject instructionKey;
-    [SerializeField] private GameObject keyStolen;
+    private GameObject keyStolen;
 
     [SerializeField] private KeyInventoryUI keyUI;
-    [SerializeField] private Camera worldCamera;
+    private Camera worldCamera;
 
     private GameObject key;
     private List<string> keysHave = new List<string>();

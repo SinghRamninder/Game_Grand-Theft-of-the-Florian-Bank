@@ -5,34 +5,37 @@ using UnityEngine.Rendering.Universal;
 public class DoorScript : MonoBehaviour
 {
     [Header("Teleport Locations")]
-    [SerializeField] private Transform teleportUp;
-    [SerializeField] private Transform teleportDown;
+    [HideInInspector] public Transform teleportUp;
+    [HideInInspector] public Transform teleportDown;
 
     [Header("Settings")]
-    [SerializeField] private KeyCode upKey = KeyCode.E;
-    [SerializeField] private KeyCode downKey = KeyCode.Q;
-    [SerializeField] private bool isUpAllow;
-    [SerializeField] private bool isDownAllow;
+    [HideInInspector] public KeyCode upKey = KeyCode.E;
+    [HideInInspector] public KeyCode downKey = KeyCode.Q;
+    [HideInInspector] public bool isUpAllow;
+    [HideInInspector] public bool isDownAllow;
 
     [Header("Key Required to Unlock")]
-    [SerializeField] private string keyNameUp1;
-    [SerializeField] private string keyNameUp2;
-    [SerializeField] private string keyNameDown1;
-    [SerializeField] private string keyNameDown2;
-    [SerializeField] private bool isUpUnlocked = false;
-    [SerializeField] private bool isDownUnlocked = false;
+    [HideInInspector] public string keyNameUp1;
+    [HideInInspector] public string keyNameUp2;
+    [HideInInspector] public string keyNameDown1;
+    [HideInInspector] public string keyNameDown2;
+    [HideInInspector] public bool isUpUnlocked = false;
+    [HideInInspector] public bool isDownUnlocked = false;
 
     [Header("Indicators")]
-    [SerializeField] private SpriteRenderer upIndicator;
-    [SerializeField] private SpriteRenderer downIndicator;
-    [SerializeField] private Light2D indicatorLight;
-    [SerializeField] private float blinkDuration;
+    [HideInInspector] public SpriteRenderer upIndicator;
+    [HideInInspector] public SpriteRenderer downIndicator;
+    [HideInInspector] public Light2D indicatorLight;
 
     [Header("Locks")]
-    [SerializeField] private GameObject upLock1;
-    [SerializeField] private GameObject upLock2;
-    [SerializeField] private GameObject downLock1;
-    [SerializeField] private GameObject downLock2;
+    [HideInInspector] public GameObject upLock1;
+    [HideInInspector] public GameObject upLock2;
+    [HideInInspector] public GameObject downLock1;
+    [HideInInspector] public GameObject downLock2;
+
+    [Header("Other Settings")]
+    public float lightBlinkDuration = 0.3f;
+    public float teleportTimeDelay = 1f;
 
     private Transform player;
     private bool playerInside = false;
@@ -134,7 +137,7 @@ public class DoorScript : MonoBehaviour
         ColorUtility.TryParseHtmlString("#04C100", out Color green);
         indicator.color = green;
 
-        yield return new WaitForSeconds(1f);
+        yield return new WaitForSeconds(teleportTimeDelay);
 
         if (isUp)
             isUpUnlocked = true;
@@ -162,10 +165,10 @@ public class DoorScript : MonoBehaviour
     {
         float elapsed = 0f;
 
-        while (elapsed < blinkDuration)
+        while (elapsed < lightBlinkDuration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / blinkDuration;
+            float t = elapsed / lightBlinkDuration;
             indicatorLight.intensity = Mathf.Lerp(from, to, t);
             yield return null;
         }

@@ -4,10 +4,14 @@ using System.Collections;
 public class PlayerMovement : MonoBehaviour
 {
     [Header("Speeds")]
+    [Tooltip("The default movement speed of the player while walking.")]
     public float normalSpeed = 3f;
-    [SerializeField] private float sprintSpeed = 5f;
-    [SerializeField] private float sneakSpeed = 1.5f;
-    [SerializeField] private Animator playerAnimation;
+    [Tooltip("The speed of the player when sprinting (holding Left Shift).")]
+    public float sprintSpeed = 5f;
+    [Tooltip("The speed of the player when sneaking or crouching (holding Left Control).")]
+    public float sneakSpeed = 1.5f;
+
+    private Animator playerAnimation;
 
     private float moveSpeed;
 

@@ -2,30 +2,39 @@ using UnityEngine;
 
 public class NoiseEmitter : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Rigidbody2D playerRb;
-    [SerializeField] private NoiseRing ringPrefab;
-
-    [Header("Guards")]
-    [SerializeField] private LayerMask guardMask;
-
     [Header("Noise Settings")]
+    [Tooltip("How fast the player must move to start generating noise rings.")]
     [SerializeField] private float minSpeedToMakeNoise = 1.0f;
+    [Tooltip("How often (in seconds) a new noise ring is spawned while moving.")]
     [SerializeField] private float stepInterval = 0.25f;
 
+    [Tooltip("How far the noise ring expands when the player is walking.")]
     [SerializeField] private float ringRadiusWalk = 3f;
+    [Tooltip("How far the noise ring expands when the player is running.")]
     [SerializeField] private float ringRadiusRun = 6f;
 
-    [SerializeField] private float strengthWalk = 0.5f;
-    [SerializeField] private float strengthRun = 1.0f;
+    [Tooltip("How strong the noise is (e.g., how much attention it draws from guards) when the player is walking.")]
+    [HideInInspector] public float strengthWalk = 0.5f;
+    [Tooltip("How strong the noise is (e.g., how much attention it draws from guards) when the player is running.")]
+    [HideInInspector] public float strengthRun = 1.0f;
+
+    [Header("Advanced Settings (Can be ignored)")]
+    [SerializeField] private Rigidbody2D playerRb;
+    [SerializeField] private NoiseRing ringPrefab;
+    [HideInInspector] public LayerMask guardMask;
 
     private float stepTimer;
 
-    public bool noSoundRing = false;
+    [HideInInspector] public bool noSoundRing = false;
 
     private void Reset()
     {
         playerRb = GetComponent<Rigidbody2D>();
+    }
+
+    private void Start()
+    {
+        guardMask = LayerMask.GetMask("Guard");
     }
 
     private void Update()
