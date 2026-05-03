@@ -199,13 +199,42 @@ MonoBehaviour:
   alertColor: {r: 1, g: 0, b: 0, a: 0.35}
   viewDistance: 10
   viewAngle: 60
-  segments: 40
   useObstacles: 1
   obstacleMask:
     serializedVersion: 2
     m_Bits: 128
-  guardTransform: {fileID: 0}
   localOffset: {x: 0, y: 0}
+--- !u!1 &1557056882972186769
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8281570165397041462}
+  m_Layer: 0
+  m_Name: KeyHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8281570165397041462
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1557056882972186769}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0.10683958, w: -0.9942763}
+  m_LocalPosition: {x: 2.0918927, y: -8.910873, z: -1.1969706}
+  m_LocalScale: {x: 0.56128275, y: 0.59092087, z: 3.3666277}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 4060350633691335540}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1563580143388507615
 GameObject:
   m_ObjectHideFlags: 0
@@ -252,7 +281,7 @@ GameObject:
   - component: {fileID: -6596057508087594289}
   m_Layer: 0
   m_Name: owl_animated
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -271,6 +300,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 4744852358365343041}
+  - {fileID: 8281570165397041462}
   - {fileID: 5260443782592061991}
   - {fileID: 8016249755532841450}
   m_Father: {fileID: 0}
@@ -373,8 +403,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee946b5ac088f24b874bcad544ec70d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionCone: {fileID: 0}
-  suspicionIcon: {fileID: 0}
+  visionCone: {fileID: 1634855437138649554}
+  suspicionIcon: {fileID: 5691714181921397006}
   speed: 3
   chaseSpeed: 6.5
   pointA: {fileID: 0}

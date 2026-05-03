@@ -10,14 +10,14 @@ public class VisionCone2D : MonoBehaviour
     [Header("Shape")]
     public float viewDistance = 6f;
     [Range(1f, 179f)] public float viewAngle = 60f;
-    [SerializeField, Range(5, 200)] private int segments = 40;
+    private int segments = 40;
 
     [Header("Optional: stop cone when something blocks it")]
     [SerializeField] private bool useObstacles = false;
     [SerializeField] private LayerMask obstacleMask;
 
     [Header("Follow")]
-    [SerializeField] private Transform guardTransform;
+    private Transform guardTransform;
     public Vector2 localOffset = Vector2.zero;
 
     private Mesh _mesh;
@@ -116,4 +116,48 @@ public class VisionCone2D : MonoBehaviour
             meshRenderer.material.color = normalColor;
     }
 
+#if UNITY_EDITOR
+    private void OnDrawGizmosSelected()
+    {
+        // Try to find the origin reference just like Awake() and DrawCone() do
+        Transform refTransform = guardTransform;
+        if (!refTransform && transform.parent) refTransform = transform.parent;
+        if (!refTransform) refTransform = transform;
+
+        bool facingRight = Mathf.Abs(refTransform.eulerAngles.y - 180f) < 1f;
+        Vector2 forward = facingRight ? Vector2.right : Vector2.left;
+        Vector3 origin = refTransform.TransformPoint((Vector3)localOffset);
+
+        // Make the Gizmo slightly opaque so it's easy to see but not overwhelming
+        Gizmos.color = new Color(normalColor.r, normalColor.g, normalColor.b, 1f);
+
+        float half = viewAngle * 0.5f;
+        Vector3 prevPoint = Vector3.zero;
+
+        for (int i = 0; i <= segments; i++)
+        {
+            float t = i / (float)segments;
+            float angle = Mathf.Lerp(-half, half, t);
+
+            Vector2 dir = Rotate(forward, angle).normalized;
+            float dist = viewDistance;
+
+            if (useObstacles)
+            {
+                RaycastHit2D hit = Physics2D.Raycast(origin, dir, viewDistance, obstacleMask);
+                if (hit.collider != null) dist = hit.distance;
+            }
+
+            Vector3 worldPoint = origin + (Vector3)(dir * dist);
+
+            // Draw the curved edge of the cone
+            if (i > 0) Gizmos.DrawLine(prevPoint, worldPoint);
+
+            // Draw the two straight side edges from the origin
+            if (i == 0 || i == segments) Gizmos.DrawLine(origin, worldPoint);
+
+            prevPoint = worldPoint;
+        }
+    }
+#endif
 }

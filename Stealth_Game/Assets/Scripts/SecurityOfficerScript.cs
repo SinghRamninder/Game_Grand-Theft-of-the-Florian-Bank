@@ -3,11 +3,7 @@ using UnityEngine;
 
 public class SecurityOfficerScript : MonoBehaviour
 {
-    [Header("Visuals")]
-    [SerializeField] private VisionCone2D visionCone;
-    [SerializeField] private GameObject suspicionIcon;
-
-    [Header("Movement")]
+    [Header("Basic Settings")]
     [Tooltip("Control the movement speed of the guard")]
     public float speed = 2f;
 
@@ -15,37 +11,39 @@ public class SecurityOfficerScript : MonoBehaviour
     public float chaseSpeed = 4f;
 
     [Tooltip("Guard will move between point A to point B (Enter x value)")]
-    [SerializeField] private GameObject pointA;
+    [HideInInspector] public GameObject pointA;
 
     [Tooltip("Guard will move between point A to point B (Enter x value)")]
-    [SerializeField] private GameObject pointB;
+    [HideInInspector] public GameObject pointB;
 
     [Tooltip("How close guard must be to target X to switch/stop")]
-    [SerializeField] private float reachXThreshold = 0.05f;
+    private float reachXThreshold = 0.05f;
 
     [Header("Vision")]
     [Tooltip("How far guard can see")]
     private float maxDisVisibiltiy;
     private float maxAngleVisibiltiy;
-    [SerializeField] private LayerMask playerMask;
 
-    [Header("Hearing Reaction Timings (Inspector Editable)")]
+    [Tooltip("Turn delay after hearing a noise")]
     [SerializeField] private float turnDelayAfterHearing = 1f;
+    [Tooltip("Duration the guard will look around")]
     [SerializeField] private float lookDuration = 2f;
 
     [Header("Other")]
-    public GameObject gameOverDisplay;
+    [HideInInspector] public GameObject gameOverDisplay;
+    [Tooltip("Wait time when guard reaches a point")]
     [SerializeField] private float waitTimeAtTarget = 2f;
+    [Tooltip("Duration to drop chase after losing sight")]
     [SerializeField] private float chaseLoseSightDuration = 2f;
-    [SerializeField] private ShowKeyInstruction showKeyInstruction;
+    private ShowKeyInstruction showKeyInstruction;
 
-    public bool hasKey;
-    public GameObject key;
-    public string keyName;
-    public float hearingRadius;
+    [HideInInspector] public bool hasKey;
+    [HideInInspector] public GameObject key;
+    [HideInInspector] public string keyName;
+    [HideInInspector] public float hearingRadius;
 
     [Header("Rotation Smoothness")]
-    [SerializeField] private float turnDuration = 0.12f;
+    [HideInInspector] public float turnDuration = 0.12f;
 
     private Rigidbody2D rb;
     private GameObject player;
@@ -53,7 +51,7 @@ public class SecurityOfficerScript : MonoBehaviour
     private Vector2 currentTarget;
     private Vector2 playerCurrentPos;
 
-    public bool playerOutOfVision = true;
+    [HideInInspector] public bool playerOutOfVision = true;
     private Animator guardAnimation;
 
     private Coroutine suspiciousRoutine;
@@ -67,6 +65,11 @@ public class SecurityOfficerScript : MonoBehaviour
     private Quaternion startRotation;
 
     private bool isWaiting = false;
+
+    [Header("Advanced Settings (Can be ignored)")]
+    [SerializeField] private VisionCone2D visionCone;
+    [SerializeField] private GameObject suspicionIcon;
+    [SerializeField] private LayerMask playerMask;
 
     private enum GuardState { Patrol, Suspicious, Chase }
     private GuardState state = GuardState.Patrol;

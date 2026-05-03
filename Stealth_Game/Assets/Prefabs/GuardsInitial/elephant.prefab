@@ -233,12 +233,10 @@ MonoBehaviour:
   alertColor: {r: 1, g: 0, b: 0, a: 0.35}
   viewDistance: 10
   viewAngle: 60
-  segments: 40
   useObstacles: 1
   obstacleMask:
     serializedVersion: 2
     m_Bits: 128
-  guardTransform: {fileID: 6866962471982057693}
   localOffset: {x: 0, y: 0}
 --- !u!1 &1202685967085229972
 GameObject:
@@ -255,7 +253,7 @@ GameObject:
   - component: {fileID: 4524182904575871784}
   m_Layer: 0
   m_Name: elephant
-  m_TagString: Untagged
+  m_TagString: Guard
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -274,6 +272,7 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1626394298010384608}
+  - {fileID: 8352553063647814649}
   - {fileID: 4598720285599110975}
   - {fileID: 6014772201904256441}
   m_Father: {fileID: 0}
@@ -312,7 +311,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: aee946b5ac088f24b874bcad544ec70d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  visionCone: {fileID: 0}
+  visionCone: {fileID: 2175885436168014157}
   suspicionIcon: {fileID: 6954570148561390895}
   speed: 1.5
   chaseSpeed: 4.2
@@ -800,6 +799,37 @@ Transform:
   m_ConstrainProportionsScale: 0
   m_Children: []
   m_Father: {fileID: 8010419924215926033}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &8005430208428213925
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 8352553063647814649}
+  m_Layer: 0
+  m_Name: KeyHolder
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &8352553063647814649
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8005430208428213925}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 3.3, y: -10.12, z: -0.164}
+  m_LocalScale: {x: 0.555, y: 0.585, z: 3.33}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 6866962471982057693}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &8669742861681480528
 GameObject:
