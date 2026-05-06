@@ -13,8 +13,8 @@ public class VisionCone2D : MonoBehaviour
     private int segments = 40;
 
     [Header("Optional: stop cone when something blocks it")]
-    [SerializeField] private bool useObstacles = false;
-    [SerializeField] private LayerMask obstacleMask;
+    public bool useObstacles = false;
+    public LayerMask obstacleMask;
 
     [Header("Follow")]
     private Transform guardTransform;

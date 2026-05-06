@@ -5,11 +5,11 @@ public class HiddingTable : MonoBehaviour
 {
     [SerializeField] private GameObject instructionKey;
     [SerializeField] private Transform hidePoint;
-    [SerializeField] private float alignDuration = 0.18f;
+    [HideInInspector] public float alignDuration = 0.18f;
 
     private GameObject player;
     private bool isNear = false;
-    public bool isHidden = false;
+    [HideInInspector] public bool isHidden = false;
     private bool isAligning = false;
 
     private Vector3 originalScale;

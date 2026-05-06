@@ -57,6 +57,70 @@ public class KeyInventoryUI : MonoBehaviour
         }
     }
 
+    private void Start()
+    {
+        KeyGlow[] sceneKeys = Object.FindObjectsByType<KeyGlow>(FindObjectsSortMode.None);
+        List<KeyUIEntry> activeEntries = new List<KeyUIEntry>();
+
+        for (int i = 0; i < keys.Count; i++)
+        {
+            var entry = keys[i];
+            if (entry == null || string.IsNullOrEmpty(entry.keyId) || entry.icon == null) continue;
+
+            bool found = false;
+            foreach (var sk in sceneKeys)
+            {
+                // Check if the KeyGlow GameObject name contains the keyId
+                if (sk.gameObject.name.ToLower().Contains(entry.keyId.ToLower()))
+                {
+                    found = true;
+                    break;
+                }
+            }
+
+            if (found)
+            {
+                entry.icon.gameObject.SetActive(true);
+                activeEntries.Add(entry);
+            }
+            else
+            {
+                entry.icon.gameObject.SetActive(false);
+            }
+        }
+
+        // Reposition active keys to prevent visual gaps
+        if (activeEntries.Count > 0 && keys.Count > 1)
+        {
+            float spacing = 60f; // Default fallback
+            // Calculate spacing based on the original configured UI positions
+            for (int i = 1; i < keys.Count; i++)
+            {
+                if (keys[i].icon != null && keys[0].icon != null)
+                {
+                    float dist = keys[i].icon.rectTransform.anchoredPosition.x - keys[0].icon.rectTransform.anchoredPosition.x;
+                    if (Mathf.Abs(dist) > 0.1f)
+                    {
+                        spacing = dist / i;
+                        break;
+                    }
+                }
+            }
+
+            float startX = 0f;
+            if (keys[0].icon != null)
+            {
+                startX = keys[0].icon.rectTransform.anchoredPosition.x;
+            }
+
+            for (int i = 0; i < activeEntries.Count; i++)
+            {
+                RectTransform rt = activeEntries[i].icon.rectTransform;
+                rt.anchoredPosition = new Vector2(startX + (i * spacing), rt.anchoredPosition.y);
+            }
+        }
+    }
+
     public void SetOwned(string keyId, bool owned, bool instant = false)
     {
         if (!map.TryGetValue(keyId, out var entry)) return;

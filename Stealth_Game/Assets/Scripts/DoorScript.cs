@@ -21,11 +21,7 @@ public class DoorScript : MonoBehaviour
     [HideInInspector] public string keyNameDown2;
     [HideInInspector] public bool isUpUnlocked = false;
     [HideInInspector] public bool isDownUnlocked = false;
-
-    [Header("Indicators")]
-    [HideInInspector] public SpriteRenderer upIndicator;
-    [HideInInspector] public SpriteRenderer downIndicator;
-    [HideInInspector] public Light2D indicatorLight;
+    
 
     [Header("Locks")]
     [HideInInspector] public GameObject upLock1;
@@ -37,6 +33,11 @@ public class DoorScript : MonoBehaviour
     public float lightBlinkDuration = 0.3f;
     public float teleportTimeDelay = 1f;
 
+    [Header("Advanced Settings (Can be ignored)")]
+    public SpriteRenderer upIndicator;
+    public SpriteRenderer downIndicator;
+    public Light2D indicatorLight;
+
     private Transform player;
     private bool playerInside = false;
     private PickPoket pickPoket;
@@ -44,6 +45,14 @@ public class DoorScript : MonoBehaviour
 
     private bool isUpCalled = false;
     private bool isDownCalled = false;
+
+    private void Start()
+    {
+        if (indicatorLight == null)
+        {
+            indicatorLight = GetComponentInChildren<Light2D>();
+        }
+    }
 
     private void Update()
     {

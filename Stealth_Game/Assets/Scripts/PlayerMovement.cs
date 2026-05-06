@@ -122,4 +122,19 @@ public class PlayerMovement : MonoBehaviour
 
         externalMoveActive = false;
     }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (CheckPoint.instance != null)
+        {
+            if (collision.CompareTag("Checkpoint1"))
+            {
+                CheckPoint.instance.checkPoint1Exists(collision.transform);
+            }
+            if (collision.CompareTag("Checkpoint2"))
+            {
+                CheckPoint.instance.checkPoint2Exists(collision.transform);
+            }
+        }
+    }
 }

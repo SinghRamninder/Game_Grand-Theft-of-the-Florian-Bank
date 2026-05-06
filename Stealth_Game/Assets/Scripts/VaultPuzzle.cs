@@ -6,7 +6,9 @@ using System.Collections;
 
 public class VaultPuzzle : MonoBehaviour
 {
+    [Tooltip("The starting speed of the vault dial rotation.")]
     [SerializeField] private float normalSpeed = 5f;
+    [Tooltip("How much the the dial speed increases after a correct number is selected.")]
     [SerializeField] private float speedIncrement = 5f;
 
     [SerializeField] private TMP_Text numbersDisplay;

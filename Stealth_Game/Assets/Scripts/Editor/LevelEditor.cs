@@ -9,6 +9,8 @@ public class LevelEditor : EditorWindow
     "Basic Settings",
     "Guard"};
 
+    private bool useCheckpoint = false;
+
     private string guardName;
     private GameObject guardSprite;
 
@@ -32,8 +34,12 @@ public class LevelEditor : EditorWindow
     [MenuItem("Tools/Level Editor")]
     public static void OpenWindow()
     {
-        GetWindow<LevelEditor>();
+        LevelEditor window = GetWindow<LevelEditor>();
+        window.minSize = new Vector2(400, 500); // Give the window some width so buttons aren't as stretched out
+        window.Show();
     }
+
+    private bool hasUnsavedChanges = false;
 
     private void OnEnable()
     {
@@ -43,7 +49,7 @@ public class LevelEditor : EditorWindow
 
     private void LoadKeyPrefabs()
     {
-        string folderPath = "Assets/Prefabs/Keys";
+        string folderPath = "Assets/LEVEL EDITOR/Keys";
         if (!AssetDatabase.IsValidFolder(folderPath))
         {
             keyPrefabs = new GameObject[0];
@@ -87,8 +93,21 @@ public class LevelEditor : EditorWindow
         }
     }
 
+    private void OnDestroy()
+    {
+        if (hasUnsavedChanges)
+        {
+            if (EditorUtility.DisplayDialog("Unsaved Changes", "You have unsaved changes in the Level Editor. Do you want to save them before closing?", "Save", "Don't Save"))
+            {
+                SaveAllSettings();
+            }
+        }
+    }
+
     private void OnGUI()
     {
+        EditorGUILayout.Space();
+
         selectedTab = GUILayout.Toolbar(selectedTab, tabs);
 
         GUILayout.Space(10);
@@ -111,6 +130,99 @@ public class LevelEditor : EditorWindow
         {
             SetupScene();
         }
+
+        EditorGUILayout.Space();
+        EditorGUILayout.LabelField("Scene Features", EditorStyles.boldLabel);
+
+        EditorGUI.BeginChangeCheck();
+        useCheckpoint = EditorGUILayout.Toggle("Enable Checkpoint", useCheckpoint);
+        if (EditorGUI.EndChangeCheck())
+        {
+            hasUnsavedChanges = true;
+        }
+
+        if (useCheckpoint)
+        {
+            GameObject managerObj = GameObject.Find("Checkpoint Manager");
+            if (managerObj != null && managerObj.transform.Find("Checkpoint1") != null)
+            {
+                EditorGUILayout.Space();
+                if (GUILayout.Button("Set checkpoint position"))
+                {
+                    GameObject cp1 = managerObj.transform.Find("Checkpoint1").gameObject;
+                    Selection.activeGameObject = cp1;
+                    if (SceneView.lastActiveSceneView != null)
+                    {
+                        SceneView.lastActiveSceneView.FrameSelected();
+                    }
+                }
+            }
+        }
+
+        EditorGUILayout.Space();
+        if (GUILayout.Button("Save Settings", GUILayout.Height(30)))
+        {
+            SaveAllSettings();
+        }
+    }
+
+    private void SaveAllSettings()
+    {
+        if (useCheckpoint)
+        {
+            CreateCheckpointManager();
+        }
+        else
+        {
+            DeleteCheckpointManager();
+        }
+
+        hasUnsavedChanges = false;
+        EditorUtility.DisplayDialog("Saved", "Settings have been saved.", "OK");
+    }
+
+    private void DeleteCheckpointManager()
+    {
+        GameObject manager = GameObject.Find("Checkpoint Manager");
+        if (manager != null)
+        {
+            Undo.DestroyObjectImmediate(manager);
+        }
+    }
+
+    private void CreateCheckpointManager()
+    {
+        if (GameObject.Find("Checkpoint Manager"))
+        {
+            return; // Already exists, just silently return is fine for the save loop
+        }
+
+        GameObject manager = new GameObject("Checkpoint Manager");
+        manager.AddComponent<CheckPoint>();
+
+        GameObject cp1 = new GameObject("Checkpoint1");
+        cp1.transform.SetParent(manager.transform);
+
+        try 
+        {
+            cp1.tag = "Checkpoint1";
+        }
+        catch (UnityException e)
+        {
+            Debug.LogWarning("Tag 'Checkpoint1' is not defined in the Tags & Layers. Please add it first. " + e.Message);
+        }
+
+        BoxCollider2D collider = cp1.AddComponent<BoxCollider2D>();
+        collider.isTrigger = true;
+        cp1.transform.localPosition = Vector3.zero;
+
+        Undo.RegisterCreatedObjectUndo(manager, "Create Checkpoint Manager");
+
+        Selection.activeGameObject = cp1;
+        if (SceneView.lastActiveSceneView != null)
+        {
+            SceneView.lastActiveSceneView.FrameSelected();
+        }
     }
 
     private void DrawGuardTab()
@@ -126,6 +238,7 @@ public class LevelEditor : EditorWindow
         {
             selectedGuardIndex = EditorGUILayout.Popup(new GUIContent("Guard Sprite", "Select a guard prefab"), selectedGuardIndex, guardPrefabNames);
             guardSprite = guardPrefabs[selectedGuardIndex];
+
 
             if (guardSprite != null)
             {
@@ -189,7 +302,7 @@ public class LevelEditor : EditorWindow
             }
             else
             {
-                EditorGUILayout.HelpBox("No Key prefabs found in 'Assets/Prefabs/Keys'.", MessageType.Warning);
+                EditorGUILayout.HelpBox("No Key prefabs found in 'Assets/LEVEL EDITOR/Keys'.", MessageType.Warning);
             }
         }
 
@@ -216,11 +329,23 @@ public class LevelEditor : EditorWindow
 
         GameObject parentInstance = new GameObject(guardName);
         GuardParent guardParent = parentInstance.AddComponent<GuardParent>();
-        parentInstance.AddComponent<VisionConeParent>();
+        VisionConeParent visionCone = parentInstance.AddComponent<VisionConeParent>();
 
         GameObject childInstance = (GameObject)PrefabUtility.InstantiatePrefab(guardSprite, parentInstance.transform);
         childInstance.name = guardSprite.name;
         childInstance.transform.localPosition = Vector3.zero;
+
+        visionCone.visionConeParent = parentInstance.GetComponentInChildren<VisionCone2D>();
+
+        if (visionCone.visionConeParent != null)
+        {
+            visionCone.visionConeParent.useObstacles = true;
+            visionCone.visionConeParent.obstacleMask = LayerMask.GetMask("Walls");
+        }
+        else
+        {
+            Debug.LogWarning("VisionCone2D was not found in the instantiated guard prefab.");
+        }
 
         SecurityOfficerScript officerScript = childInstance.GetComponent<SecurityOfficerScript>();
         if (officerScript != null)
@@ -351,6 +476,216 @@ public class LevelEditor : EditorWindow
 
     private void SetupScene()
     {
+        if (!EditorUtility.DisplayDialog("Warning", "This will delete all existing gameobjects in the scene. Proceed?", "OK", "Cancel"))
+        {
+            return;
+        }
 
+        GameObject[] allObjects = UnityEngine.Object.FindObjectsByType<GameObject>(FindObjectsInactive.Include, FindObjectsSortMode.None);
+        foreach (var go in allObjects)
+        {
+            if (go != null && go.transform.parent == null)
+            {
+                DestroyImmediate(go);
+            }
+        }
+
+        GameObject mainCamera = new GameObject("MainCamera");
+        mainCamera.tag = "MainCamera";
+        Camera cam = mainCamera.AddComponent<Camera>();
+        cam.orthographic = true;
+        cam.orthographicSize = 6f;
+        cam.nearClipPlane = 0.01f;
+        cam.farClipPlane = 984.2f;
+
+        mainCamera.AddComponent<AudioListener>();
+
+        System.Type urpCamType = System.Type.GetType("UnityEngine.Rendering.Universal.UniversalAdditionalCameraData, Unity.RenderPipelines.Universal.Runtime");
+        if (urpCamType != null)
+        {
+            Component urpData = mainCamera.AddComponent(urpCamType);
+            SerializedObject so = new SerializedObject(urpData);
+            so.Update();
+            SerializedProperty renderType = so.FindProperty("m_RenderType");
+            if (renderType != null) renderType.intValue = 0; // Base
+            so.ApplyModifiedProperties();
+        }
+
+        System.Type brainType = System.Type.GetType("Unity.Cinemachine.CinemachineBrain, Unity.Cinemachine");
+        if (brainType == null) brainType = System.Type.GetType("Cinemachine.CinemachineBrain, Cinemachine");
+        if (brainType != null)
+        {
+            Component brain = mainCamera.AddComponent(brainType);
+            SerializedObject so = new SerializedObject(brain);
+            so.Update();
+            SerializedProperty frustum = so.FindProperty("m_ShowCameraFrustum");
+            if (frustum != null) frustum.boolValue = true;
+            so.ApplyModifiedProperties();
+        }
+
+        GameObject cinemachineCam = new GameObject("CinemachineCamera");
+        System.Type cmCamType = System.Type.GetType("Unity.Cinemachine.CinemachineCamera, Unity.Cinemachine");
+        Component vcam = null;
+        if (cmCamType != null)
+        {
+            vcam = cinemachineCam.AddComponent(cmCamType);
+            SerializedObject so = new SerializedObject(vcam);
+            so.Update();
+            SerializedProperty lensSize = so.FindProperty("Lens.OrthographicSize");
+            if (lensSize == null) lensSize = so.FindProperty("m_Lens.OrthographicSize");
+            if (lensSize != null) lensSize.floatValue = 6f;
+            so.ApplyModifiedProperties();
+
+            System.Type composerType = System.Type.GetType("Unity.Cinemachine.CinemachinePositionComposer, Unity.Cinemachine");
+            if (composerType != null)
+            {
+                Component composer = cinemachineCam.AddComponent(composerType);
+                SerializedObject cSo = new SerializedObject(composer);
+                cSo.Update();
+                SerializedProperty sx = cSo.FindProperty("Composition.ScreenPosition.x");
+                if (sx == null) sx = cSo.FindProperty("m_ScreenPosition.x");
+                if (sx != null) sx.floatValue = -0.03f;
+                SerializedProperty sy = cSo.FindProperty("Composition.ScreenPosition.y");
+                if (sy == null) sy = cSo.FindProperty("m_ScreenPosition.y");
+                if (sy != null) sy.floatValue = 0.19f;
+                cSo.ApplyModifiedProperties();
+            }
+        }
+        else
+        {
+            System.Type vcamType = System.Type.GetType("Cinemachine.CinemachineVirtualCamera, Cinemachine");
+            if (vcamType != null)
+            {
+                vcam = cinemachineCam.AddComponent(vcamType);
+                SerializedObject so = new SerializedObject(vcam);
+                so.Update();
+                SerializedProperty lensSize = so.FindProperty("m_Lens.OrthographicSize");
+                if (lensSize != null) lensSize.floatValue = 6f;
+                so.ApplyModifiedProperties();
+            }
+        }
+
+        // Global Light 2D is now spawned automatically via the RequiredObjects loop below
+
+        GameObject levelRefMgr = new GameObject("Level Reference Manager");
+        LevelReferences levelRefs = levelRefMgr.AddComponent<LevelReferences>();
+
+        GameObject keyInventoryInst = null;
+        GameObject pauseMenuInst = null;
+        GameObject audioManagerInst = null;
+
+        string reqFolderPath = "Assets/Prefabs/RequiredObjects";
+        if (AssetDatabase.IsValidFolder(reqFolderPath))
+        {
+            string[] guids = AssetDatabase.FindAssets("t:Prefab", new[] { reqFolderPath });
+            foreach (string guid in guids)
+            {
+                string path = AssetDatabase.GUIDToAssetPath(guid);
+                GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(path);
+                if (prefab != null)
+                {
+                    GameObject inst = (GameObject)PrefabUtility.InstantiatePrefab(prefab);
+                    // Match against expected components/names based on your instructions
+                    if (inst.name.Contains("Guard caught"))
+                    {
+                        levelRefs.gameOverDisplay = inst;
+                        inst.SetActive(false);
+                    }
+                    else if (inst.name.Contains("Timer"))
+                    {
+                        levelRefs.timerDisplay = inst;
+                        inst.SetActive(false);
+                    }
+                    else if (inst.name.Contains("TimesUP"))
+                    {
+                        levelRefs.timesUpDisplay = inst;
+                        inst.SetActive(false);
+                    }
+                    else if (inst.name.Contains("PauseMenu"))
+                    {
+                        pauseMenuInst = inst;
+                        inst.SetActive(false);
+                    }
+                    else if (inst.name.Contains("AudioManager"))
+                    {
+                        audioManagerInst = inst;
+                    }
+                    else if (inst.name.Contains("Instruction"))
+                    {
+                        Transform tBox = inst.transform.Find("FindElectricBox");
+                        if (tBox != null) levelRefs.laserInstructionText = tBox.gameObject;
+                        Transform tDeact = inst.transform.Find("LasersDeactiavte");
+                        if (tDeact != null) levelRefs.laserDeactivatedText = tDeact.gameObject;
+
+                        foreach (Transform child in inst.transform)
+                        {
+                            child.gameObject.SetActive(false);
+                        }
+                    }
+                    else if (inst.name.Contains("KeyInventory"))
+                    {
+                        keyInventoryInst = inst;
+                    }
+                }
+            }
+        }
+
+        GameObject pauseGameObj = new GameObject("PauseGame");
+        PauseGame pauseGameScript = pauseGameObj.AddComponent<PauseGame>();
+        SerializedObject pgSo = new SerializedObject(pauseGameScript);
+        pgSo.Update();
+        if (pauseMenuInst != null)
+        {
+            pgSo.FindProperty("pauseMenu").objectReferenceValue = pauseMenuInst;
+        }
+        if (audioManagerInst != null)
+        {
+            AudioManager am = audioManagerInst.GetComponent<AudioManager>();
+            if (am != null)
+            {
+                pgSo.FindProperty("audioManager").objectReferenceValue = am;
+            }
+        }
+        pgSo.ApplyModifiedProperties();
+
+        GameObject playerInst = null;
+        string[] playerGuids = AssetDatabase.FindAssets("t:Prefab", new[] { "Assets/LEVEL EDITOR/Player" });
+        if (playerGuids.Length > 0)
+        {
+            string pPath = AssetDatabase.GUIDToAssetPath(playerGuids[0]);
+            GameObject pPrefab = AssetDatabase.LoadAssetAtPath<GameObject>(pPath);
+            if (pPrefab != null)
+            {
+                playerInst = (GameObject)PrefabUtility.InstantiatePrefab(pPrefab);
+                PickPoket pp = playerInst.GetComponentInChildren<PickPoket>();
+                if (pp != null && keyInventoryInst != null)
+                {
+                    KeyInventoryUI ui = keyInventoryInst.GetComponentInChildren<KeyInventoryUI>();
+                    if (ui != null)
+                    {
+                        SerializedObject so = new SerializedObject(pp);
+                        so.Update();
+                        so.FindProperty("keyUI").objectReferenceValue = ui;
+                        so.ApplyModifiedProperties();
+                    }
+                }
+
+                if (vcam != null && playerInst != null)
+                {
+                    SerializedObject so = new SerializedObject(vcam);
+                    so.Update();
+                    SerializedProperty targetObj = so.FindProperty("Target.TrackingTarget");
+                    if (targetObj == null) targetObj = so.FindProperty("m_Follow");
+                    if (targetObj != null) targetObj.objectReferenceValue = playerInst.transform;
+                    so.ApplyModifiedProperties();
+                }
+            }
+        }
+
+        GameObject esObj = new GameObject("EventSystem");
+        System.Type esType = System.Type.GetType("UnityEngine.EventSystems.EventSystem, UnityEngine.UI");
+        if (esType != null) esObj.AddComponent(esType);
+        System.Type inputModType = System.Type.GetType("UnityEngine.EventSystems.StandaloneInputModule, UnityEngine.UI");
+        if (inputModType != null) esObj.AddComponent(inputModType);
     }
 }

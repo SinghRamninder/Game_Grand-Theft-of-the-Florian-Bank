@@ -1,23 +1,38 @@
 using System.Collections;
 using UnityEngine;
-using UnityEngine.InputSystem;
 using UnityEngine.Rendering.Universal;
 
 public class lasers : MonoBehaviour
 {
-    [SerializeField] private Light2D indicatorLight;
-    [SerializeField] private float blinkDuration;
-    [SerializeField] private GameObject lasersGameobject;
-    [SerializeField] private string keyName;
-    [SerializeField] private GameObject lockTransform;
-    [SerializeField] private GameObject instructionText;
-    [SerializeField] private GameObject instructionKey;
+    [Header("Other Settings")]
+    public float lightBlinkDuration = 0.3f;
+
+    [Header("Advanced Settings (Can be ignored)")]
+    public Light2D indicatorLight;
+    public GameObject lasersGameobject;
+    [HideInInspector] public string keyName;
+    [HideInInspector] public GameObject lockTransform;
+    public GameObject instructionText;
+    public GameObject instructionKey;
 
     private Coroutine blinkRoutine;
 
     private bool playerNear = false;
     private PickPoket pickPoket;
     private bool isLaserWorking = true;
+
+    private void Start()
+    {
+        if (instructionText == null)
+        {
+            var lvlRef = GameObject.FindFirstObjectByType<LevelReferences>();
+
+            if (lvlRef != null)
+            {
+                instructionText = lvlRef.laserDeactivatedText;
+            }
+        }
+    }
 
     private void Update()
     {
@@ -30,7 +45,10 @@ public class lasers : MonoBehaviour
         {
             if (pickPoket.hasKey(keyName))
             {
-                pickPoket.PlayUseKeyFly(keyName, lockTransform.transform.position);
+                if (lockTransform != null)
+                {
+                    pickPoket.PlayUseKeyFly(keyName, lockTransform.transform.position);
+                }
 
                 lasersGameobject.SetActive(false);
                 StartCoroutine(showandhidetext());
@@ -64,10 +82,10 @@ public class lasers : MonoBehaviour
     {
         float elapsed = 0f;
 
-        while (elapsed < blinkDuration)
+        while (elapsed < lightBlinkDuration)
         {
             elapsed += Time.deltaTime;
-            float t = elapsed / blinkDuration;
+            float t = elapsed / lightBlinkDuration;
             indicatorLight.intensity = Mathf.Lerp(from, to, t);
             yield return null;
         }

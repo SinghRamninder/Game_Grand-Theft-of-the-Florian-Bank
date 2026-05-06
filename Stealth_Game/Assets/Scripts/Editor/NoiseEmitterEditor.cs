@@ -21,8 +21,11 @@ public class NoiseEmitterEditor : Editor
     {
         GameObject noNoiseRing = new GameObject("No Noise Ring");
 
-        noNoiseRing.AddComponent<BoxCollider2D>();
+        BoxCollider2D boxcollider = noNoiseRing.AddComponent<BoxCollider2D>();
+        boxcollider.isTrigger = true;
 
         noNoiseRing.tag = "No Sound";
+
+        Selection.activeGameObject = noNoiseRing;
     }
 }

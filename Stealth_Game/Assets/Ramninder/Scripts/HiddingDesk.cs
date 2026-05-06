@@ -6,7 +6,7 @@ public class HiddingDesk : MonoBehaviour
 
     private GameObject player;
     private bool isNear = false;
-    public bool isHidden = false;
+    [HideInInspector] public bool isHidden = false;
 
     private Vector3 originalScale;
     private Quaternion originalRotation;
