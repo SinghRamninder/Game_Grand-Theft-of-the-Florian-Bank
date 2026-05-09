@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.UI;
 using UnityEditor;
 
 public class LevelEditor : EditorWindow
@@ -9,8 +10,12 @@ public class LevelEditor : EditorWindow
     "Basic Settings",
     "Guard"};
 
+
     private bool useCheckpoint = false;
     private bool useStartCutscene = false;
+    private bool useEndManager = false;
+    private bool useEndCutscene = false;
+    private bool useEndCredits = false;
 
     private string guardName;
     private GameObject guardSprite;
@@ -40,7 +45,7 @@ public class LevelEditor : EditorWindow
         window.Show();
     }
 
-    private bool hasUnsavedChanges = false;
+    private bool unsavedChanges = false;
 
     private void OnEnable()
     {
@@ -51,7 +56,7 @@ public class LevelEditor : EditorWindow
 
     private void OnHierarchyChange()
     {
-        if (!hasUnsavedChanges)
+        if (!unsavedChanges)
         {
             SyncToggleStates();
         }
@@ -61,6 +66,9 @@ public class LevelEditor : EditorWindow
     {
         useCheckpoint = false;
         useStartCutscene = false;
+        useEndManager = false;
+        useEndCutscene = false;
+        useEndCredits = false;
 
         GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
         foreach (GameObject obj in allObjects)
@@ -73,12 +81,21 @@ public class LevelEditor : EditorWindow
             {
                 if (obj.name == "Checkpoint Manager" && obj.activeInHierarchy)
                     useCheckpoint = true;
-
+                
                 if (obj.name == "Start Cutscene Manager" && obj.activeInHierarchy)
                     useStartCutscene = true;
+
+                if (obj.name == "End Manager" && obj.activeInHierarchy)
+                    useEndManager = true;
+
+                if (obj.name == "End cutscene manager" && obj.activeInHierarchy)
+                    useEndCutscene = true;
+
+                if (obj.name == "End credits manager" && obj.activeInHierarchy)
+                    useEndCredits = true;
             }
         }
-
+        
         Repaint();
     }
 
@@ -130,7 +147,7 @@ public class LevelEditor : EditorWindow
 
     private void OnDestroy()
     {
-        if (hasUnsavedChanges)
+        if (unsavedChanges)
         {
             if (EditorUtility.DisplayDialog("Unsaved Changes", "You have unsaved changes in the Level Editor. Do you want to save them before closing?", "Save", "Don't Save"))
             {
@@ -161,19 +178,24 @@ public class LevelEditor : EditorWindow
 
     private void DrawBasicSettingsTab()
     {
-        if (GUILayout.Button("Setup Scene"))
+        EditorGUILayout.BeginVertical("box");
+        GUILayout.Label("Scene Initialization", EditorStyles.boldLabel);
+        if (GUILayout.Button("Setup Scene", GUILayout.Height(30)))
         {
             SetupScene();
         }
+        EditorGUILayout.EndVertical();
 
         EditorGUILayout.Space();
+
+        EditorGUILayout.BeginVertical("box");
         EditorGUILayout.LabelField("Scene Features", EditorStyles.boldLabel);
 
         EditorGUI.BeginChangeCheck();
         useStartCutscene = EditorGUILayout.Toggle("Enable Start Cutscene", useStartCutscene);
         if (EditorGUI.EndChangeCheck())
         {
-            hasUnsavedChanges = true;
+            unsavedChanges = true;
         }
 
         if (useStartCutscene)
@@ -181,8 +203,9 @@ public class LevelEditor : EditorWindow
             GameObject startManagerObj = FindObjectInScene("Start Cutscene Manager");
             if (startManagerObj != null && startManagerObj.activeInHierarchy)
             {
-                EditorGUILayout.Space();
-                if (GUILayout.Button("Edit cutscene"))
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Space(EditorGUIUtility.labelWidth);
+                if (GUILayout.Button("Edit Cutscene"))
                 {
                     Selection.activeGameObject = startManagerObj;
                     if (SceneView.lastActiveSceneView != null)
@@ -190,7 +213,80 @@ public class LevelEditor : EditorWindow
                         SceneView.lastActiveSceneView.FrameSelected();
                     }
                 }
+                EditorGUILayout.EndHorizontal();
             }
+        }
+
+        EditorGUILayout.Space();
+
+        EditorGUI.BeginChangeCheck();
+        useEndManager = EditorGUILayout.Toggle("Enable End Manager", useEndManager);
+        if (EditorGUI.EndChangeCheck())
+        {
+            unsavedChanges = true;
+        }
+
+        if (useEndManager)
+        {
+            GameObject endManagerObj = FindObjectInScene("End Manager");
+            if (endManagerObj != null && endManagerObj.activeInHierarchy)
+            {
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Space(EditorGUIUtility.labelWidth);
+                if (GUILayout.Button("Edit End Manager"))
+                {
+                    Selection.activeGameObject = endManagerObj;
+                    if (SceneView.lastActiveSceneView != null)
+                        SceneView.lastActiveSceneView.FrameSelected();
+                }
+                EditorGUILayout.EndHorizontal();
+            }
+
+            EditorGUI.indentLevel++;
+
+            EditorGUI.BeginChangeCheck();
+            useEndCutscene = EditorGUILayout.Toggle("Enable End Cutscene", useEndCutscene);
+            if (EditorGUI.EndChangeCheck()) unsavedChanges = true;
+
+            if (useEndCutscene)
+            {
+                GameObject ecm = FindObjectInScene("End cutscene manager");
+                if (ecm != null && ecm.activeInHierarchy)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Space(EditorGUIUtility.labelWidth);
+                    if (GUILayout.Button("Edit End Cutscene"))
+                    {
+                        Selection.activeGameObject = ecm;
+                        if (SceneView.lastActiveSceneView != null) SceneView.lastActiveSceneView.FrameSelected();
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
+            EditorGUILayout.Space();
+
+            EditorGUI.BeginChangeCheck();
+            useEndCredits = EditorGUILayout.Toggle("Enable End Credits", useEndCredits);
+            if (EditorGUI.EndChangeCheck()) unsavedChanges = true;
+
+            if (useEndCredits)
+            {
+                GameObject ecredm = FindObjectInScene("End credits manager");
+                if (ecredm != null && ecredm.activeInHierarchy)
+                {
+                    EditorGUILayout.BeginHorizontal();
+                    GUILayout.Space(EditorGUIUtility.labelWidth);
+                    if (GUILayout.Button("Edit End Credits"))
+                    {
+                        Selection.activeGameObject = ecredm;
+                        if (SceneView.lastActiveSceneView != null) SceneView.lastActiveSceneView.FrameSelected();
+                    }
+                    EditorGUILayout.EndHorizontal();
+                }
+            }
+
+            EditorGUI.indentLevel--;
         }
 
         EditorGUILayout.Space();
@@ -199,7 +295,7 @@ public class LevelEditor : EditorWindow
         useCheckpoint = EditorGUILayout.Toggle("Enable Checkpoint", useCheckpoint);
         if (EditorGUI.EndChangeCheck())
         {
-            hasUnsavedChanges = true;
+            unsavedChanges = true;
         }
 
         if (useCheckpoint)
@@ -207,8 +303,9 @@ public class LevelEditor : EditorWindow
             GameObject managerObj = FindObjectInScene("Checkpoint Manager");
             if (managerObj != null && managerObj.activeInHierarchy && managerObj.transform.Find("Checkpoint1") != null)
             {
-                EditorGUILayout.Space();
-                if (GUILayout.Button("Set checkpoint position"))
+                EditorGUILayout.BeginHorizontal();
+                GUILayout.Space(EditorGUIUtility.labelWidth);
+                if (GUILayout.Button("Set Checkpoint Position"))
                 {
                     GameObject cp1 = managerObj.transform.Find("Checkpoint1").gameObject;
                     Selection.activeGameObject = cp1;
@@ -217,10 +314,14 @@ public class LevelEditor : EditorWindow
                         SceneView.lastActiveSceneView.FrameSelected();
                     }
                 }
+                EditorGUILayout.EndHorizontal();
             }
         }
 
-        EditorGUILayout.Space();
+        EditorGUILayout.EndVertical();
+
+        GUILayout.FlexibleSpace();
+
         if (GUILayout.Button("Save Settings", GUILayout.Height(30)))
         {
             SaveAllSettings();
@@ -238,6 +339,19 @@ public class LevelEditor : EditorWindow
             DisableStartCutsceneManager();
         }
 
+        if (useEndManager)
+        {
+            GameObject endMgr = CreateEndManager();
+            if (useEndCutscene) CreateEndCutsceneManager(endMgr.transform); else DisableEndCutsceneManager();
+            if (useEndCredits) CreateEndCreditsManager(endMgr.transform); else DisableEndCreditsManager();
+        }
+        else
+        {
+            DisableEndCutsceneManager();
+            DisableEndCreditsManager();
+            DisableEndManager();
+        }
+
         if (useCheckpoint)
         {
             CreateCheckpointManager();
@@ -247,7 +361,7 @@ public class LevelEditor : EditorWindow
             DisableCheckpointManager();
         }
 
-        hasUnsavedChanges = false;
+        unsavedChanges = false;
         SyncToggleStates();
         EditorUtility.DisplayDialog("Saved", "Settings have been saved.", "OK");
     }
@@ -296,6 +410,110 @@ public class LevelEditor : EditorWindow
         if (SceneView.lastActiveSceneView != null)
         {
             SceneView.lastActiveSceneView.FrameSelected();
+        }
+    }
+
+    private GameObject CreateEndManager()
+    {
+        GameObject existingManager = FindObjectInScene("End Manager");
+        if (existingManager != null)
+        {
+            Undo.RecordObject(existingManager, "Enable End Manager");
+            existingManager.SetActive(true);
+            return existingManager;
+        }
+
+        GameObject manager = new GameObject("End Manager");
+        manager.AddComponent<EndManager>();
+        BoxCollider2D col = manager.AddComponent<BoxCollider2D>();
+        col.isTrigger = true;
+        Undo.RegisterCreatedObjectUndo(manager, "Create End Manager");
+
+        return manager;
+    }
+
+    private void DisableEndManager()
+    {
+        GameObject manager = FindObjectInScene("End Manager");
+        if (manager != null)
+        {
+            Undo.RecordObject(manager, "Disable End Manager");
+            manager.SetActive(false);
+        }
+    }
+
+    private void CreateEndCutsceneManager(Transform parent)
+    {
+        GameObject existingManager = FindObjectInScene("End cutscene manager");
+        if (existingManager != null)
+        {
+            Undo.RecordObject(existingManager, "Enable End cutscene manager");
+            existingManager.SetActive(true);
+            existingManager.transform.SetParent(parent);
+            return;
+        }
+
+        GameObject manager = new GameObject("End cutscene manager");
+        manager.transform.SetParent(parent);
+        manager.AddComponent<EndCutsceneManager>();
+        Undo.RegisterCreatedObjectUndo(manager, "Create End cutscene manager");
+    }
+
+    private void DisableEndCutsceneManager()
+    {
+        GameObject manager = FindObjectInScene("End cutscene manager");
+        if (manager != null)
+        {
+            Undo.RecordObject(manager, "Disable End cutscene manager");
+            manager.SetActive(false);
+        }
+    }
+
+    private void CreateEndCreditsManager(Transform parent)
+    {
+        GameObject existingManager = FindObjectInScene("End credits manager");
+        if (existingManager != null)
+        {
+            Undo.RecordObject(existingManager, "Enable End credits manager");
+            existingManager.SetActive(true);
+            existingManager.transform.SetParent(parent);
+            return;
+        }
+
+        GameObject manager = new GameObject("End credits manager");
+        manager.transform.SetParent(parent);
+        EndCreditsManager ecm = manager.AddComponent<EndCreditsManager>();
+        Undo.RegisterCreatedObjectUndo(manager, "Create End credits manager");
+
+        // Spawn EndCreditsCanvas prefab as child
+        string prefabPath = "Assets/Prefabs/RequiredObjects/EndCreditsCanvas.prefab";
+        GameObject prefab = AssetDatabase.LoadAssetAtPath<GameObject>(prefabPath);
+        if (prefab != null)
+        {
+            GameObject canvasInstance = (GameObject)PrefabUtility.InstantiatePrefab(prefab, manager.transform);
+            canvasInstance.transform.localPosition = Vector3.zero;
+            Undo.RegisterCreatedObjectUndo(canvasInstance, "Create EndCreditsCanvas");
+            
+            // Assign BlackFade Image natively if we found it
+            Image blackFade = canvasInstance.GetComponentInChildren<Image>(true); // Might need a more precise search if multiple exist, but usually it's correct
+            if (blackFade != null)
+            {
+                ecm.blackFadeImage = blackFade;
+            }
+        }
+        else
+        {
+            Debug.LogWarning("Could not find EndCreditsCanvas prefab at " + prefabPath);
+        }
+    }
+
+    private void DisableEndCreditsManager()
+    {
+        GameObject manager = FindObjectInScene("End credits manager");
+        if (manager != null)
+        {
+            Undo.RecordObject(manager, "Disable End credits manager");
+            manager.SetActive(false);
         }
     }
 
@@ -429,7 +647,10 @@ public class LevelEditor : EditorWindow
         }
 
         EditorGUILayout.Space();
-        if (GUILayout.Button("Create Guard"))
+
+        GUILayout.FlexibleSpace();
+
+        if (GUILayout.Button("Create Guard", GUILayout.Height(30)))
         {
             CreateGuard();
         }

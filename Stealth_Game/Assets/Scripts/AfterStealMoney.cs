@@ -7,19 +7,19 @@ using TMPro;
 public class AfterStealMoney : MonoBehaviour
 {
     [Tooltip("The actual money GameObject to hide when stolen.")]
-    [SerializeField] private GameObject money;
+    [HideInInspector] public GameObject money;
 
     [Tooltip("List of all alert lights that will blink when the alarm goes off. Add lights via the custom editor inspector.")]
     public List<Light2D> alertLights = new List<Light2D>();
 
     [Tooltip("The UI prompt or object telling the player to press a key.")]
-    [SerializeField] private GameObject instructionKey;
+    [HideInInspector] public GameObject instructionKey;
 
     [Tooltip("How fast the warning lights should blink after the steal.")]
     [SerializeField] private float alertLightBlinkSpeed = 1f;
 
     [Tooltip("Trigger to activate the end credits sequence.")]
-    [SerializeField] private GameObject endCreditTrigger;
+    [HideInInspector] public GameObject endCreditTrigger;
 
     [Header("Countdown")]
     [Tooltip("Number of seconds the player has to escape before the timer runs out.")]
@@ -70,6 +70,9 @@ public class AfterStealMoney : MonoBehaviour
         allHidingBins.AddRange(Object.FindObjectsByType<HiddingBin>(FindObjectsSortMode.None));
         allHidingTables.AddRange(Object.FindObjectsByType<HiddingTable>(FindObjectsSortMode.None));
         allHidingDesks.AddRange(Object.FindObjectsByType<HiddingDesk>(FindObjectsSortMode.None));
+
+        if (endCreditTrigger == null)
+            endCreditTrigger = Object.FindFirstObjectByType<EndManager>(FindObjectsInactive.Include).gameObject;
 
         if (timerCanvas != null) timerCanvas.SetActive(false);
         if (timeUpCanvas != null) timeUpCanvas.SetActive(false);
