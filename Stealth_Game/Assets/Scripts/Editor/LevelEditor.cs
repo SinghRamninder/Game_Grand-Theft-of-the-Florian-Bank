@@ -10,6 +10,7 @@ public class LevelEditor : EditorWindow
     "Guard"};
 
     private bool useCheckpoint = false;
+    private bool useStartCutscene = false;
 
     private string guardName;
     private GameObject guardSprite;
@@ -45,6 +46,40 @@ public class LevelEditor : EditorWindow
     {
         LoadGuardPrefabs();
         LoadKeyPrefabs();
+        SyncToggleStates();
+    }
+
+    private void OnHierarchyChange()
+    {
+        if (!hasUnsavedChanges)
+        {
+            SyncToggleStates();
+        }
+    }
+
+    private void SyncToggleStates()
+    {
+        useCheckpoint = false;
+        useStartCutscene = false;
+
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.hideFlags == HideFlags.NotEditable || obj.hideFlags == HideFlags.HideAndDontSave)
+                continue;
+
+            // Ensure it's in the scene
+            if (!EditorUtility.IsPersistent(obj.transform.root.gameObject))
+            {
+                if (obj.name == "Checkpoint Manager" && obj.activeInHierarchy)
+                    useCheckpoint = true;
+
+                if (obj.name == "Start Cutscene Manager" && obj.activeInHierarchy)
+                    useStartCutscene = true;
+            }
+        }
+
+        Repaint();
     }
 
     private void LoadKeyPrefabs()
@@ -135,6 +170,32 @@ public class LevelEditor : EditorWindow
         EditorGUILayout.LabelField("Scene Features", EditorStyles.boldLabel);
 
         EditorGUI.BeginChangeCheck();
+        useStartCutscene = EditorGUILayout.Toggle("Enable Start Cutscene", useStartCutscene);
+        if (EditorGUI.EndChangeCheck())
+        {
+            hasUnsavedChanges = true;
+        }
+
+        if (useStartCutscene)
+        {
+            GameObject startManagerObj = FindObjectInScene("Start Cutscene Manager");
+            if (startManagerObj != null && startManagerObj.activeInHierarchy)
+            {
+                EditorGUILayout.Space();
+                if (GUILayout.Button("Edit cutscene"))
+                {
+                    Selection.activeGameObject = startManagerObj;
+                    if (SceneView.lastActiveSceneView != null)
+                    {
+                        SceneView.lastActiveSceneView.FrameSelected();
+                    }
+                }
+            }
+        }
+
+        EditorGUILayout.Space();
+
+        EditorGUI.BeginChangeCheck();
         useCheckpoint = EditorGUILayout.Toggle("Enable Checkpoint", useCheckpoint);
         if (EditorGUI.EndChangeCheck())
         {
@@ -143,8 +204,8 @@ public class LevelEditor : EditorWindow
 
         if (useCheckpoint)
         {
-            GameObject managerObj = GameObject.Find("Checkpoint Manager");
-            if (managerObj != null && managerObj.transform.Find("Checkpoint1") != null)
+            GameObject managerObj = FindObjectInScene("Checkpoint Manager");
+            if (managerObj != null && managerObj.activeInHierarchy && managerObj.transform.Find("Checkpoint1") != null)
             {
                 EditorGUILayout.Space();
                 if (GUILayout.Button("Set checkpoint position"))
@@ -168,33 +229,94 @@ public class LevelEditor : EditorWindow
 
     private void SaveAllSettings()
     {
+        if (useStartCutscene)
+        {
+            CreateStartCutsceneManager();
+        }
+        else
+        {
+            DisableStartCutsceneManager();
+        }
+
         if (useCheckpoint)
         {
             CreateCheckpointManager();
         }
         else
         {
-            DeleteCheckpointManager();
+            DisableCheckpointManager();
         }
 
         hasUnsavedChanges = false;
+        SyncToggleStates();
         EditorUtility.DisplayDialog("Saved", "Settings have been saved.", "OK");
     }
 
-    private void DeleteCheckpointManager()
+    private GameObject FindObjectInScene(string name)
     {
-        GameObject manager = GameObject.Find("Checkpoint Manager");
+        GameObject[] allObjects = Resources.FindObjectsOfTypeAll<GameObject>();
+        foreach (GameObject obj in allObjects)
+        {
+            if (obj.hideFlags == HideFlags.NotEditable || obj.hideFlags == HideFlags.HideAndDontSave)
+                continue;
+
+            if (!EditorUtility.IsPersistent(obj.transform.root.gameObject) && obj.name == name)
+            {
+                return obj;
+            }
+        }
+        return null;
+    }
+
+    private void DisableStartCutsceneManager()
+    {
+        GameObject manager = FindObjectInScene("Start Cutscene Manager");
         if (manager != null)
         {
-            Undo.DestroyObjectImmediate(manager);
+            Undo.RecordObject(manager, "Disable Start Cutscene Manager");
+            manager.SetActive(false);
+        }
+    }
+
+    private void CreateStartCutsceneManager()
+    {
+        GameObject existingManager = FindObjectInScene("Start Cutscene Manager");
+        if (existingManager != null)
+        {
+            Undo.RecordObject(existingManager, "Enable Start Cutscene Manager");
+            existingManager.SetActive(true);
+            return;
+        }
+
+        GameObject manager = new GameObject("Start Cutscene Manager");
+        manager.AddComponent<LevelStart>();
+        Undo.RegisterCreatedObjectUndo(manager, "Create Start Cutscene Manager");
+
+        Selection.activeGameObject = manager;
+        if (SceneView.lastActiveSceneView != null)
+        {
+            SceneView.lastActiveSceneView.FrameSelected();
+        }
+    }
+
+    private void DisableCheckpointManager()
+    {
+        GameObject manager = FindObjectInScene("Checkpoint Manager");
+        if (manager != null)
+        {
+            Undo.RecordObject(manager, "Disable Checkpoint Manager");
+            manager.SetActive(false);
         }
     }
 
     private void CreateCheckpointManager()
     {
-        if (GameObject.Find("Checkpoint Manager"))
+        GameObject existingManager = FindObjectInScene("Checkpoint Manager");
+        if (existingManager != null)
         {
-            return; // Already exists, just silently return is fine for the save loop
+            Undo.RecordObject(existingManager, "Enable Checkpoint Manager");
+            existingManager.SetActive(true);
+            return; 
         }
 
         GameObject manager = new GameObject("Checkpoint Manager");
