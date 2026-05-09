@@ -1,56 +1,77 @@
 using System.Collections;
+using System.Collections.Generic;
 using Unity.Cinemachine;
 using UnityEngine;
 
 public class LevelStart : MonoBehaviour
 {
-    [HideInInspector] public bool enableCutscene;
+    [System.Serializable]
+    public class CameraMovementStep
+    {
+        [Tooltip("The transform representing the position to move the camera to.")]
+        public Transform targetTransform;
+        
+        [Tooltip("The orthographic size of the camera for this step. Represents how much the camera sees.")]
+        public float orthoSize = 5f;
+        
+        [Tooltip("How long it takes to move to this position in seconds.")]
+        public float moveDuration = 1.5f;
 
-    [SerializeField] private GameObject mainCamera;
-    [SerializeField] private PlayerMovement playerScript;
+        [Tooltip("How many seconds to wait at this position before continuing.")]
+        public float waitTime = 1f;
 
-    [Header("Step 1")]
-    [SerializeField] private Transform pointA;
-    [SerializeField] private float orthoSizeA = 6f;
-    [SerializeField] private float moveDurationA = 1.5f;
-    [SerializeField] private float yOnlyTime = 0.6f;
-    [SerializeField] private float waitAtA = 1f;
+        [Tooltip("Optional: if higher than 0, the Y axis position moves first for this duration, then X axis and zoom begin.")]
+        public float yOnlyTime = 0f;
+    }
 
-    [Header("Step 2")]
-    [SerializeField] private Transform pointB;
-    [SerializeField] private float orthoSizeB = 5f;
-    [SerializeField] private float moveDurationB = 1.5f;
-    [SerializeField] private float waitAtB = 0f;
+    [HideInInspector] public GameObject mainCamera;
+    [HideInInspector] public PlayerMovement playerScript;
 
     [Header("Options")]
-    [SerializeField] private bool enablePlayerAfterSequence = true;
-    [SerializeField] private bool enableCinemachineAfterSequence = true;
+    [HideInInspector] public bool enablePlayerAfterSequence = true;
+    [HideInInspector] public bool enableCinemachineAfterSequence = true;
+    [HideInInspector] public bool startSequenceOnStart = true;
 
     [Header("Canvas")]
-    [SerializeField] private GameObject mainMenu;
-    [SerializeField] private GameObject keyInventory;
+    [HideInInspector] public GameObject mainMenu;
+    [HideInInspector] public GameObject keyInventory;
+
+    [Header("Camera Movements")]
+    [Tooltip("Add steps here to structure your intro cutscene. The camera will move sequentially to each transform.")]
+    public List<CameraMovementStep> cameraSteps = new List<CameraMovementStep>();
 
     private Camera cam;
 
     private void Start()
     {
+        if (mainCamera == null)
+            mainCamera = Camera.main.gameObject;
+
+        if (playerScript == null)
+            playerScript = GameObject.FindFirstObjectByType<PlayerMovement>();
+
+        if (playerScript != null)
+            playerScript.enabled = false;
+
+        if (keyInventory == null)
+        {
+            var keyUI = GameObject.FindFirstObjectByType<KeyInventoryUI>();
+            if (keyUI != null) keyInventory = keyUI.gameObject;
+        }
+
+        if (keyInventory != null)
+            keyInventory.SetActive(false);
+
         var brain = mainCamera != null ? mainCamera.GetComponent<CinemachineBrain>() : null;
 
-        if (enableCutscene)
+        if (brain != null)
+            brain.enabled = false;
+
+        cam = Camera.main;
+
+        if (startSequenceOnStart)
         {
-            if (playerScript != null) playerScript.enabled = false;
-
-            if (keyInventory != null) keyInventory.SetActive(false);
-
-            if (brain != null) brain.enabled = false;
-
-            cam = mainCamera != null ? mainCamera.GetComponent<Camera>() : null;
-
             StartCoroutine(IntroSequence(brain));
-        }
-        else
-        {
-            if (brain != null) brain.enabled = true;
         }
     }
 
@@ -58,17 +79,24 @@ public class LevelStart : MonoBehaviour
     {
         if (mainCamera == null || cam == null) yield break;
 
-        if (pointA != null)
-            yield return MoveToA_YStartsFirstThenXZoom(pointA.position, orthoSizeA, moveDurationA, yOnlyTime);
+        foreach (var step in cameraSteps)
+        {
+            if (step.targetTransform == null) continue;
 
-        if (waitAtA > 0f)
-            yield return new WaitForSeconds(waitAtA);
+            if (step.yOnlyTime > 0f)
+            {
+                yield return MoveToA_YStartsFirstThenXZoom(step.targetTransform.position, step.orthoSize, step.moveDuration, step.yOnlyTime);
+            }
+            else
+            {
+                yield return MoveAndZoom(step.targetTransform.position, step.orthoSize, step.moveDuration);
+            }
 
-        if (pointB != null)
-            yield return MoveAndZoom(pointB.position, orthoSizeB, moveDurationB);
-
-        if (waitAtB > 0f)
-            yield return new WaitForSeconds(waitAtB);
+            if (step.waitTime > 0f)
+            {
+                yield return new WaitForSeconds(step.waitTime);
+            }
+        }
 
         if (enableCinemachineAfterSequence && brain != null)
             brain.enabled = true;
@@ -163,5 +191,45 @@ public class LevelStart : MonoBehaviour
     {
         t = Mathf.Clamp01(t);
         return t * t * (3f - 2f * t);
+    }
+
+    private void OnDrawGizmos()
+    {
+        if (cameraSteps == null) return;
+
+        float aspect = 16f / 9f;
+        if (Application.isPlaying && cam != null)
+        {
+            aspect = cam.aspect;
+        }
+        else if (Camera.main != null)
+        {
+            aspect = Camera.main.aspect;
+        }
+
+        Gizmos.color = Color.cyan;
+
+        foreach (var step in cameraSteps)
+        {
+            if (step.targetTransform != null)
+            {
+                float height = step.orthoSize * 2f;
+                float width = height * aspect;
+                Vector3 size = new Vector3(width, height, 0.1f);
+                
+                Gizmos.DrawWireCube(step.targetTransform.position, size);
+                
+                Gizmos.DrawSphere(step.targetTransform.position, 0.2f);
+            }
+        }
+
+        Gizmos.color = Color.yellow;
+        for (int i = 0; i < cameraSteps.Count - 1; i++)
+        {
+            if (cameraSteps[i].targetTransform != null && cameraSteps[i + 1].targetTransform != null)
+            {
+                Gizmos.DrawLine(cameraSteps[i].targetTransform.position, cameraSteps[i+1].targetTransform.position);
+            }
+        }
     }
 }
